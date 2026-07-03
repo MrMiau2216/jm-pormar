@@ -1,0 +1,193 @@
+<section class="pagina-certificaciones">
+  <div class="encabezado-pagina">
+    <div>
+      <small>Gestión institucional</small>
+      <h1>Certificaciones</h1>
+      <p>Administra las certificaciones y documentos institucionales visibles en la web.</p>
+    </div>
+
+    <button type="button" class="boton-principal" (click)="abrirNuevaCertificacion()">
+      <span class="material-symbols-outlined">add</span>
+      Nueva certificación
+    </button>
+  </div>
+
+  <div class="tarjeta-filtros">
+    <label class="buscador">
+      <span class="material-symbols-outlined">search</span>
+      <input
+        type="text"
+        [(ngModel)]="terminoBusqueda"
+        placeholder="Buscar por nombre, tipo o descripción..."
+      >
+    </label>
+
+    <select [(ngModel)]="filtroEstado" aria-label="Filtrar por estado">
+      <option value="TODOS">Todos</option>
+      <option value="ACTIVOS">Activos</option>
+      <option value="INACTIVOS">Inactivos</option>
+    </select>
+
+    <select [(ngModel)]="filtroTipoArchivo" aria-label="Filtrar por tipo de archivo">
+      <option value="TODOS">Todos los archivos</option>
+      <option value="PDF">PDF</option>
+      <option value="IMAGEN">Imagen</option>
+    </select>
+
+    <button type="button" class="boton-limpiar" (click)="limpiarFiltros()">Limpiar</button>
+  </div>
+
+  <div class="tarjeta-tabla">
+    <div class="resumen-tabla">
+      <strong>{{ certificacionesFiltradas.length }}</strong>
+      <span>certificaciones encontradas</span>
+    </div>
+
+    <div class="tabla-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Orden</th>
+            <th>Certificación</th>
+            <th>Tipo</th>
+            <th>Archivo</th>
+            <th>Estado</th>
+            <th class="columna-acciones">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let certificacion of certificacionesFiltradas">
+            <td>{{ certificacion.orden }}</td>
+            <td>
+              <div class="certificacion-info">
+                <div class="icono-certificacion">
+                  <span class="material-symbols-outlined">
+                    {{ certificacion.tipoArchivo === 'PDF' ? 'picture_as_pdf' : 'image' }}
+                  </span>
+                </div>
+                <div>
+                  <strong>{{ certificacion.nombre }}</strong>
+                  <span>{{ certificacion.descripcion }}</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="texto-muted">{{ certificacion.tipo }}</span></td>
+            <td><span class="etiqueta-archivo">{{ certificacion.tipoArchivo }}</span></td>
+            <td>
+              <span class="estado" [class.inactivo]="!certificacion.activo">
+                {{ certificacion.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="acciones">
+              <button type="button" class="boton-ver" (click)="verArchivo(certificacion)">Ver</button>
+              <button
+                type="button"
+                class="boton-editar"
+                (click)="abrirEditarCertificacion(certificacion)"
+              >
+                Editar
+              </button>
+              <button
+                type="button"
+                class="boton-estado"
+                (click)="cambiarEstado(certificacion)"
+              >
+                {{ certificacion.activo ? 'Desactivar' : 'Activar' }}
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="certificacionesFiltradas.length === 0">
+            <td colspan="6" class="sin-resultados">
+              No se encontraron certificaciones con los filtros seleccionados.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="fondo-modal" *ngIf="modalAbierto">
+  <div class="modal-certificacion" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-certificacion">
+    <div class="modal-encabezado">
+      <div>
+        <small>{{ modoEdicion ? 'Editar certificación' : 'Nueva certificación' }}</small>
+        <h2 id="titulo-modal-certificacion">
+          {{ modoEdicion ? 'Modificar información' : 'Registrar certificación' }}
+        </h2>
+      </div>
+
+      <button type="button" class="boton-cerrar" aria-label="Cerrar" (click)="cerrarModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form class="formulario-certificacion" (ngSubmit)="guardarCertificacion()">
+      <div class="grid-formulario">
+        <label>
+          Nombre *
+          <input type="text" name="nombre" [(ngModel)]="formulario.nombre" placeholder="Ej: ISO 9001:2015">
+        </label>
+
+        <label>
+          Tipo *
+          <input
+            type="text"
+            name="tipo"
+            [(ngModel)]="formulario.tipo"
+            placeholder="Ej: Sistema de Gestión de Calidad"
+          >
+        </label>
+
+        <label>
+          Tipo de archivo *
+          <select name="tipoArchivo" [(ngModel)]="formulario.tipoArchivo">
+            <option value="PDF">PDF</option>
+            <option value="IMAGEN">Imagen</option>
+          </select>
+        </label>
+
+        <label>
+          Orden *
+          <input type="number" name="orden" [(ngModel)]="formulario.orden" min="1">
+        </label>
+      </div>
+
+      <label>
+        URL o ruta del archivo *
+        <input
+          type="text"
+          name="archivoUrl"
+          [(ngModel)]="formulario.archivoUrl"
+          placeholder="/certificates/iso-9001.pdf"
+        >
+      </label>
+
+      <label>
+        Descripción *
+        <textarea
+          name="descripcion"
+          rows="4"
+          [(ngModel)]="formulario.descripcion"
+          placeholder="Describe brevemente la certificación o documento..."
+        ></textarea>
+      </label>
+
+      <div class="checks-formulario">
+        <label>
+          <input type="checkbox" name="activo" [(ngModel)]="formulario.activo">
+          Certificación activa
+        </label>
+      </div>
+
+      <div class="acciones-modal">
+        <button type="button" class="boton-secundario" (click)="cerrarModal()">Cancelar</button>
+        <button type="submit" class="boton-principal">
+          {{ modoEdicion ? 'Guardar cambios' : 'Registrar certificación' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

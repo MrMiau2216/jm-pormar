@@ -1,0 +1,41 @@
+<section class="pagina-ingreso">
+  <div class="tarjeta-ingreso">
+    <div class="marca-ingreso">
+      <span class="material-symbols-outlined">admin_panel_settings</span>
+
+      <h1>JM Pormar</h1>
+
+      <p>Acceso de gestión interna</p>
+    </div>
+
+    <form class="formulario-ingreso" (ngSubmit)="ingresar()">
+      <label>
+        Usuario
+        <input
+          type="text"
+          name="usuario"
+          [(ngModel)]="usuario"
+          placeholder="Usuario"
+        >
+      </label>
+
+      <label>
+        Contraseña
+        <input
+          type="password"
+          name="clave"
+          [(ngModel)]="clave"
+          placeholder="Contraseña"
+        >
+      </label>
+
+      <button type="submit">
+        Ingresar
+      </button>
+    </form>
+
+    <small>
+      Acceso temporal para presentación frontend.
+    </small>
+  </div>
+</section>

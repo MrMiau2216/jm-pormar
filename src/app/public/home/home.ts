@@ -6,6 +6,7 @@ import { buildWhatsappUrl } from '../../shared/data/company-info';
 import { ClientService } from '../../shared/services/client.service';
 import { ClientItem } from '../../shared/data/clients-data';
 import { RucLookupService } from '../../shared/services/ruc-lookup.service';
+import { DialogoSistemaService } from '../../compartido/servicios/dialogo-sistema.service';
 
 interface Sector {
   icon: string;
@@ -40,7 +41,8 @@ export class Home implements OnInit {
 
   constructor(
     private clientService: ClientService,
-    private rucLookupService: RucLookupService
+    private rucLookupService: RucLookupService,
+    private dialogo: DialogoSistemaService
   ) {}
 
   ngOnInit(): void {
@@ -108,31 +110,41 @@ export class Home implements OnInit {
 
   private validateQuoteForm(): boolean {
     if (!this.quoteForm.nombre.trim()) {
-      alert('Ingresa tu nombre completo.');
+      this.mostrarError('Campo obligatorio', 'Ingresa tu nombre completo.');
       return false;
     }
 
     if (!this.quoteForm.telefono.trim()) {
-      alert('Ingresa tu número de teléfono.');
+      this.mostrarError('Campo obligatorio', 'Ingresa tu número de teléfono.');
       return false;
     }
 
     if (!this.quoteForm.detalle.trim()) {
-      alert('Ingresa el detalle de tu requerimiento.');
+      this.mostrarError('Campo obligatorio', 'Ingresa el detalle de tu requerimiento.');
       return false;
     }
 
     if (this.quoteForm.ruc && this.quoteForm.ruc.length !== 11) {
-      alert('El RUC debe tener 11 dígitos.');
+      this.mostrarError('RUC inválido', 'El RUC debe tener 11 dígitos.');
       return false;
     }
 
     if (this.quoteForm.ruc && !this.quoteForm.razonSocial) {
-      alert('Valida el RUC para obtener la razón social.');
+      this.mostrarError('RUC sin validar', 'Valida el RUC para obtener la razón social.');
       return false;
     }
 
     return true;
+  }
+
+  private mostrarError(titulo: string, mensaje: string): void {
+    void this.dialogo.alerta({
+      tipo: 'error',
+      titulo,
+      mensaje,
+      textoAceptar: 'Entendido',
+      icono: 'error'
+    });
   }
 
   sendQuote(): void {

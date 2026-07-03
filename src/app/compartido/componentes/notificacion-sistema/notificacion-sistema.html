@@ -1,0 +1,29 @@
+<div class="contenedor-notificacion" *ngIf="notificacion$ | async as notificacion">
+  <div
+    class="tarjeta-notificacion"
+    [class.exito]="notificacion.tipo === 'exito'"
+    [class.error]="notificacion.tipo === 'error'"
+    [class.info]="notificacion.tipo === 'info'"
+    [class.advertencia]="notificacion.tipo === 'advertencia'"
+    role="status"
+    aria-live="polite"
+  >
+    <div class="icono-notificacion">
+      <span class="material-symbols-outlined">{{ notificacion.icono }}</span>
+    </div>
+
+    <div class="contenido-notificacion">
+      <strong>{{ notificacion.titulo }}</strong>
+      <p>{{ notificacion.mensaje }}</p>
+    </div>
+
+    <button
+      type="button"
+      class="cerrar-notificacion"
+      aria-label="Cerrar notificación"
+      (click)="cerrar()"
+    >
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+</div>

@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PRODUCTS_DATA, ProductData } from '../../shared/data/products-data';
 import { buildWhatsappUrl } from '../../shared/data/company-info';
+import { DialogoSistemaService } from '../../compartido/servicios/dialogo-sistema.service';
 
 interface QuoteItem {
   id: number;
@@ -26,7 +27,10 @@ export class ProductDetail implements OnInit {
   selectedImage = '';
   quantity = 1;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private dialogo: DialogoSistemaService
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -92,7 +96,13 @@ export class ProductDetail implements OnInit {
     }
 
     localStorage.setItem(storageKey, JSON.stringify(currentItems));
-    alert('Producto agregado a la lista de cotización.');
+    void this.dialogo.alerta({
+      tipo: 'exito',
+      titulo: 'Producto agregado',
+      mensaje: 'Producto agregado a la lista de cotización.',
+      textoAceptar: 'Listo',
+      icono: 'shopping_cart'
+    });
   }
 
   quoteByWhatsapp(): void {

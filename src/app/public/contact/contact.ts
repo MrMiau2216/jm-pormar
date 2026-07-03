@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { COMPANY_INFO, buildWhatsappUrl } from '../../shared/data/company-info';
 import { RucLookupService } from '../../shared/services/ruc-lookup.service';
+import { DialogoSistemaService } from '../../compartido/servicios/dialogo-sistema.service';
 
 interface ContactMethod {
   icon: string;
@@ -21,7 +22,10 @@ interface ContactMethod {
 export class Contact {
   company = COMPANY_INFO;
 
-  constructor(private rucLookupService: RucLookupService) {}
+  constructor(
+    private rucLookupService: RucLookupService,
+    private dialogo: DialogoSistemaService
+  ) {}
 
   contactForm = {
     nombre: '',
@@ -84,31 +88,41 @@ export class Contact {
 
   private validateContactForm(): boolean {
     if (!this.contactForm.nombre.trim()) {
-      alert('Ingresa tu nombre completo.');
+      this.mostrarError('Campo obligatorio', 'Ingresa tu nombre completo.');
       return false;
     }
 
     if (!this.contactForm.telefono.trim()) {
-      alert('Ingresa tu número de teléfono.');
+      this.mostrarError('Campo obligatorio', 'Ingresa tu número de teléfono.');
       return false;
     }
 
     if (!this.contactForm.asunto.trim() && !this.contactForm.mensaje.trim()) {
-      alert('Ingresa un asunto o mensaje.');
+      this.mostrarError('Consulta incompleta', 'Ingresa un asunto o mensaje.');
       return false;
     }
 
     if (this.contactForm.ruc && this.contactForm.ruc.length !== 11) {
-      alert('El RUC debe tener 11 dígitos.');
+      this.mostrarError('RUC inválido', 'El RUC debe tener 11 dígitos.');
       return false;
     }
 
     if (this.contactForm.ruc && !this.contactForm.razonSocial) {
-      alert('Valida el RUC para obtener la razón social.');
+      this.mostrarError('RUC sin validar', 'Valida el RUC para obtener la razón social.');
       return false;
     }
 
     return true;
+  }
+
+  private mostrarError(titulo: string, mensaje: string): void {
+    void this.dialogo.alerta({
+      tipo: 'error',
+      titulo,
+      mensaje,
+      textoAceptar: 'Entendido',
+      icono: 'error'
+    });
   }
 
   contactMethods: ContactMethod[] = [

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { buildWhatsappUrl } from '../../shared/data/company-info';
 import { RucLookupService } from '../../shared/services/ruc-lookup.service';
+import { DialogoSistemaService } from '../../compartido/servicios/dialogo-sistema.service';
 
 interface QuoteItem {
   id: number;
@@ -36,7 +37,10 @@ export class Quotation implements OnInit {
   rucSearching = false;
   rucMessage = '';
 
-  constructor(private rucLookupService: RucLookupService) {}
+  constructor(
+    private rucLookupService: RucLookupService,
+    private dialogo: DialogoSistemaService
+  ) {}
 
   ngOnInit(): void {
     this.loadItems();
@@ -75,8 +79,15 @@ export class Quotation implements OnInit {
     this.saveItems();
   }
 
-  clearQuote(): void {
-    const confirmClear = confirm('¿Deseas limpiar toda la lista de cotización?');
+  async clearQuote(): Promise<void> {
+    const confirmClear = await this.dialogo.confirmar({
+      tipo: 'confirmacion',
+      titulo: 'Limpiar cotización',
+      mensaje: '¿Deseas limpiar toda la lista de cotización?',
+      textoAceptar: 'Sí, limpiar',
+      textoCancelar: 'Cancelar',
+      icono: 'delete_sweep'
+    });
 
     if (!confirmClear) {
       return;
@@ -84,6 +95,14 @@ export class Quotation implements OnInit {
 
     this.items = [];
     localStorage.removeItem(this.storageKey);
+
+    await this.dialogo.alerta({
+      tipo: 'exito',
+      titulo: 'Cotización limpia',
+      mensaje: 'Se eliminaron todos los productos de la cotización.',
+      textoAceptar: 'Listo',
+      icono: 'check_circle'
+    });
   }
 
   onRucInput(): void {
@@ -133,31 +152,45 @@ export class Quotation implements OnInit {
 
   private validateQuoteForm(): boolean {
     if (this.items.length === 0) {
-      alert('Agrega al menos un producto a la cotización.');
+      this.mostrarError(
+        'Cotización incompleta',
+        'Agrega al menos un producto a la cotización.',
+        'shopping_cart'
+      );
       return false;
     }
 
     if (!this.quoteForm.nombre.trim()) {
-      alert('Ingresa tu nombre completo.');
+      this.mostrarError('Campo obligatorio', 'Ingresa tu nombre completo.');
       return false;
     }
 
     if (!this.quoteForm.telefono.trim()) {
-      alert('Ingresa tu número de teléfono.');
+      this.mostrarError('Campo obligatorio', 'Ingresa tu número de teléfono.');
       return false;
     }
 
     if (this.quoteForm.ruc && this.quoteForm.ruc.length !== 11) {
-      alert('El RUC debe tener 11 dígitos.');
+      this.mostrarError('RUC inválido', 'El RUC debe tener 11 dígitos.');
       return false;
     }
 
     if (this.quoteForm.ruc && !this.quoteForm.razonSocial) {
-      alert('Valida el RUC para obtener la razón social.');
+      this.mostrarError('RUC sin validar', 'Valida el RUC para obtener la razón social.');
       return false;
     }
 
     return true;
+  }
+
+  private mostrarError(titulo: string, mensaje: string, icono = 'error'): void {
+    void this.dialogo.alerta({
+      tipo: 'error',
+      titulo,
+      mensaje,
+      textoAceptar: 'Entendido',
+      icono
+    });
   }
 
   sendByWhatsapp(): void {

@@ -9,6 +9,15 @@ import { Contact } from './public/contact/contact';
 import { About } from './public/about/about';
 import { PrivacyPolicy } from './public/privacy-policy/privacy-policy';
 import { TermsConditions } from './public/terms-conditions/terms-conditions';
+import { Ingreso } from './gestion-interna/acceso/ingreso';
+import { PlantillaGestion } from './gestion-interna/estructura/plantilla-gestion';
+import { accesoInternoGuard } from './gestion-interna/seguridad/acceso-interno.guard';
+import { InicioGestion } from './gestion-interna/paginas/inicio/inicio-gestion';
+import { ProductosGestion } from './gestion-interna/paginas/productos/productos-gestion';
+import { CategoriasGestion } from './gestion-interna/paginas/categorias/categorias-gestion';
+import { ServiciosGestion } from './gestion-interna/paginas/servicios/servicios-gestion';
+import { CertificacionesGestion } from './gestion-interna/paginas/certificaciones/certificaciones-gestion';
+import { ContactoGestion } from './gestion-interna/paginas/contacto/contacto-gestion';
 
 export const routes: Routes = [
   {
@@ -50,6 +59,46 @@ export const routes: Routes = [
   {
     path: 'terminos-condiciones',
     component: TermsConditions
+  },
+  {
+    path: 'portal-jmp-1622/ingreso',
+    component: Ingreso
+  },
+  {
+    path: 'portal-jmp-1622',
+    component: PlantillaGestion,
+    canActivate: [accesoInternoGuard],
+    children: [
+      {
+        path: '',
+        redirectTo: 'inicio',
+        pathMatch: 'full'
+      },
+      {
+        path: 'inicio',
+        component: InicioGestion
+      },
+      {
+        path: 'productos',
+        component: ProductosGestion
+      },
+      {
+        path: 'categorias',
+        component: CategoriasGestion
+      },
+      {
+        path: 'servicios',
+        component: ServiciosGestion
+      },
+      {
+        path: 'certificaciones',
+        component: CertificacionesGestion
+      },
+      {
+        path: 'contacto',
+        component: ContactoGestion
+      }
+    ]
   },
   {
     path: '**',

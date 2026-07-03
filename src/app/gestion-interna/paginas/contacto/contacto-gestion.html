@@ -1,0 +1,153 @@
+<section class="pagina-contacto">
+  <div class="encabezado-pagina">
+    <div>
+      <small>Configuración general</small>
+      <h1>Contacto</h1>
+      <p>Administra los datos de contacto según la tabla configuracion_contacto.</p>
+    </div>
+
+    <button type="button" class="boton-secundario" (click)="restaurarDatosBase()">
+      <span class="material-symbols-outlined">restart_alt</span>
+      Restaurar datos base
+    </button>
+  </div>
+
+  <div class="tarjeta-informativa">
+    <span class="material-symbols-outlined">info</span>
+    <p>
+      Esta vista solo usa los campos existentes en la tabla configuracion_contacto.
+      Razón social, teléfono y ubicación no se editan aquí porque no están en el modelo de BD.
+    </p>
+  </div>
+
+  <div class="grid-contacto">
+    <form class="tarjeta-formulario" (ngSubmit)="guardarConfiguracion()">
+      <div class="subtitulo-formulario">
+        <h2>Datos de contacto</h2>
+        <p>Estos datos se usarán para WhatsApp, correo, dirección, horario y ubicación en mapa.</p>
+      </div>
+
+      <div class="grid-formulario">
+        <label>
+          WhatsApp *
+          <input
+            type="text"
+            name="whatsapp"
+            inputmode="numeric"
+            [(ngModel)]="formulario.whatsapp"
+            (input)="limpiarSoloNumeros('whatsapp')"
+            placeholder="51949180383"
+          >
+        </label>
+
+        <label>
+          Correo *
+          <input
+            type="email"
+            name="correo"
+            [(ngModel)]="formulario.correo"
+            placeholder="contacto@jmpormar.com"
+          >
+        </label>
+
+        <label>
+          RUC *
+          <input
+            type="text"
+            name="ruc"
+            maxlength="11"
+            inputmode="numeric"
+            [(ngModel)]="formulario.ruc"
+            (input)="limpiarSoloNumeros('ruc')"
+            placeholder="20601234567"
+          >
+        </label>
+
+        <label>
+          Horario de atención *
+          <input
+            type="text"
+            name="horarioAtencion"
+            [(ngModel)]="formulario.horarioAtencion"
+            placeholder="Lunes a sábado, previa coordinación"
+          >
+        </label>
+      </div>
+
+      <label>
+        Dirección *
+        <input
+          type="text"
+          name="direccion"
+          [(ngModel)]="formulario.direccion"
+          placeholder="Dirección de la empresa"
+        >
+      </label>
+
+      <label>
+        Link de Google Maps
+        <input
+          type="text"
+          name="googleMapsUrl"
+          [(ngModel)]="formulario.googleMapsUrl"
+          placeholder="https://www.google.com/maps/..."
+        >
+      </label>
+
+      <div class="acciones-formulario">
+        <button type="button" class="boton-secundario" (click)="abrirWhatsapp()">
+          <span class="material-symbols-outlined">chat</span>
+          Probar WhatsApp
+        </button>
+
+        <button type="button" class="boton-secundario" (click)="abrirMapa()">
+          <span class="material-symbols-outlined">map</span>
+          Ver mapa
+        </button>
+
+        <button type="submit" class="boton-principal">
+          <span class="material-symbols-outlined">save</span>
+          Guardar cambios
+        </button>
+      </div>
+    </form>
+
+    <aside class="tarjeta-vista-previa">
+      <div class="vista-header">
+        <span class="material-symbols-outlined">visibility</span>
+        <div>
+          <h2>Vista previa</h2>
+          <p>Datos principales configurados.</p>
+        </div>
+      </div>
+
+      <div class="preview-lista">
+        <div>
+          <span class="material-symbols-outlined">badge</span>
+          <div><small>RUC</small><strong>{{ formulario.ruc || 'No indicado' }}</strong></div>
+        </div>
+        <div>
+          <span class="material-symbols-outlined">chat</span>
+          <div><small>WhatsApp</small><strong>{{ formulario.whatsapp || 'No indicado' }}</strong></div>
+        </div>
+        <div>
+          <span class="material-symbols-outlined">mail</span>
+          <div><small>Correo</small><strong>{{ formulario.correo || 'No indicado' }}</strong></div>
+        </div>
+        <div>
+          <span class="material-symbols-outlined">location_on</span>
+          <div><small>Dirección</small><strong>{{ formulario.direccion || 'No indicado' }}</strong></div>
+        </div>
+        <div>
+          <span class="material-symbols-outlined">schedule</span>
+          <div><small>Horario</small><strong>{{ formulario.horarioAtencion || 'No indicado' }}</strong></div>
+        </div>
+      </div>
+
+      <div class="nota-contacto">
+        <span class="material-symbols-outlined">database</span>
+        <p>Campos usados: whatsapp, correo, direccion, horario_atencion, ruc y google_maps_url.</p>
+      </div>
+    </aside>
+  </div>
+</section>

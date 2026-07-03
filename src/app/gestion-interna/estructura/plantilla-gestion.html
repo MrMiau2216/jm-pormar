@@ -1,0 +1,75 @@
+<div
+  class="contenedor-gestion"
+  [class.menu-contraido]="menuContraido"
+  [class.menu-movil-abierto]="menuMovilAbierto"
+>
+  <div class="capa-menu-movil" (click)="cerrarMenuMovil()"></div>
+
+  <aside class="menu-lateral">
+    <div class="marca-panel">
+      <div class="icono-marca">JM</div>
+
+      <div class="texto-marca">
+        <strong>JM Pormar</strong>
+        <small>Gestión interna</small>
+      </div>
+    </div>
+
+    <nav class="opciones-menu">
+      <a
+        *ngFor="let opcion of opcionesMenu"
+        [routerLink]="opcion.ruta"
+        routerLinkActive="activo"
+        (click)="cerrarMenuMovil()"
+      >
+        <span class="material-symbols-outlined">{{ opcion.icono }}</span>
+        <span class="texto-opcion">{{ opcion.texto }}</span>
+      </a>
+    </nav>
+
+    <button type="button" class="boton-salir" (click)="cerrarSesion()">
+      <span class="material-symbols-outlined">logout</span>
+      <span class="texto-opcion">Cerrar sesión</span>
+    </button>
+  </aside>
+
+  <section class="contenido-gestion">
+    <header class="barra-superior">
+      <div class="lado-izquierdo-topbar">
+        <button
+          type="button"
+          class="boton-menu"
+          aria-label="Alternar menú"
+          (click)="alternarMenu()"
+        >
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+
+        <div>
+          <strong>JM Pormar Admin</strong>
+          <small>Panel de gestión interna</small>
+        </div>
+      </div>
+
+      <div class="lado-derecho-topbar">
+        <a routerLink="/" class="enlace-publico">
+          <span class="material-symbols-outlined">public</span>
+          Ver sitio público
+        </a>
+
+        <div class="usuario-panel">
+          <div class="avatar-usuario">A</div>
+
+          <div>
+            <strong>{{ nombreUsuario }}</strong>
+            <small>Sesión activa</small>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="contenido-pagina">
+      <router-outlet></router-outlet>
+    </main>
+  </section>
+</div>

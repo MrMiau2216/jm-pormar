@@ -1,0 +1,84 @@
+<section class="pagina-inicio">
+  <div class="encabezado-pagina">
+    <div>
+      <small>Panel de control</small>
+      <h1>Dashboard</h1>
+      <p>Resumen general del contenido administrable de la web.</p>
+    </div>
+  </div>
+
+  <div class="grid-resumen">
+    <a
+      class="tarjeta-resumen"
+      *ngFor="let tarjeta of tarjetas"
+      [routerLink]="tarjeta.ruta"
+    >
+      <div>
+        <small>{{ tarjeta.titulo }}</small>
+        <h2>{{ tarjeta.cantidad }}</h2>
+        <p>{{ tarjeta.descripcion }}</p>
+      </div>
+
+      <span class="material-symbols-outlined">{{ tarjeta.icono }}</span>
+    </a>
+
+    <a class="tarjeta-contacto" routerLink="/portal-jmp-1622/contacto">
+      <span class="material-symbols-outlined">contact_phone</span>
+      <h3>Contacto</h3>
+      <p>Datos configurados</p>
+      <strong>Editar datos</strong>
+    </a>
+  </div>
+
+  <div class="grid-inferior">
+    <section class="tarjeta-accesos">
+      <div class="titulo-tarjeta">
+        <span class="material-symbols-outlined">bolt</span>
+        <h2>Accesos rápidos</h2>
+      </div>
+
+      <div class="acciones-rapidas">
+        <a routerLink="/portal-jmp-1622/productos" class="accion-principal">
+          <span class="material-symbols-outlined">add</span>
+          Agregar producto
+        </a>
+
+        <a routerLink="/portal-jmp-1622/servicios" class="accion-secundaria">
+          <span class="material-symbols-outlined">add</span>
+          Agregar servicio
+        </a>
+
+        <a routerLink="/portal-jmp-1622/certificaciones" class="accion-borde">
+          <span class="material-symbols-outlined">add</span>
+          Agregar certificación
+        </a>
+
+        <a routerLink="/" class="accion-publica">
+          <span class="material-symbols-outlined">public</span>
+          Ver sitio público
+        </a>
+      </div>
+    </section>
+
+    <section class="tarjeta-actividad">
+      <div class="titulo-tarjeta">
+        <span class="material-symbols-outlined">history</span>
+        <h2>Actividad reciente</h2>
+      </div>
+
+      <div class="lista-actividad">
+        <article class="item-actividad" *ngFor="let actividad of actividades">
+          <div class="icono-actividad">
+            <span class="material-symbols-outlined">{{ actividad.icono }}</span>
+          </div>
+
+          <div>
+            <strong>{{ actividad.titulo }}</strong>
+            <p>{{ actividad.detalle }}</p>
+            <small>{{ actividad.fecha }} · Administrador</small>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>
