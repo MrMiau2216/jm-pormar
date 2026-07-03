@@ -1,0 +1,352 @@
+<section class="hero" id="inicio">
+  <div class="section-container hero-content">
+    <div class="hero-text">
+      <span class="hero-label">Abastecimiento y servicios para empresas</span>
+
+      <h1>Soluciones integrales para obras, empresas y proyectos</h1>
+
+      <p>
+        Abastecimiento de materiales, ferretería, herramientas y servicios para atender
+        requerimientos empresariales y operativos.
+      </p>
+
+      <div class="hero-actions">
+        <button type="button" class="btn btn-primary" (click)="openGeneralWhatsapp()">
+          <span class="material-symbols-outlined">chat</span>
+          Cotizar por WhatsApp
+        </button>
+
+        <a class="btn btn-secondary" href="#productos">
+          Ver productos
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sectors">
+  <div class="section-container">
+    <div class="section-title centered">
+      <h2>Sectores que atendemos</h2>
+      <span></span>
+    </div>
+
+    
+
+    <div class="sector-grid">
+      <article class="sector-card" *ngFor="let sector of sectors">
+        <div class="icon-circle">
+          <span class="material-symbols-outlined">{{ sector.icon }}</span>
+        </div>
+        <h3>{{ sector.title }}</h3>
+      </article>
+    </div>
+  </div>
+  
+</section>
+
+<section class="services" id="servicios">
+  <div class="section-container">
+    <div class="section-title centered">
+      <small>Nuestras capacidades</small>
+      <h2>Servicios principales</h2>
+      <p>Servicios orientados a empresas, obras, instituciones y proyectos.</p>
+    </div>
+
+    <div class="service-grid">
+      <article class="service-card" *ngFor="let service of services">
+        <div class="service-image">
+          <img [src]="service.image" [alt]="service.title">
+        </div>
+
+        <div class="service-body">
+          <h3>{{ service.title }}</h3>
+          <p>{{ service.description }}</p>
+
+          <a href="#contacto">
+            Solicitar cotización
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="products" id="productos">
+  <div class="section-container">
+    <div class="section-title centered">
+      <small>Nuestras líneas</small>
+      <h2>Nuestras líneas de productos</h2>
+      <p>
+        Suministros certificados de alta rotación para obras, empresas e instituciones.
+      </p>
+    </div>
+
+    <div class="category-grid">
+      <article class="category-card" *ngFor="let category of categories">
+        <div class="category-icon">
+          <span class="material-symbols-outlined">{{ category.icon }}</span>
+        </div>
+
+        <strong>{{ category.name }}</strong>
+      </article>
+    </div>
+
+    <div class="center-action">
+      <a class="btn btn-dark" routerLink="/productos">
+        Ver catálogo completo
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="nosotros">
+  <div class="section-container about-grid">
+    <div class="about-images">
+      <img src="/images/about-obra.jpg" alt="Infraestructura y obras">
+      <img src="/images/about-calidad.jpg" alt="Calidad y servicios">
+
+      <div class="about-badge">
+        <span class="material-symbols-outlined">verified</span>
+        <p>Atención directa para empresas y proyectos</p>
+      </div>
+    </div>
+
+    <div class="about-content">
+      <small>Sobre JM Pormar</small>
+
+      <h2>Nuestra institución</h2>
+
+      <div class="company-name">
+        INVERSIONES JM PORMAR BIENES Y SERVICIOS E.I.R.L.
+      </div>
+
+      <p>
+        Somos una empresa peruana dedicada al abastecimiento de materiales de construcción,
+        artículos de ferretería, herramientas, equipos y servicios orientados a obras,
+        empresas y proyectos.
+      </p>
+
+      <p>
+        Nos enfocamos en brindar atención responsable, comunicación directa y soluciones
+        oportunas según los requerimientos de cada cliente. Nuestro objetivo es apoyar la
+        continuidad de sus operaciones mediante una atención clara, rápida y confiable.
+      </p>
+
+      <a class="btn btn-dark" href="#contacto">
+        Solicitar cotización
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="section-container">
+    <div class="section-title centered light">
+      <h2>¿Por qué elegirnos?</h2>
+      <p>
+        Diferenciales que fortalecen nuestra propuesta de valor institucional.
+      </p>
+    </div>
+
+    <div class="reason-grid">
+      <article class="reason-card" *ngFor="let reason of reasons">
+        <span class="material-symbols-outlined">{{ reason.icon }}</span>
+
+        <h3>{{ reason.title }}</h3>
+
+        <p>{{ reason.description }}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<section class="stats">
+  <div class="section-container stats-card">
+    <div class="stat-item">
+      <strong>Desde 2023</strong>
+      <span>Inicio de actividades</span>
+    </div>
+
+    <div class="stat-item">
+      <strong>4</strong>
+      <span>Certificaciones</span>
+    </div>
+
+    <div class="stat-item">
+      <strong>+100</strong>
+      <span>Clientes corporativos</span>
+    </div>
+
+    <div class="stat-item">
+      <strong>24/7</strong>
+      <span>Atención directa</span>
+    </div>
+  </div>
+</section>
+
+
+<section class="certifications">
+  <div class="section-container">
+    <div class="section-title centered">
+      <small>Excelencia certificada</small>
+      <h2>Certificaciones que respaldan nuestro compromiso</h2>
+      <p>
+        Contamos con certificaciones orientadas a la calidad, gestión ambiental,
+        buenas prácticas laborales y cumplimiento empresarial.
+      </p>
+    </div>
+
+    <div class="cert-grid">
+      <article class="cert-card" *ngFor="let certification of certifications">
+        <strong>{{ certification.name }}</strong>
+        <span>{{ certification.detail }}</span>
+      </article>
+    </div>
+
+    <div class="center-action">
+      <a class="btn btn-dark" routerLink="/nosotros">
+        Conócenos más
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="clients">
+  <div class="section-container">
+    <div class="section-title centered">
+      <small>Confianza empresarial</small>
+      <h2>Clientes que confiaron en nosotros</h2>
+      <p>
+        Empresas e instituciones que han confiado en nuestras soluciones.
+      </p>
+    </div>
+
+    <div class="client-carousel" [class.is-carousel]="shouldCarousel">
+      <div class="client-track">
+        <article class="client-card" *ngFor="let client of visibleClients">
+          <ng-container *ngIf="client.logo; else clientName">
+            <img [src]="client.logo" [alt]="client.name">
+          </ng-container>
+
+          <ng-template #clientName>
+            <span>{{ client.name }}</span>
+          </ng-template>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quote" id="contacto">
+  <div class="section-container quote-card">
+    <div class="quote-form">
+      <small>Canal de ventas</small>
+
+      <h2>Solicita tu cotización</h2>
+
+      <p>
+        Complete el formulario y un asesor especializado atenderá su requerimiento
+        directamente por WhatsApp.
+      </p>
+
+      <form>
+        <label>
+          Nombre completo *
+          <input
+            type="text"
+            name="nombre"
+            [(ngModel)]="quoteForm.nombre"
+            placeholder="Ej: Juan Pérez"
+          >
+        </label>
+
+        <label>
+          Empresa / Institución
+          <input
+            type="text"
+            name="empresa"
+            [(ngModel)]="quoteForm.empresa"
+            placeholder="Ej: Constructora S.A."
+          >
+        </label>
+
+        <label>
+          RUC
+          <input
+            type="text"
+            name="ruc"
+            [(ngModel)]="quoteForm.ruc"
+            maxlength="11"
+            inputmode="numeric"
+            placeholder="Ej: 20601234567"
+            (input)="onRucInput()"
+            (blur)="searchRuc()"
+          >
+
+          <small class="ruc-message" *ngIf="rucMessage">
+            {{ rucMessage }}
+          </small>
+        </label>
+
+        <label>
+          Razón social
+          <input
+            type="text"
+            name="razonSocial"
+            [(ngModel)]="quoteForm.razonSocial"
+            placeholder="Se completará automáticamente con el RUC"
+            readonly
+          >
+        </label>
+
+        <label>
+          Teléfono *
+          <input
+            type="text"
+            name="telefono"
+            [(ngModel)]="quoteForm.telefono"
+            placeholder="Ej: 987654321"
+          >
+        </label>
+
+        <label>
+          Detalle del requerimiento *
+          <textarea
+            name="detalle"
+            rows="4"
+            [(ngModel)]="quoteForm.detalle"
+            placeholder="Describe los productos o servicios que necesitas..."
+          ></textarea>
+        </label>
+
+        <button type="button" class="btn btn-primary full" (click)="sendQuote()">
+          <span class="material-symbols-outlined">send</span>
+          Enviar consulta por WhatsApp
+        </button>
+      </form>
+    </div>
+
+    <div class="quote-info">
+      <div class="contact-card">
+        <span class="material-symbols-outlined">call</span>
+
+        <small>Atención inmediata</small>
+
+        <strong>+51 949 180 383</strong>
+
+        <p>contacto&#64;jmpormar.com</p>
+
+        <a class="btn btn-dark full" routerLink="/contacto">
+          Ver datos de contacto
+        </a>
+
+        <span class="location">Lima, Perú</span>
+      </div>
+    </div>
+  </div>
+</section>

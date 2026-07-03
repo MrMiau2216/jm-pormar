@@ -1,0 +1,163 @@
+<section class="catalog-hero">
+  <div class="section-container">
+    <span>Catálogo empresarial</span>
+
+    <h1>Catálogo de productos</h1>
+
+    <p>
+      Encuentra materiales, herramientas, equipos y artículos de ferretería para
+      obras, empresas y proyectos.
+    </p>
+
+    <a class="hero-button" href="#catalogo">
+      Ver productos
+    </a>
+  </div>
+</section>
+
+<section class="catalog" id="catalogo">
+  <div class="section-container">
+    <div class="catalog-header">
+      <div>
+        <small>Productos disponibles</small>
+        <h2>Explora nuestro catálogo</h2>
+        <p>
+          Agrega productos a tu lista de cotización y envía tu requerimiento por WhatsApp.
+        </p>
+      </div>
+
+      <a class="quote-button" routerLink="/cotizacion">
+        <span class="material-symbols-outlined">receipt_long</span>
+        Mi cotización ({{ quoteCount }})
+      </a>
+    </div>
+
+    <div class="filters-card">
+      <div class="search-wrapper">
+        <label class="search-box">
+          <span class="material-symbols-outlined">search</span>
+
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchTyping()"
+            (keyup.enter)="applySearch()"
+            (focus)="onSearchTyping()"
+            placeholder="Buscar por producto, código o categoría..."
+          >
+
+          <button type="button" class="search-action" (click)="applySearch()">
+            Buscar
+          </button>
+        </label>
+
+        <div class="suggestions-box" *ngIf="showSuggestions && searchSuggestions.length > 0">
+          <button
+            type="button"
+            class="suggestion-item"
+            *ngFor="let product of searchSuggestions"
+            (click)="selectSuggestion(product)"
+          >
+            <div>
+              <strong>{{ product.name }}</strong>
+              <span>{{ product.category }} · {{ product.code }}</span>
+            </div>
+
+            <span class="material-symbols-outlined">north_west</span>
+          </button>
+        </div>
+      </div>
+
+      <select [(ngModel)]="selectedCategory" (change)="onFilterChange()">
+        <option *ngFor="let category of categories" [value]="category">
+          {{ category === 'TODAS' ? 'Todas las categorías' : category }}
+        </option>
+      </select>
+
+      <button type="button" class="clear-button" (click)="resetFilters()">
+        Limpiar filtros
+      </button>
+    </div>
+
+    <div class="category-chips">
+      <button
+        type="button"
+        *ngFor="let category of categories"
+        [class.active]="selectedCategory === category"
+        (click)="selectedCategory = category; onFilterChange()"
+      >
+        {{ category === 'TODAS' ? 'Todo' : category }}
+      </button>
+    </div>
+
+    <div class="empty-state" *ngIf="filteredProducts.length === 0">
+      <span class="material-symbols-outlined">inventory_2</span>
+      <h3>No se encontraron productos</h3>
+      <p>Prueba con otra búsqueda o limpia los filtros aplicados.</p>
+      <button type="button" class="clear-button" (click)="resetFilters()">
+        Limpiar filtros
+      </button>
+    </div>
+
+    <div class="product-grid" *ngIf="filteredProducts.length > 0">
+      <article class="product-card" *ngFor="let product of pagedProducts">
+        <div class="product-image">
+          <img [src]="product.image" [alt]="product.name">
+
+          <span class="availability" [class.not-available]="!product.available">
+            {{ product.available ? 'Disponible' : 'No disponible' }}
+          </span>
+        </div>
+
+        <div class="product-body">
+          <span class="category">{{ product.category }}</span>
+
+          <h3>{{ product.name }}</h3>
+
+          <p>{{ product.shortDescription }}</p>
+
+          <div class="product-meta">
+            <span>Código: {{ product.code }}</span>
+            <span>Categoría: {{ product.category }}</span>
+          </div>
+
+          <div class="product-actions">
+            <a class="outline-button" [routerLink]="['/productos', product.id]">
+              <span class="material-symbols-outlined">visibility</span>
+              Ver detalle
+            </a>
+
+            <button
+              type="button"
+              class="add-button"
+              [disabled]="!product.available"
+              (click)="addToQuote(product)"
+            >
+              <span class="material-symbols-outlined">add_shopping_cart</span>
+              Agregar
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="pagination" *ngIf="filteredProducts.length > pageSize">
+      <button type="button" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
+
+      <button
+        type="button"
+        *ngFor="let page of pages"
+        [class.active]="page === currentPage"
+        (click)="changePage(page)"
+      >
+        {{ page }}
+      </button>
+
+      <button type="button" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+        <span class="material-symbols-outlined">chevron_right</span>
+      </button>
+    </div>
+  </div>
+</section>

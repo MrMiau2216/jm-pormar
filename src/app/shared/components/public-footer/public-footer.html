@@ -1,0 +1,57 @@
+<footer class="public-footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <h3>{{ company.shortName }}</h3>
+
+      <p>
+        Empresa peruana dedicada al abastecimiento de materiales de construcción,
+        artículos de ferretería, herramientas, equipos y servicios generales para
+        obras, empresas, instituciones y proyectos.
+      </p>
+    </div>
+
+    <div class="footer-section">
+      <h4>Navegación</h4>
+      <a routerLink="/">Inicio</a>
+      <a routerLink="/nosotros">Nosotros</a>
+      <a routerLink="/productos">Productos</a>
+      <a routerLink="/servicios">Servicios</a>
+      <a routerLink="/contacto">Contáctanos</a>
+    </div>
+
+    <div class="footer-section">
+      <h4>Institucional</h4>
+      <a routerLink="/certificaciones">Certificaciones ISO</a>
+      <a routerLink="/politica-privacidad">Política de privacidad</a>
+      <a routerLink="/terminos-condiciones">Términos y condiciones</a>
+
+      <p class="footer-note">
+        La información del catálogo es referencial. La disponibilidad y condiciones
+        finales se confirman mediante cotización.
+      </p>
+    </div>
+
+    <div class="footer-section footer-contact">
+      <h4>Sede central</h4>
+
+      <div class="mini-map">
+        <div class="mini-map-grid"></div>
+
+        <div class="mini-map-pin">
+          <span class="material-symbols-outlined">location_on</span>
+        </div>
+
+        <small>{{ company.location }}</small>
+      </div>
+
+      <p><strong>Razón social:</strong> {{ company.name }}</p>
+      <p><strong>RUC:</strong> {{ company.ruc }}</p>
+      <p><strong>Correo:</strong> {{ company.email }}</p>
+      <p><strong>Teléfono:</strong> {{ company.phoneDisplay }}</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2024 {{ company.shortName }}. Todos los derechos reservados.</p>
+  </div>
+</footer>
