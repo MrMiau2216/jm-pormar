@@ -34,7 +34,28 @@ export class Quotation implements OnInit {
 
   increaseQuantity(item: QuoteItem): void { this.quoteService.increase(item.id); }
   decreaseQuantity(item: QuoteItem): void { this.quoteService.decrease(item.id); }
-  removeItem(itemId: string): void { this.quoteService.remove(itemId); }
+async removeItem(
+  item: QuoteItem
+): Promise<void> {
+  const result =
+    await this.sweetAlert.confirmar(
+      '¿Retirar producto?',
+      `Se retirará "${item.name}" de la cotización.`,
+      'Sí, retirar',
+      'Cancelar'
+    );
+
+  if (!result.isConfirmed) {
+    return;
+  }
+
+  this.quoteService.remove(item.id);
+
+  void this.sweetAlert.toast(
+    'Producto retirado',
+    'success'
+  );
+}
 
   async clearQuote(): Promise<void> {
     const result = await this.sweetAlert.confirmar(

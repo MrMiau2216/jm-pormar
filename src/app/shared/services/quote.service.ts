@@ -15,7 +15,7 @@ private readonly expirationKey =
   'jm_pormar_quote_expires_at';
 
 private readonly quoteLifetimeMs =
-  24 * 60 * 60 * 1000; // 24 horas
+  7 * 24 * 60 * 60 * 1000;// 7 días en milisegundos
 
 private expirationTimer?: ReturnType<typeof setTimeout>;
 
