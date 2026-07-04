@@ -1,0 +1,270 @@
+<section
+  class="detail-page"
+  *ngIf="loading()"
+>
+  <div class="section-container">
+    <div class="empty-state">
+      <h2>Cargando producto...</h2>
+    </div>
+  </div>
+</section>
+
+<section
+  class="detail-page"
+  *ngIf="!loading() && errorMessage()"
+>
+  <div class="section-container">
+    <nav class="breadcrumb">
+      <a routerLink="/">Inicio</a>
+      <span>/</span>
+      <a routerLink="/productos">Productos</a>
+    </nav>
+
+    <div class="empty-state">
+      <span class="material-symbols-outlined">
+        inventory_2
+      </span>
+
+      <h2>No se pudo mostrar el producto</h2>
+
+      <p>{{ errorMessage() }}</p>
+
+      <a
+        class="btn btn-primary"
+        routerLink="/productos"
+      >
+        Volver al catálogo
+      </a>
+    </div>
+  </div>
+</section>
+
+<section
+  class="detail-page"
+  *ngIf="!loading() && product() as current"
+>
+  <div class="section-container">
+    <nav class="breadcrumb">
+      <a routerLink="/">Inicio</a>
+      <span>/</span>
+      <a routerLink="/productos">Productos</a>
+      <span>/</span>
+      <span>{{ current.nombre }}</span>
+    </nav>
+
+    <div class="detail-grid">
+      <div class="gallery">
+        <div class="main-image">
+          <img
+            [src]="selectedImage()"
+            [alt]="current.nombre"
+          >
+        </div>
+
+        <div
+          class="thumbs"
+          *ngIf="gallery().length > 1"
+        >
+          <button
+            type="button"
+            class="thumb"
+            *ngFor="let image of gallery()"
+            [class.active]="image === selectedImage()"
+            (click)="selectImage(image)"
+          >
+            <img
+              [src]="image"
+              [alt]="current.nombre"
+            >
+          </button>
+        </div>
+      </div>
+
+      <div class="product-info">
+        <div class="badges">
+          <span class="category">
+            {{ current.categoria }}
+          </span>
+
+          <span
+            class="availability"
+            [class.not-available]="
+              current.disponibilidad === 'NO_DISPONIBLE'
+            "
+          >
+            {{
+              current.disponibilidad === 'DISPONIBLE'
+                ? 'Disponible'
+                : 'No disponible'
+            }}
+          </span>
+        </div>
+
+        <h1>{{ current.nombre }}</h1>
+
+        <div class="meta">
+          <span>
+            Código:
+            <strong>{{ current.codigoSku }}</strong>
+          </span>
+
+          <span>
+            Categoría:
+            <strong>{{ current.categoria }}</strong>
+          </span>
+        </div>
+
+        <p class="summary">
+          {{ current.descripcionBreve }}
+        </p>
+
+        <div
+          class="features-box"
+          *ngIf="characteristics().length > 0"
+        >
+          <h3>Características principales</h3>
+
+          <ul>
+            <li
+              *ngFor="let item of characteristics()"
+            >
+              <span class="material-symbols-outlined">
+                check
+              </span>
+              {{ item }}
+            </li>
+          </ul>
+        </div>
+
+        <div class="quantity-box">
+          <span>Cantidad referencial</span>
+
+          <div class="quantity-control">
+            <button
+              type="button"
+              (click)="decreaseQuantity()"
+            >
+              -
+            </button>
+
+            <strong>{{ quantity() }}</strong>
+
+            <button
+              type="button"
+              (click)="increaseQuantity()"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button
+            type="button"
+            class="btn btn-primary full"
+            [disabled]="
+              current.disponibilidad !== 'DISPONIBLE'
+            "
+            (click)="addToQuote()"
+          >
+            <span class="material-symbols-outlined">
+              playlist_add
+            </span>
+            Agregar a cotización
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-outline full"
+            (click)="quoteByWhatsapp()"
+          >
+            <span class="material-symbols-outlined">
+              chat
+            </span>
+            Cotizar este producto por WhatsApp
+          </button>
+
+          <a
+            class="back-link"
+            routerLink="/productos"
+          >
+            <span class="material-symbols-outlined">
+              arrow_back
+            </span>
+            Volver al catálogo
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <section class="description-section">
+      <div class="description-text">
+        <h2>Descripción del producto</h2>
+        <p>{{ current.descripcionCompleta }}</p>
+      </div>
+
+      <div
+        class="spec-table"
+        *ngIf="specifications().length > 0"
+      >
+        <h2>Especificaciones técnicas</h2>
+
+        <div
+          class="spec-row"
+          *ngFor="let spec of specifications()"
+        >
+          <span>{{ spec.label }}</span>
+          <strong>{{ spec.value }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="related"
+      *ngIf="relatedProducts().length > 0"
+    >
+      <div class="section-title">
+        <small>Productos relacionados</small>
+        <h2>
+          Más productos de {{ current.categoria }}
+        </h2>
+        <p>
+          También puedes revisar otros productos
+          disponibles dentro de esta categoría.
+        </p>
+      </div>
+
+      <div class="related-grid">
+        <article
+          class="related-card"
+          *ngFor="let item of relatedProducts()"
+        >
+          <div class="related-image">
+            <img
+              [src]="imageUrl(item.imagenPrincipalUrl)"
+              [alt]="item.nombre"
+            >
+          </div>
+
+          <div class="related-body">
+            <span>{{ item.categoria }}</span>
+            <h3>{{ item.nombre }}</h3>
+            <p>{{ item.descripcionBreve }}</p>
+
+            <a
+              [routerLink]="[
+                '/productos',
+                item.idProducto
+              ]"
+            >
+              Ver detalle
+              <span class="material-symbols-outlined">
+                arrow_forward
+              </span>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>

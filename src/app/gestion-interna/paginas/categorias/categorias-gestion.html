@@ -1,0 +1,172 @@
+<section class="pagina-categorias">
+  <div class="encabezado-pagina">
+    <div>
+      <small>Gestión de catálogo</small>
+      <h1>Categorías</h1>
+      <p>Administra las categorías registradas según la tabla categoria.</p>
+    </div>
+
+    <button type="button" class="boton-principal" (click)="abrirNuevaCategoria()">
+      <span class="material-symbols-outlined">add</span>
+      Nueva categoría
+    </button>
+  </div>
+
+  <div class="tarjeta-informativa">
+    <span class="material-symbols-outlined">info</span>
+    <p>
+      Las categorías permiten organizar los productos del catálogo público.
+      No se define orden manual porque la tabla categoria no contempla ese campo.
+    </p>
+  </div>
+
+  <div class="tarjeta-filtros">
+    <label class="buscador">
+      <span class="material-symbols-outlined">search</span>
+      <input
+        type="text"
+        [(ngModel)]="terminoBusqueda"
+        placeholder="Buscar por nombre o descripción..."
+      >
+    </label>
+
+    <select [(ngModel)]="filtroEstado" aria-label="Filtrar por estado">
+      <option value="TODOS">Todos</option>
+      <option value="ACTIVOS">Activas</option>
+      <option value="INACTIVOS">Inactivas</option>
+    </select>
+
+    <button type="button" class="boton-limpiar" (click)="limpiarFiltros()">Limpiar</button>
+  </div>
+
+  <div class="tarjeta-tabla">
+    <div class="resumen-tabla">
+      <strong>{{ categoriasFiltradas.length }}</strong>
+      <span>categorías encontradas</span>
+    </div>
+
+    <div class="tabla-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Estado web</th>
+            <th>Última actualización</th>
+            <th class="columna-acciones">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let categoria of categoriasFiltradas">
+            <td data-label="Categoría"><strong class="nombre-categoria">{{ categoria.nombre }}</strong></td>
+            <td data-label="Descripción"><span class="descripcion-categoria">{{ categoria.descripcion }}</span></td>
+            <td data-label="Estado web">
+              <span class="estado" [class.inactivo]="!categoria.activo">
+                {{ categoria.activo ? 'Activa' : 'Inactiva' }}
+              </span>
+            </td>
+            <td data-label="Última actualización">
+              <span class="texto-muted">
+                {{ categoria.fechaActualizacion | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+            </td>
+            <td class="acciones" data-label="Acciones">
+              <div class="acciones-contenedor">
+              <button
+                type="button"
+                class="boton-icono editar"
+                title="Editar"
+                aria-label="Editar categoría"
+                (click)="abrirEditarCategoria(categoria)"
+              >
+                <span class="material-symbols-outlined">edit</span>
+              </button>
+
+              <button
+                type="button"
+                class="boton-icono cambiar-estado"
+                title="Activar o desactivar"
+                aria-label="Activar o desactivar categoría"
+                (click)="cambiarEstado(categoria)"
+              >
+                <span class="material-symbols-outlined">
+                  {{ categoria.activo ? 'visibility_off' : 'visibility' }}
+                </span>
+              </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="categoriasFiltradas.length === 0">
+            <td colspan="5" class="sin-resultados">
+              No se encontraron categorías con los filtros seleccionados.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="fondo-modal" *ngIf="modalAbierto">
+  <div class="modal-categoria" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-categoria">
+    <div class="modal-encabezado">
+      <div>
+        <small>{{ modoEdicion ? 'Editar categoría' : 'Nueva categoría' }}</small>
+        <h2 id="titulo-modal-categoria">
+          {{ modoEdicion ? 'Modificar información' : 'Registrar categoría' }}
+        </h2>
+      </div>
+
+      <button type="button" class="boton-cerrar" aria-label="Cerrar" (click)="cerrarModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form class="formulario-categoria" #formCategoria="ngForm" (ngSubmit)="guardarCategoria(formCategoria)" novalidate>
+      <label>
+        Nombre de categoría *
+        <input
+          type="text"
+          name="nombre"
+          [(ngModel)]="formulario.nombre"
+          placeholder="Ej: Materiales"
+          required
+          minlength="3"
+          maxlength="100"
+        >
+      </label>
+
+      <label>
+        Descripción *
+        <textarea
+          name="descripcion"
+          rows="4"
+          [(ngModel)]="formulario.descripcion"
+          placeholder="Describe el tipo de productos que pertenecen a esta categoría..."
+          maxlength="2000"
+        ></textarea>
+      </label>
+
+      <div class="checks-formulario">
+        <label>
+          <input type="checkbox" name="activo" [(ngModel)]="formulario.activo">
+          Categoría activa en la web
+        </label>
+      </div>
+
+      <div class="nota-formulario">
+        <span class="material-symbols-outlined">info</span>
+        <p>Esta información corresponde directamente a los campos de la tabla categoria.</p>
+      </div>
+
+      <div class="acciones-modal">
+        <button type="button" class="boton-secundario" (click)="cerrarModal()">Cancelar</button>
+        <button type="submit" class="boton-principal" [disabled]="guardando">
+          {{ guardando ? 'Guardando...' : (modoEdicion ? 'Guardar cambios' : 'Registrar categoría') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,247 @@
+<section class="about-hero">
+  <div class="section-container hero-content">
+    <span>Sobre nuestra empresa</span>
+
+    <h1>Sobre JM Pormar</h1>
+
+    <p>
+      Conoce nuestra empresa, nuestro compromiso y el respaldo que nos permite
+      atender requerimientos para obras, empresas y proyectos.
+    </p>
+  </div>
+</section>
+
+<section class="who-we-are" id="nosotros-principal">
+  <div class="section-container about-grid">
+    <div class="about-image">
+      <img src="/images/about-equipo.jpg" alt="Equipo JM Pormar">
+    </div>
+
+    <div class="about-content">
+      <small>Abastecimiento y servicios empresariales</small>
+
+      <h2>Quiénes somos</h2>
+
+      <p>
+        <strong>INVERSIONES JM PORMAR BIENES Y SERVICIOS E.I.R.L.</strong>
+        es una empresa peruana dedicada al abastecimiento de materiales de construcción,
+        artículos de ferretería, herramientas, equipos y servicios generales orientados
+        a obras, empresas y proyectos.
+      </p>
+
+      <p>
+        Nuestro enfoque se basa en brindar atención responsable, comunicación directa
+        y soluciones oportunas según los requerimientos de cada cliente, contribuyendo
+        al desarrollo de operaciones, obras y proyectos con compromiso y confianza.
+      </p>
+
+      <button type="button" class="btn-primary" (click)="openWhatsapp()">
+        Solicitar información
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="mission-vision">
+  <div class="section-container mv-grid">
+    <article class="mv-card mission">
+      <div class="mv-icon">
+        <span class="material-symbols-outlined">track_changes</span>
+      </div>
+
+      <h2>Nuestra misión</h2>
+
+      <p>
+        Brindar productos y servicios orientados a obras, empresas y proyectos,
+        ofreciendo soluciones oportunas, atención responsable y acompañamiento directo
+        en cada requerimiento.
+      </p>
+    </article>
+
+    <article class="mv-card vision">
+      <div class="mv-icon">
+        <span class="material-symbols-outlined">visibility</span>
+      </div>
+
+      <h2>Nuestra visión</h2>
+
+      <p>
+        Ser una empresa reconocida en el abastecimiento de materiales, artículos de
+        ferretería, herramientas, equipos y servicios generales, destacando por la
+        confianza, cumplimiento y calidad de atención.
+      </p>
+    </article>
+  </div>
+</section>
+
+<section class="values">
+  <div class="section-container">
+    <div class="section-title centered">
+      <small>Nuestros principios</small>
+      <h2>Nuestros valores</h2>
+      <p>
+        Principios que guían nuestras operaciones y fortalecen la confianza con nuestros clientes.
+      </p>
+    </div>
+
+    <div class="values-grid">
+      <article class="value-card" *ngFor="let value of values">
+        <span class="material-symbols-outlined">{{ value.icon }}</span>
+
+        <h3>{{ value.title }}</h3>
+
+        <p>{{ value.description }}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="experience">
+  <div class="section-container">
+    <div class="experience-header">
+      <small>Nuestra experiencia</small>
+
+      <h2>Atención para obras, empresas e instituciones</h2>
+
+      <p>
+        Atendemos requerimientos relacionados con abastecimiento, materiales,
+        herramientas, servicios generales y soluciones para obras y proyectos.
+      </p>
+    </div>
+
+    <div class="experience-grid">
+      <article class="experience-card" *ngFor="let item of experience">
+        <span class="material-symbols-outlined">{{ item.icon }}</span>
+
+        <h3>{{ item.title }}</h3>
+
+        <p>{{ item.description }}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="about-certifications">
+  <div class="section-container">
+    <div class="section-title centered">
+      <small>Respaldo empresarial</small>
+      <h2>Certificaciones que respaldan nuestro compromiso</h2>
+      <p>
+        Contamos con certificaciones orientadas a la calidad, gestión ambiental,
+        buenas prácticas laborales y cumplimiento empresarial.
+      </p>
+    </div>
+
+    <div class="cert-grid">
+      <article class="cert-card" *ngFor="let certification of certifications">
+        <div class="cert-icon">
+          <span class="material-symbols-outlined">{{ certification.icon }}</span>
+        </div>
+
+        <h3>{{ certification.name }}</h3>
+
+        <p>{{ certification.detail }}</p>
+
+        <button type="button" (click)="openCertificate(certification)">
+          Ver certificado
+        </button>
+      </article>
+    </div>
+
+    <div class="center-action">
+      <a class="btn-more" routerLink="/certificaciones">
+        Ver más certificados
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="trust-band">
+  <div class="section-container trust-grid">
+    <article class="trust-item" *ngFor="let item of trustItems">
+      <span class="material-symbols-outlined">{{ item.icon }}</span>
+
+      <h3>{{ item.title }}</h3>
+
+      <p>{{ item.description }}</p>
+    </article>
+  </div>
+</section>
+
+<section class="about-clients">
+  <div class="section-container">
+    <div class="section-title centered">
+      <small>Confianza empresarial</small>
+      <h2>Clientes que confían en nosotros</h2>
+      <p>
+        Nuestro compromiso nos ha permitido colaborar con instituciones y empresas
+        que requieren atención responsable.
+      </p>
+    </div>
+
+    <div class="client-carousel" [class.is-carousel]="shouldCarousel">
+      <div class="client-track">
+        <article class="client-card" *ngFor="let client of visibleClients">
+          <ng-container *ngIf="client.logo; else clientName">
+            <img [src]="client.logo" [alt]="client.name">
+          </ng-container>
+
+          <ng-template #clientName>
+            <span>{{ client.name }}</span>
+          </ng-template>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about-cta">
+  <div class="section-container cta-card">
+    <h2>
+      Comunícate con nosotros y solicita información según los requerimientos
+      de tu empresa, obra o proyecto.
+    </h2>
+
+    <a routerLink="/contacto">
+      Deseo contactarlos
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+</section>
+
+<div class="certificate-backdrop" *ngIf="selectedCertification">
+  <div class="certificate-modal">
+    <div class="certificate-header">
+      <div>
+        <small>Vista previa del certificado</small>
+        <h2>{{ selectedCertification.name }}</h2>
+      </div>
+
+      <button type="button" class="close-button" (click)="closeCertificate()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="certificate-body">
+      <ng-container *ngIf="selectedCertification.fileType === 'PDF'; else imageCertificate">
+        <iframe [src]="safeCertificateUrl"></iframe>
+      </ng-container>
+
+      <ng-template #imageCertificate>
+        <img [src]="selectedCertification.fileUrl" [alt]="selectedCertification.name">
+      </ng-template>
+    </div>
+
+    <div class="certificate-footer">
+      <p>
+        Este certificado se muestra como vista previa.
+      </p>
+
+      <button type="button" (click)="closeCertificate()">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>

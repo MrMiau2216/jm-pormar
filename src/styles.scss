@@ -1,0 +1,64 @@
+:root {
+  --color-primary: #2B2F36;
+  --color-secondary: #5B616B;
+  --color-accent: #A67C52;
+  --color-accent-dark: #6E543B;
+  --color-background: #F5F3F0;
+  --color-surface: #FFFFFF;
+  --color-text: #202124;
+  --color-muted: #6B7280;
+  --color-border: #DDD8D2;
+  --color-whatsapp: #25D366;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', Arial, sans-serif;
+  background: var(--color-background);
+  color: var(--color-text);
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+}
+
+.section-container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+img {
+  max-width: 100%;
+}
+
+main {
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .section-container {
+    width: min(100% - 28px, 1180px);
+  }
+}
+
+@media (max-width: 480px) {
+  .section-container {
+    width: min(100% - 22px, 1180px);
+  }
+}

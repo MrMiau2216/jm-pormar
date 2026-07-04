@@ -1,0 +1,13 @@
+<app-public-header *ngIf="!esRutaInterna"></app-public-header>
+
+<main [class.ruta-interna]="esRutaInterna">
+  <router-outlet></router-outlet>
+</main>
+
+<app-public-footer *ngIf="!esRutaInterna"></app-public-footer>
+
+<app-whatsapp-floating-button *ngIf="!esRutaInterna"></app-whatsapp-floating-button>
+
+<app-dialogo-sistema></app-dialogo-sistema>
+
+<app-notificacion-sistema></app-notificacion-sistema>

@@ -1,0 +1,48 @@
+<section class="pagina-ingreso">
+  <div class="tarjeta-ingreso">
+    <div class="marca-ingreso">
+      <span class="material-symbols-outlined">admin_panel_settings</span>
+      <h1>JM Pormar</h1>
+      <p>Acceso de gestión interna</p>
+    </div>
+
+    <form class="formulario-ingreso" #formIngreso="ngForm" (ngSubmit)="ingresar(formIngreso)" novalidate>
+      <label>
+        Usuario o correo
+        <input
+          type="text"
+          name="usuario"
+          [(ngModel)]="usuario"
+          #usuarioControl="ngModel"
+          placeholder="admin o admin@jmpormar.com"
+          required
+          maxlength="150"
+          autocomplete="username"
+        >
+        <small class="mensaje-error" *ngIf="usuarioControl.touched && usuarioControl.invalid">El usuario o correo es obligatorio.</small>
+      </label>
+
+      <label>
+        Contraseña
+        <input
+          type="password"
+          name="clave"
+          [(ngModel)]="clave"
+          #claveControl="ngModel"
+          placeholder="Contraseña"
+          required
+          minlength="8"
+          maxlength="72"
+          autocomplete="current-password"
+        >
+        <small class="mensaje-error" *ngIf="claveControl.touched && claveControl.invalid">La contraseña debe tener entre 8 y 72 caracteres.</small>
+      </label>
+
+      <button type="submit" [disabled]="procesando">
+        {{ procesando ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+    </form>
+
+    <small>Acceso protegido mediante JWT y validado por el backend.</small>
+  </div>
+</section>

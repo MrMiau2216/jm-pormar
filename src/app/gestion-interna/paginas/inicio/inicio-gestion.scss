@@ -1,0 +1,266 @@
+.encabezado-pagina {
+  margin-bottom: 26px;
+
+  small {
+    color: var(--color-accent);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  h1 {
+    margin: 6px 0;
+    color: var(--color-primary);
+    font-size: 38px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 16px;
+  }
+}
+
+.grid-resumen {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 22px;
+  margin-bottom: 26px;
+}
+
+.tarjeta-resumen,
+.tarjeta-contacto,
+.tarjeta-accesos,
+.tarjeta-actividad {
+  background: white;
+  border: 1px solid #dfe4ee;
+  border-radius: 18px;
+  box-shadow: 0 14px 30px rgba(13, 34, 64, 0.06);
+}
+
+.tarjeta-resumen {
+  min-height: 148px;
+  padding: 24px;
+  color: inherit;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  transition: 0.18s ease;
+
+  small {
+    color: var(--color-primary);
+    font-weight: 900;
+    font-size: 15px;
+  }
+
+  h2 {
+    margin: 16px 0 6px;
+    font-size: 42px;
+    line-height: 1;
+    color: var(--color-primary);
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 14px;
+  }
+
+  > span {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    background: #f2e9df;
+    color: var(--color-accent-dark);
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 38px rgba(13, 34, 64, 0.1);
+  }
+}
+
+.tarjeta-contacto {
+  min-height: 148px;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: inherit;
+  transition: 0.18s ease;
+
+  > span {
+    color: var(--color-accent);
+    font-size: 36px;
+  }
+
+  h3 {
+    margin: 8px 0 4px;
+    color: var(--color-primary);
+    font-size: 20px;
+  }
+
+  p {
+    margin: 0 0 12px;
+    color: var(--color-muted);
+    font-size: 14px;
+  }
+
+  strong {
+    background: var(--color-primary);
+    color: white;
+    border-radius: 10px;
+    padding: 11px 18px;
+    font-size: 14px;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 38px rgba(13, 34, 64, 0.1);
+  }
+}
+
+.grid-inferior {
+  display: grid;
+  grid-template-columns: 0.8fr 1.6fr;
+  gap: 22px;
+}
+
+.tarjeta-accesos,
+.tarjeta-actividad {
+  padding: 24px;
+}
+
+.titulo-tarjeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+
+  span {
+    color: var(--color-accent);
+  }
+
+  h2 {
+    margin: 0;
+    color: var(--color-primary);
+    font-size: 26px;
+  }
+}
+
+.acciones-rapidas {
+  display: grid;
+  gap: 14px;
+
+  a {
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+.accion-principal {
+  background: var(--color-accent);
+  color: white;
+
+  &:hover {
+    background: var(--color-accent-dark);
+  }
+}
+
+.accion-secundaria {
+  background: var(--color-primary);
+  color: white;
+
+  &:hover {
+    background: #071b33;
+  }
+}
+
+.accion-borde {
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  background: white;
+
+  &:hover {
+    background: var(--color-primary);
+    color: white;
+  }
+}
+
+.accion-publica {
+  color: var(--color-accent-dark);
+  background: transparent;
+
+  &:hover {
+    background: var(--color-background);
+  }
+}
+
+.lista-actividad {
+  display: grid;
+  gap: 20px;
+}
+
+.item-actividad {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 14px;
+  align-items: start;
+
+  strong {
+    color: var(--color-primary);
+  }
+
+  p {
+    margin: 4px 0;
+    color: var(--color-muted);
+    line-height: 1.5;
+  }
+
+  small {
+    color: var(--color-muted);
+    font-weight: 700;
+  }
+}
+
+.icono-actividad {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background: #edf2fb;
+  color: var(--color-accent-dark);
+  display: grid;
+  place-items: center;
+}
+
+@media (max-width: 1100px) {
+  .grid-resumen {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-inferior {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .encabezado-pagina h1 {
+    font-size: 32px;
+  }
+
+  .grid-resumen {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta-resumen {
+    align-items: flex-start;
+  }
+}

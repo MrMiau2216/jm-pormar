@@ -1,0 +1,133 @@
+<section class="quotation-hero">
+  <div class="section-container">
+    <span>Solicitud por WhatsApp</span>
+
+    <h1>Mi cotización</h1>
+
+    <p>
+      Revisa los productos seleccionados, completa tus datos y envía tu requerimiento
+      directamente por WhatsApp.
+    </p>
+
+    <a routerLink="/productos" class="hero-link">
+      Seguir viendo productos
+    </a>
+  </div>
+</section>
+
+<section class="quotation-page">
+  <div class="section-container quotation-grid">
+    <div class="quotation-list">
+      <div class="section-heading">
+        <small>Productos seleccionados</small>
+        <h2>Lista de cotización</h2>
+      </div>
+
+      <div class="empty-quote" *ngIf="items.length === 0">
+        <span class="material-symbols-outlined">receipt_long</span>
+
+        <h3>No tienes productos agregados</h3>
+
+        <p>
+          Agrega productos desde el catálogo para armar tu solicitud de cotización.
+        </p>
+
+        <a routerLink="/productos" class="btn btn-primary">
+          Ver catálogo
+        </a>
+      </div>
+
+      <div class="quote-items" *ngIf="items.length > 0">
+        <article class="quote-item" *ngFor="let item of items">
+          <div class="item-info">
+            <span class="category">{{ item.category }}</span>
+
+            <h3>{{ item.name }}</h3>
+
+            <p>
+              Código: <strong>{{ item.code }}</strong>
+            </p>
+          </div>
+
+          <div class="quantity-control">
+            <button type="button" (click)="decreaseQuantity(item)">-</button>
+            <strong>{{ item.quantity }}</strong>
+            <button type="button" (click)="increaseQuantity(item)">+</button>
+          </div>
+
+          <button type="button" class="remove-button" (click)="removeItem(item.id)">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </article>
+
+        <div class="list-actions">
+          <button type="button" class="clear-list" (click)="clearQuote()">
+            Limpiar lista
+          </button>
+
+          <a routerLink="/productos" class="outline-link">
+            Seguir agregando productos
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <aside class="quotation-summary">
+      <h2>Resumen de cotización</h2>
+
+      <div class="summary-row">
+        <span>Total productos:</span>
+        <strong>{{ totalProducts }}</strong>
+      </div>
+
+      <div class="summary-row">
+        <span>Total unidades:</span>
+        <strong>{{ totalUnits }}</strong>
+      </div>
+
+      <form #quotationForm="ngForm" class="quote-form" (ngSubmit)="sendByWhatsapp(quotationForm)" novalidate>
+        <label>
+          Nombre completo *
+          <input type="text" name="nombre" [(ngModel)]="quoteForm.nombre" #nombre="ngModel" required minlength="3" maxlength="150" placeholder="Ej: Juan Pérez">
+          <small class="admin-error" *ngIf="nombre.touched && nombre.errors?.['required']">El nombre es obligatorio.</small>
+          <small class="admin-error" *ngIf="nombre.touched && nombre.errors?.['minlength']">Debe tener al menos 3 caracteres.</small>
+        </label>
+
+        <label>
+          Empresa / Institución
+          <input type="text" name="empresa" [(ngModel)]="quoteForm.empresa" maxlength="150" placeholder="Ej: Constructora S.A.">
+        </label>
+
+        <label>
+          RUC
+          <input type="text" name="ruc" [(ngModel)]="quoteForm.ruc" #ruc="ngModel" (input)="onlyDigits('ruc')" pattern="[0-9]{11}" maxlength="11" inputmode="numeric" placeholder="Ej: 20601234567">
+          <small class="admin-error" *ngIf="ruc.touched && ruc.errors?.['pattern']">El RUC debe tener exactamente 11 dígitos o quedar vacío.</small>
+        </label>
+
+        <label>
+          Razón social
+          <input type="text" name="razonSocial" [(ngModel)]="quoteForm.razonSocial" maxlength="180" placeholder="Razón social (opcional)">
+        </label>
+
+        <label>
+          Teléfono *
+          <input type="text" name="telefono" [(ngModel)]="quoteForm.telefono" #telefono="ngModel" required pattern="[0-9+() -]{7,20}" maxlength="20" placeholder="Ej: 987654321">
+          <small class="admin-error" *ngIf="telefono.touched && telefono.errors?.['required']">El teléfono es obligatorio.</small>
+          <small class="admin-error" *ngIf="telefono.touched && telefono.errors?.['pattern']">Ingresa un teléfono válido de 7 a 20 caracteres.</small>
+        </label>
+
+        <label>
+          Detalle del requerimiento
+          <textarea name="detalle" rows="4" [(ngModel)]="quoteForm.detalle" maxlength="2000" placeholder="Agrega detalles de tu requerimiento, tiempos de entrega, cantidades adicionales, obra o destino..."></textarea>
+          <small>{{ quoteForm.detalle.length }}/2000</small>
+        </label>
+
+        <p class="admin-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <button type="submit" class="send-button">
+          <span class="material-symbols-outlined">send</span>
+          Enviar cotización por WhatsApp
+        </button>
+      </form>
+    </aside>
+  </div>
+</section>

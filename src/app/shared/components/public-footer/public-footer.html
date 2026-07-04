@@ -1,0 +1,33 @@
+<footer class="public-footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <h3>{{ shortName }}</h3>
+      <p>Empresa peruana dedicada al abastecimiento de materiales, ferretería, herramientas, equipos y servicios generales para obras, empresas, instituciones y proyectos.</p>
+    </div>
+
+    <div class="footer-section">
+      <h4>Navegación</h4>
+      <a routerLink="/">Inicio</a><a routerLink="/nosotros">Nosotros</a><a routerLink="/productos">Productos</a><a routerLink="/servicios">Servicios</a><a routerLink="/contacto">Contáctanos</a>
+    </div>
+
+    <div class="footer-section">
+      <h4>Institucional</h4>
+      <a routerLink="/certificaciones">Certificaciones</a><a routerLink="/politica-privacidad">Política de privacidad</a><a routerLink="/terminos-condiciones">Términos y condiciones</a><a routerLink="/admin/login">Administración</a>
+      <p class="footer-note">La información del catálogo es referencial. La disponibilidad y condiciones finales se confirman mediante cotización.</p>
+    </div>
+
+    <div class="footer-section footer-contact">
+      <h4>Contacto</h4>
+      <ng-container *ngIf="contact as info; else noContact">
+        <p><strong>Razón social:</strong> {{ companyName }}</p>
+        <p *ngIf="info.ruc"><strong>RUC:</strong> {{ info.ruc }}</p>
+        <p><strong>Correo:</strong> {{ info.correo }}</p>
+        <p><strong>WhatsApp:</strong> {{ formatPhone(info.whatsapp) }}</p>
+        <p><strong>Dirección:</strong> {{ info.direccion }}</p>
+        <p><strong>Horario:</strong> {{ info.horarioAtencion }}</p>
+      </ng-container>
+      <ng-template #noContact><p>Configuración de contacto no disponible.</p></ng-template>
+    </div>
+  </div>
+  <div class="footer-bottom"><p>© {{ currentYear }} {{ shortName }}. Todos los derechos reservados.</p></div>
+</footer>

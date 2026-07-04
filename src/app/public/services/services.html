@@ -1,0 +1,42 @@
+<section class="services-hero">
+  <div class="section-container">
+    <span>Servicios empresariales</span>
+    <h1>Servicios para obras, empresas y proyectos</h1>
+    <p>Brindamos soluciones complementarias para atender requerimientos de abastecimiento, transporte, mantenimiento, acondicionamiento y consultoría técnica.</p>
+    <button type="button" class="hero-button" (click)="generalQuote()">Solicitar información por WhatsApp</button>
+  </div>
+</section>
+
+<section class="services-page" id="servicios-principales">
+  <div class="section-container">
+    <div class="section-title centered"><small>Nuestras capacidades</small><h2>Servicios principales</h2><p>Servicios publicados y administrados desde el panel JM Pormar.</p></div>
+
+    <div class="empty-state" *ngIf="loading"><h3>Cargando servicios...</h3></div>
+    <div class="empty-state" *ngIf="!loading && errorMessage"><h3>No se pudieron cargar los servicios</h3><p>{{ errorMessage }}</p></div>
+    <div class="empty-state" *ngIf="!loading && !errorMessage && services.length === 0"><h3>No hay servicios publicados</h3><p>Activa los servicios desde el panel administrador.</p></div>
+
+    <div class="services-grid" *ngIf="services.length > 0">
+      <article class="service-card" *ngFor="let service of services">
+        <div class="service-image"><img [src]="imageUrl(service.imagenPrincipalUrl)" [alt]="service.nombre"></div>
+        <div class="service-content">
+          <div class="service-icon"><span class="material-symbols-outlined">{{ iconFor(service.nombre) }}</span></div>
+          <small>{{ service.proyectoRelacionado || 'Servicio empresarial' }}</small>
+          <h3>{{ service.nombre }}</h3>
+          <p>{{ service.descripcionBreve }}</p>
+          <button type="button" (click)="quoteService(service.nombre)">Solicitar información<span class="material-symbols-outlined">arrow_forward</span></button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="process">
+  <div class="section-container">
+    <div class="section-title centered light"><small>Proceso de atención</small><h2>¿Cómo trabajamos?</h2><p>Mantenemos una atención directa para entender el requerimiento y brindar una respuesta ordenada.</p></div>
+    <div class="process-grid"><article class="process-card" *ngFor="let step of processSteps"><strong>{{ step.number }}</strong><h3>{{ step.title }}</h3><p>{{ step.description }}</p></article></div>
+  </div>
+</section>
+
+<section class="service-cta">
+  <div class="section-container cta-card"><div><small>Atención directa</small><h2>¿Necesitas apoyo para tu obra o empresa?</h2><p>Contáctanos y cuéntanos qué producto, servicio o solución necesitas.</p></div><a routerLink="/contacto">Contáctanos<span class="material-symbols-outlined">arrow_forward</span></a></div>
+</section>

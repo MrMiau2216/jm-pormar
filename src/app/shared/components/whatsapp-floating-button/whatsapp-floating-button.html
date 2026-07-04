@@ -1,0 +1,34 @@
+<button
+  type="button"
+  class="floating-whatsapp"
+  (click)="openWhatsapp()"
+  [attr.aria-label]="
+    quoteCount() > 0
+      ? 'Enviar pedido con ' + quoteCount() + ' unidades por WhatsApp'
+      : 'Contactar por WhatsApp'
+  "
+  title="Enviar pedido por WhatsApp"
+>
+  <span
+    class="material-symbols-outlined"
+    aria-hidden="true"
+  >
+    chat
+  </span>
+
+  <span class="floating-label">
+    {{
+      quoteCount() > 0
+        ? 'Enviar pedido'
+        : 'WhatsApp'
+    }}
+  </span>
+
+  <span
+    *ngIf="quoteCount() > 0"
+    class="quote-badge"
+    aria-hidden="true"
+  >
+    {{ quoteCount() > 99 ? '99+' : quoteCount() }}
+  </span>
+</button>

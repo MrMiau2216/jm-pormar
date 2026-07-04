@@ -1,0 +1,78 @@
+<section class="pagina-contacto">
+  <div class="encabezado-pagina">
+    <div>
+      <small>Configuración general</small>
+      <h1>Contacto</h1>
+      <p>Administra los datos que utiliza el footer, la página de contacto y los botones de WhatsApp.</p>
+    </div>
+
+    <button type="button" class="boton-secundario" (click)="recargarDesdeBase()" [disabled]="cargando">
+      <span class="material-symbols-outlined">refresh</span>
+      Recargar desde la base
+    </button>
+  </div>
+
+  <div class="tarjeta-informativa">
+    <span class="material-symbols-outlined">info</span>
+    <p>Esta vista corresponde exactamente a la tabla <strong>configuracion_contacto</strong>: WhatsApp, correo, dirección, horario de atención y RUC.</p>
+  </div>
+
+  <div class="grid-contacto">
+    <form class="tarjeta-formulario" #formContacto="ngForm" (ngSubmit)="guardarConfiguracion(formContacto)" novalidate>
+      <div class="subtitulo-formulario">
+        <h2>Datos de contacto</h2>
+        <p>Los cambios se guardan en PostgreSQL y se reflejan automáticamente en la web pública.</p>
+      </div>
+
+      <div class="grid-formulario">
+        <label>
+          WhatsApp *
+          <input type="text" name="whatsapp" inputmode="numeric" [(ngModel)]="formulario.whatsapp" (input)="limpiarSoloNumeros('whatsapp')" required minlength="9" maxlength="15" pattern="^[0-9]{9,15}$" placeholder="51949180383">
+        </label>
+        <label>
+          Correo *
+          <input type="email" name="correo" [(ngModel)]="formulario.correo" required maxlength="150" placeholder="contacto@jmpormar.com">
+        </label>
+        <label>
+          RUC
+          <input type="text" name="ruc" maxlength="11" inputmode="numeric" [(ngModel)]="formulario.ruc" (input)="limpiarSoloNumeros('ruc')" pattern="^$|^[0-9]{11}$" placeholder="20601234567">
+        </label>
+        <label>
+          Horario de atención *
+          <input type="text" name="horarioAtencion" [(ngModel)]="formulario.horarioAtencion" required minlength="5" maxlength="180" placeholder="Lunes a sábado, previa coordinación">
+        </label>
+      </div>
+
+      <label>
+        Dirección *
+        <input type="text" name="direccion" [(ngModel)]="formulario.direccion" required minlength="5" maxlength="250" placeholder="Dirección de la empresa">
+      </label>
+
+      <div class="acciones-formulario">
+        <button type="button" class="boton-secundario" (click)="abrirWhatsapp()">
+          <span class="material-symbols-outlined">chat</span>
+          Probar WhatsApp
+        </button>
+        <button type="submit" class="boton-principal" [disabled]="guardando || cargando">
+          <span class="material-symbols-outlined">save</span>
+          {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
+    </form>
+
+    <aside class="tarjeta-vista-previa">
+      <div class="vista-header">
+        <span class="material-symbols-outlined">visibility</span>
+        <div><h2>Vista previa</h2><p>Información obtenida de la base de datos.</p></div>
+      </div>
+      <div class="preview-lista">
+        <div><span class="material-symbols-outlined">badge</span><div><small>RUC</small><strong>{{ formulario.ruc || 'No indicado' }}</strong></div></div>
+        <div><span class="material-symbols-outlined">chat</span><div><small>WhatsApp</small><strong>{{ formulario.whatsapp || 'No indicado' }}</strong></div></div>
+        <div><span class="material-symbols-outlined">mail</span><div><small>Correo</small><strong>{{ formulario.correo || 'No indicado' }}</strong></div></div>
+        <div><span class="material-symbols-outlined">location_on</span><div><small>Dirección</small><strong>{{ formulario.direccion || 'No indicado' }}</strong></div></div>
+        <div><span class="material-symbols-outlined">schedule</span><div><small>Horario</small><strong>{{ formulario.horarioAtencion || 'No indicado' }}</strong></div></div>
+      </div>
+      <div class="nota-contacto"><span class="material-symbols-outlined">database</span><p>Google Maps no forma parte del modelo de datos actual.</p></div>
+    </aside>
+  </div>
+</section>

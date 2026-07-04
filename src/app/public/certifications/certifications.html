@@ -1,0 +1,44 @@
+<section class="cert-hero"><div class="section-container"><span>Respaldo empresarial</span><h1>Certificaciones</h1><p>Conoce las certificaciones y documentos que respaldan nuestros procesos, compromiso empresarial y buenas prácticas.</p></div></section>
+
+<section class="cert-page">
+  <div class="section-container">
+    <div class="section-title centered"><small>Excelencia certificada</small><h2>Certificaciones empresariales</h2><p>Documentación institucional publicada desde el panel administrador.</p></div>
+
+    <div class="cert-card" *ngIf="loading"><h3>Cargando certificaciones...</h3></div>
+    <div class="cert-card" *ngIf="!loading && errorMessage"><h3>No se pudieron cargar</h3><p>{{ errorMessage }}</p></div>
+    <div class="cert-card" *ngIf="!loading && !errorMessage && certifications.length === 0"><h3>No hay certificaciones publicadas</h3><p>Las certificaciones activas aparecerán aquí.</p></div>
+
+    <div class="cert-grid" *ngIf="certifications.length > 0">
+      <article class="cert-card" *ngFor="let certification of certifications">
+        <div class="cert-icon"><span class="material-symbols-outlined">{{ certification.tipoArchivo === 'PDF' ? 'picture_as_pdf' : 'verified' }}</span></div>
+        <small>{{ certification.tipo }}</small>
+        <h3>{{ certification.nombre }}</h3>
+        <p>{{ certification.descripcion || 'Documento de respaldo institucional de JM Pormar.' }}</p>
+        <button type="button" (click)="openPreview(certification)"><span class="material-symbols-outlined">visibility</span>Ver certificado</button>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="cert-info"><div class="section-container info-card"><div><small>Importante</small><h2>Visualización de certificados</h2><p>Los documentos se sirven desde endpoints controlados por el backend y se muestran dentro de la web.</p></div><span class="material-symbols-outlined">verified_user</span></div></section>
+
+<div class="preview-backdrop" *ngIf="selectedCertification as certification">
+  <div class="preview-modal">
+    <div class="preview-header"><div><small>Vista previa del certificado</small><h2>{{ certification.nombre }}</h2></div><button type="button" class="close-button" (click)="closePreview()"><span class="material-symbols-outlined">close</span></button></div>
+    <div class="preview-body" (contextmenu)="$event.preventDefault()">
+      <iframe
+        *ngIf="selectedIsPdf && selectedFileUrl"
+        [src]="selectedFileUrl"
+        [title]="certification.nombre"
+        loading="lazy"
+      ></iframe>
+      <img
+        *ngIf="!selectedIsPdf && selectedImageUrl"
+        [src]="selectedImageUrl"
+        [alt]="certification.nombre"
+        draggable="false"
+      >
+    </div>
+    <div class="preview-footer"><p>Vista previa protegida: no se muestra una opción de descarga directa.</p><button type="button" (click)="closePreview()">Cerrar</button></div>
+  </div>
+</div>

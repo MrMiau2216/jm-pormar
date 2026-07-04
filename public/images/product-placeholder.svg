@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#eeeae5"/>
+  <path d="M280 205h240v190H280z" fill="#d4ccc3"/>
+  <path d="M310 235h180v130H310z" fill="#f8f6f3"/>
+  <circle cx="360" cy="285" r="28" fill="#b8844f"/>
+  <path d="M310 350l65-65 45 45 35-35 35 55z" fill="#9b8e80"/>
+  <text x="400" y="455" text-anchor="middle" font-family="Arial" font-size="28" fill="#6d665f">JM Pormar</text>
+</svg>

@@ -1,0 +1,103 @@
+.pagina-ingreso {
+  min-height: 100vh;
+  background:
+    linear-gradient(135deg, rgba(43, 47, 54, 0.96), rgba(43, 47, 54, 0.86)),
+    var(--color-primary);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.tarjeta-ingreso {
+  width: min(430px, 100%);
+  background: white;
+  border-radius: 24px;
+  padding: 34px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.26);
+}
+
+.marca-ingreso {
+  text-align: center;
+  margin-bottom: 28px;
+
+  span {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: var(--color-accent);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 36px;
+    margin: 0 auto 14px;
+  }
+
+  h1 {
+    margin: 0;
+    color: var(--color-primary);
+    font-size: 32px;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: var(--color-muted);
+    font-weight: 700;
+  }
+}
+
+.formulario-ingreso {
+  display: grid;
+  gap: 18px;
+
+  label {
+    display: grid;
+    gap: 8px;
+    color: var(--color-primary);
+    font-weight: 800;
+    font-size: 14px;
+  }
+
+  input {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 14px;
+    outline: 0;
+    font-size: 14px;
+
+    &:focus {
+      border-color: var(--color-accent);
+    }
+  }
+
+  button {
+    border: 0;
+    border-radius: 12px;
+    background: var(--color-accent);
+    color: white;
+    padding: 15px;
+    font-weight: 900;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-accent-dark);
+    }
+  }
+}
+
+.mensaje-error {
+  background: #fff1f1;
+  color: #b42318;
+  border: 1px solid #ffc9c9;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+small {
+  display: block;
+  text-align: center;
+  margin-top: 18px;
+  color: var(--color-muted);
+}
