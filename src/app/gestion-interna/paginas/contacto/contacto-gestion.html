@@ -33,10 +33,52 @@
           Correo *
           <input type="email" name="correo" [(ngModel)]="formulario.correo" required maxlength="150" placeholder="contacto@jmpormar.com">
         </label>
-        <label>
-          RUC
-          <input type="text" name="ruc" maxlength="11" inputmode="numeric" [(ngModel)]="formulario.ruc" (input)="limpiarSoloNumeros('ruc')" pattern="^$|^[0-9]{11}$" placeholder="20601234567">
-        </label>
+       <label>
+  RUC
+  <div class="campo-ruc">
+    <input
+      type="text"
+      name="ruc"
+      [(ngModel)]="formulario.ruc"
+      maxlength="11"
+      inputmode="numeric"
+      placeholder="Ej: 20601234567"
+      (input)="onRucInput()"
+    >
+
+    <button
+      type="button"
+      class="boton-consultar-ruc"
+      [disabled]="
+        consultandoRuc ||
+        formulario.ruc.length !== 11
+      "
+      (click)="consultarRuc()"
+    >
+      <span class="material-symbols-outlined">
+        search
+      </span>
+
+      {{
+        consultandoRuc
+          ? 'Consultando...'
+          : 'Consultar'
+      }}
+    </button>
+  </div>
+</label>
+
+<label>
+  Razón social
+  <input
+    type="text"
+    name="razonSocial"
+    [(ngModel)]="formulario.razonSocial"
+    maxlength="200"
+    readonly
+    placeholder="Se completará al consultar el RUC"
+  >
+</label>
         <label>
           Horario de atención *
           <input type="text" name="horarioAtencion" [(ngModel)]="formulario.horarioAtencion" required minlength="5" maxlength="180" placeholder="Lunes a sábado, previa coordinación">

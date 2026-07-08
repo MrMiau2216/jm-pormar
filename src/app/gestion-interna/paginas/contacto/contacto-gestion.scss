@@ -376,3 +376,44 @@
     }
   }
 }
+
+.campo-ruc {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.boton-consultar-ruc {
+  min-width: 140px;
+  padding: 0 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  border: 0;
+  border-radius: 12px;
+
+  background: var(--color-primary);
+  color: white;
+
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 620px) {
+  .campo-ruc {
+    grid-template-columns: 1fr;
+  }
+
+  .boton-consultar-ruc {
+    min-height: 46px;
+  }
+}

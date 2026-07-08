@@ -1,14 +1,36 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZoneChangeDetection
+} from '@angular/core';
+import {
+  provideRouter,
+  withInMemoryScrolling
+} from '@angular/router';
+
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true, runCoalescing: true }),
-    provideHttpClient(withInterceptors([authInterceptor])),
-    provideRouter(routes)
+
+    provideZoneChangeDetection({
+      eventCoalescing: true,
+      runCoalescing: true
+    }),
+
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    ),
+
+    provideRouter(
+      routes,
+      withInMemoryScrolling({
+        anchorScrolling: 'enabled',
+        scrollPositionRestoration: 'enabled'
+      })
+    )
   ]
 };

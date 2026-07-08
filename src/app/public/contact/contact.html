@@ -21,16 +21,59 @@
               <small class="admin-error" *ngIf="nombre.touched && nombre.errors?.['required']">El nombre es obligatorio.</small>
               <small class="admin-error" *ngIf="nombre.touched && nombre.errors?.['minlength']">Debe tener al menos 3 caracteres.</small>
             </label>
-            <label>Empresa / Institución<input type="text" name="empresa" [(ngModel)]="contactForm.empresa" maxlength="150" placeholder="Ej: Constructora S.A."></label>
+      
           </div>
-          <div class="form-row">
-            <label>
-              RUC
-              <input type="text" name="ruc" [(ngModel)]="contactForm.ruc" #ruc="ngModel" pattern="[0-9]{11}" maxlength="11" inputmode="numeric" placeholder="Ej: 20601234567" (input)="onlyDigits()">
-              <small class="admin-error" *ngIf="ruc.touched && ruc.errors?.['pattern']">El RUC debe tener exactamente 11 dígitos o quedar vacío.</small>
-            </label>
-            <label>Razón social<input type="text" name="razonSocial" [(ngModel)]="contactForm.razonSocial" maxlength="180" placeholder="Razón social (opcional)"></label>
-          </div>
+<div class="form-field">
+  <label for="ruc">RUC</label>
+
+  <div class="ruc-control">
+    <input
+      id="ruc"
+      type="text"
+      name="ruc"
+      [(ngModel)]="contactForm.ruc"
+      maxlength="11"
+      inputmode="numeric"
+      placeholder="Ej: 20601234567"
+      (input)="onRucInput()"
+    >
+
+    <button
+      type="button"
+      class="btn-consultar-ruc"
+      [disabled]="
+        consultandoRuc ||
+        contactForm.ruc.length !== 11
+      "
+      (click)="consultarRuc()"
+    >
+      <span class="material-symbols-outlined">
+        search
+      </span>
+
+      {{
+        consultandoRuc
+          ? 'Consultando...'
+          : 'Consultar'
+      }}
+    </button>
+  </div>
+</div>
+
+<div class="form-field">
+  <label for="razonSocial">
+    Razón social
+  </label>
+
+  <input
+    id="razonSocial"
+    type="text"
+    name="razonSocial"
+    [(ngModel)]="contactForm.razonSocial"
+    readonly
+    placeholder="Se completará al consultar el RUC"
+  >
+</div>
           <div class="form-row">
             <label>
               Teléfono *

@@ -18,3 +18,12 @@ export interface PageResponse<T> {
 export interface EstadoRequest {
   activo: boolean;
 }
+export interface ArchivoSubido {
+  nombreOriginal: string;
+  nombreAlmacenado: string;
+  url: string;
+  publicId?: string;
+  resourceType?: 'image' | 'raw';
+  contentType?: string | null;
+  size: number;
+}

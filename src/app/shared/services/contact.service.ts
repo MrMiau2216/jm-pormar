@@ -220,4 +220,43 @@ buildWhatsappUrl(
       navigator.userAgent
     );
   }
+consultarRuc(
+  ruc: string
+): Observable<ConsultaRucResponse> {
+  return this.http
+    .get<ApiResponse<ConsultaRucResponse>>(
+      apiUrl(
+        `/api/admin/contacto/consultar-ruc/${ruc}`
+      )
+    )
+    .pipe(
+      map(response => response.data)
+    );
 }
+  
+consultarRucPublico(
+  ruc: string
+): Observable<ConsultaRucResponse> {
+  return this.http
+    .get<ApiResponse<ConsultaRucResponse>>(
+      apiUrl(
+        `/api/public/contacto/consulta-ruc/${ruc}`
+      )
+    )
+    .pipe(
+      map(response => response.data)
+    );
+}
+}
+
+
+export interface ConsultaRucResponse {
+  ruc: string;
+  razonSocial: string;
+  estado?: string | null;
+  condicion?: string | null;
+  direccion?: string | null;
+}
+
+
+

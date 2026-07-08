@@ -3,43 +3,54 @@
     <button
       type="button"
       class="brand"
-      (click)="goTo('/')"
+      (click)="goToSection('inicio')"
     >
       JM Pormar
     </button>
 
-    <nav class="nav" [class.open]="isMenuOpen">
+    <nav
+      class="nav"
+      [class.open]="isMenuOpen"
+      aria-label="Navegación principal"
+    >
       <button
         type="button"
-        (click)="goTo('/')"
+        (click)="goToSection('inicio')"
       >
         Inicio
       </button>
 
       <button
         type="button"
-        (click)="goTo('/nosotros', 'nosotros-principal')"
+        (click)="goToSection('nosotros')"
       >
         Nosotros
       </button>
 
       <button
         type="button"
-        (click)="goTo('/productos', 'catalogo')"
+        (click)="goToSection('productos')"
       >
         Productos
       </button>
 
       <button
         type="button"
-        (click)="goTo('/servicios', 'servicios-principales')"
+        (click)="goToSection('servicios')"
       >
         Servicios
       </button>
 
       <button
         type="button"
-        (click)="goTo('/contacto', 'contacto-principal')"
+        (click)="goToSection('certificaciones')"
+      >
+        Certificaciones
+      </button>
+
+      <button
+        type="button"
+        (click)="goToSection('contacto')"
       >
         Contáctanos
       </button>

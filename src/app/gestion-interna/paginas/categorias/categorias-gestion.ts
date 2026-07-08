@@ -74,6 +74,58 @@ export class CategoriasGestion implements OnInit {
     });
   }
 
+  obtenerIconoCategoria(nombre: string): string {
+    const nombreNormalizado = nombre
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
+
+    if (
+      nombreNormalizado.includes('electric') ||
+      nombreNormalizado.includes('cable')
+    ) {
+      return 'electrical_services';
+    }
+
+    if (
+      nombreNormalizado.includes('proteccion') ||
+      nombreNormalizado.includes('seguridad') ||
+      nombreNormalizado.includes('epp')
+    ) {
+      return 'health_and_safety';
+    }
+
+    if (
+      nombreNormalizado.includes('ferreter')
+    ) {
+      return 'construction';
+    }
+
+    if (
+      nombreNormalizado.includes('herramient')
+    ) {
+      return 'handyman';
+    }
+
+    if (
+      nombreNormalizado.includes('material') ||
+      nombreNormalizado.includes('construccion')
+    ) {
+      return 'foundation';
+    }
+
+    if (
+      nombreNormalizado.includes('tuber') ||
+      nombreNormalizado.includes('conexion') ||
+      nombreNormalizado.includes('sanitari')
+    ) {
+      return 'plumbing';
+    }
+
+    return 'inventory_2';
+  }
+
   abrirNuevaCategoria(): void {
     this.modoEdicion = false;
     this.categoriaEditandoId = undefined;

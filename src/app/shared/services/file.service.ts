@@ -1,20 +1,51 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+
 import { apiUrl } from '../../core/utils/api-url';
-import { ApiResponse } from '../models/api.models';
-import { ArchivoResponse } from '../models/domain.models';
 
-export type UploadFolder = 'productos' | 'servicios' | 'certificaciones';
+interface ApiResponse<T> {
+  data: T;
+}
 
-@Injectable({ providedIn: 'root' })
+export interface ArchivoSubido {
+  nombreOriginal: string;
+  nombreAlmacenado: string;
+  url: string;
+  publicId: string;
+  resourceType: string;
+  contentType: string;
+  size: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 export class FileService {
-  constructor(private readonly http: HttpClient) {}
 
-  upload(folder: UploadFolder, file: File): Observable<ArchivoResponse> {
-    const body = new FormData();
-    body.append('file', file);
-    return this.http.post<ApiResponse<ArchivoResponse>>(apiUrl(`/api/admin/archivos/${folder}`), body)
-      .pipe(map(response => response.data));
-  }
+  constructor(
+    private readonly http: HttpClient
+  ) {}
+
+ upload(
+  carpeta: 'productos' | 'servicios' | 'certificaciones',
+  file: File
+): Observable<ArchivoSubido> {
+  const formData = new FormData();
+
+  formData.append(
+    'file',
+    file,
+    file.name
+  );
+
+  return this.http
+    .post<ApiResponse<ArchivoSubido>>(
+      apiUrl(`/api/admin/archivos/${carpeta}`),
+      formData
+    )
+    .pipe(
+      map(response => response.data)
+    );
+}
 }

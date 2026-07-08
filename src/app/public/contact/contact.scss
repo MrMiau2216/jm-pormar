@@ -215,6 +215,46 @@ textarea {
   font-weight: 600;
 }
 
+.ruc-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.btn-consultar-ruc {
+  min-width: 135px;
+  padding: 0 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: var(--color-primary);
+  color: white;
+
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 600px) {
+  .ruc-control {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-consultar-ruc {
+    min-height: 48px;
+  }
+}
 .contact-info-card {
   position: sticky;
   top: 96px;

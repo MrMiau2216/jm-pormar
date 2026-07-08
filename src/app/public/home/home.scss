@@ -1020,3 +1020,310 @@
     padding: 26px;
   }
 }
+
+
+/* ==========================================================
+   Navegación por secciones
+   ========================================================== */
+
+#inicio,
+#nosotros,
+#productos,
+#servicios,
+#certificaciones,
+#contacto {
+  scroll-margin-top: 88px;
+}
+
+/* ==========================================================
+   Productos destacados de la landing
+   ========================================================== */
+
+.featured-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  margin-bottom: 70px;
+}
+
+.featured-product-card {
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.featured-product-image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #f4f1ec;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.availability-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #e7f8ed;
+  color: #147d3f;
+  font-size: 12px;
+  font-weight: 900;
+
+  &.not-available {
+    background: #fff0f0;
+    color: #b42318;
+  }
+}
+
+.featured-product-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+
+  small {
+    color: var(--color-accent);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  h3 {
+    margin: 9px 0;
+    color: var(--color-primary);
+    font-size: 21px;
+    line-height: 1.2;
+  }
+
+  p {
+    flex: 1;
+    margin: 0;
+    color: var(--color-muted);
+    line-height: 1.55;
+  }
+}
+
+.featured-product-meta {
+  margin-top: 18px;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.featured-product-link,
+.cert-card-link {
+  margin-top: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  border: 1px solid var(--color-primary);
+  border-radius: 11px;
+  background: transparent;
+  color: var(--color-primary);
+  font-family: inherit;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-primary);
+    color: white;
+  }
+}
+
+.lines-title {
+  margin-top: 18px;
+}
+
+/* ==========================================================
+   Certificaciones de la landing
+   ========================================================== */
+
+.cert-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+
+  small {
+    color: var(--color-accent);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  p {
+    flex: 1;
+    margin: 10px 0 0;
+    color: var(--color-muted);
+    line-height: 1.5;
+  }
+}
+
+.cert-card-icon {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: rgba(184, 132, 79, 0.12);
+  color: var(--color-accent);
+
+  span {
+    font-size: 31px;
+  }
+}
+
+.cert-card-link {
+  width: 100%;
+  padding: 0 14px;
+}
+
+.landing-empty {
+  padding: 28px;
+  border: 1px dashed var(--color-border);
+  border-radius: 16px;
+  background: white;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+@media (max-width: 1100px) {
+  .featured-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .featured-product-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 54px;
+  }
+
+  .featured-product-body {
+    padding: 18px;
+  }
+
+  .cert-card {
+    text-align: center;
+  }
+}
+/* ==========================================================
+   Consulta de RUC
+   ========================================================== */
+
+.ruc-control {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 155px;
+  gap: 12px;
+  align-items: stretch;
+
+  input {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.btn-consultar-ruc {
+  min-height: 52px;
+  padding: 0 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: 1px solid #b8844f;
+  border-radius: 10px;
+
+  background: #b8844f;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  box-shadow: 0 6px 16px rgba(184, 132, 79, 0.2);
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  .material-symbols-outlined {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  &:hover:not(:disabled) {
+    background: #9f7042;
+    border-color: #9f7042;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 9px 22px rgba(184, 132, 79, 0.3);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+
+    box-shadow:
+      0 4px 10px rgba(184, 132, 79, 0.22);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(184, 132, 79, 0.28);
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    background: #d7c4b1;
+    border-color: #d7c4b1;
+    color: #ffffff;
+
+    box-shadow: none;
+
+    cursor: not-allowed;
+    opacity: 0.75;
+  }
+}
+
+@media (max-width: 620px) {
+  .ruc-control {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-consultar-ruc {
+    width: 100%;
+    min-height: 50px;
+  }
+}

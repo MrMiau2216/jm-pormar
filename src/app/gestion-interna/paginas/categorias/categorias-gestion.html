@@ -59,7 +59,20 @@
 
         <tbody>
           <tr *ngFor="let categoria of categoriasFiltradas">
-            <td data-label="Categoría"><strong class="nombre-categoria">{{ categoria.nombre }}</strong></td>
+            <td data-label="Categoría">
+              <div class="categoria-con-icono">
+                <span
+                  class="material-symbols-outlined icono-categoria"
+                  aria-hidden="true"
+                >
+                  {{ obtenerIconoCategoria(categoria.nombre) }}
+                </span>
+
+                <strong class="nombre-categoria">
+                  {{ categoria.nombre }}
+                </strong>
+              </div>
+            </td>
             <td data-label="Descripción"><span class="descripcion-categoria">{{ categoria.descripcion }}</span></td>
             <td data-label="Estado web">
               <span class="estado" [class.inactivo]="!categoria.activo">

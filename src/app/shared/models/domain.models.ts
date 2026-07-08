@@ -107,7 +107,16 @@ export interface Contacto {
   direccion: string;
   horarioAtencion: string;
   ruc: string | null;
+  razonSocial?: string | null;
   fechaActualizacion: string;
+}
+
+export interface ConsultaRucResponse {
+  ruc: string;
+  razonSocial: string;
+  estado?: string | null;
+  condicion?: string | null;
+  direccion?: string | null;
 }
 
 export interface ContactoRequest {
@@ -116,6 +125,7 @@ export interface ContactoRequest {
   direccion: string;
   horarioAtencion: string;
   ruc: string;
+  razonSocial: string;
 }
 
 export interface Dashboard {

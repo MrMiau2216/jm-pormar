@@ -54,7 +54,7 @@
     </div>
 
     <div class="service-grid">
-      <article class="service-card" *ngFor="let service of services">
+      <article class="service-card" *ngFor="let service of services()">
         <div class="service-image">
           <img [src]="service.image" [alt]="service.title">
         </div>
@@ -77,16 +77,92 @@
   <div class="section-container">
     <div class="section-title centered">
       <small>Nuestras líneas</small>
-      <h2>Nuestras líneas de productos</h2>
+      <h2>Productos destacados</h2>
       <p>
-        Suministros certificados de alta rotación para obras, empresas e instituciones.
+        Una selección de productos disponibles para obras,
+        empresas e instituciones.
       </p>
     </div>
 
+    <div
+      class="featured-product-grid"
+      *ngIf="featuredProducts().length > 0"
+    >
+      <article
+        class="featured-product-card"
+        *ngFor="let product of featuredProducts()"
+      >
+        <div class="featured-product-image">
+          <img
+            [src]="productImage(product.imagenPrincipalUrl)"
+            [alt]="product.nombre"
+          >
+
+          <span
+            class="availability-badge"
+            [class.not-available]="
+              product.disponibilidad === 'NO_DISPONIBLE'
+            "
+          >
+            {{
+              product.disponibilidad === 'DISPONIBLE'
+                ? 'Disponible'
+                : 'No disponible'
+            }}
+          </span>
+        </div>
+
+        <div class="featured-product-body">
+          <small>{{ product.categoria }}</small>
+
+          <h3>{{ product.nombre }}</h3>
+
+          <p>{{ product.descripcionBreve }}</p>
+
+          <div class="featured-product-meta">
+            Código: {{ product.codigoSku }}
+          </div>
+
+          <a
+            class="featured-product-link"
+            [routerLink]="[
+              '/productos',
+              product.idProducto
+            ]"
+          >
+            Ver detalle
+            <span class="material-symbols-outlined">
+              arrow_forward
+            </span>
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <div
+      class="landing-empty"
+      *ngIf="
+        !loadingLanding() &&
+        featuredProducts().length === 0
+      "
+    >
+      Todavía no hay productos publicados.
+    </div>
+
+    <div class="section-title centered lines-title">
+      <small>Categorías</small>
+      <h2>Nuestras líneas de productos</h2>
+    </div>
+
     <div class="category-grid">
-      <article class="category-card" *ngFor="let category of categories">
+      <article
+        class="category-card"
+        *ngFor="let category of categories()"
+      >
         <div class="category-icon">
-          <span class="material-symbols-outlined">{{ category.icon }}</span>
+          <span class="material-symbols-outlined">
+            {{ category.icon }}
+          </span>
         </div>
 
         <strong>{{ category.name }}</strong>
@@ -94,9 +170,14 @@
     </div>
 
     <div class="center-action">
-      <a class="btn btn-dark" routerLink="/productos">
+      <a
+        class="btn btn-dark"
+        routerLink="/productos"
+      >
         Ver catálogo completo
-        <span class="material-symbols-outlined">arrow_forward</span>
+        <span class="material-symbols-outlined">
+          arrow_forward
+        </span>
       </a>
     </div>
   </div>
@@ -189,28 +270,85 @@
 </section>
 
 
-<section class="certifications">
+<section
+  class="certifications"
+  id="certificaciones"
+>
   <div class="section-container">
     <div class="section-title centered">
       <small>Excelencia certificada</small>
-      <h2>Certificaciones que respaldan nuestro compromiso</h2>
+
+      <h2>
+        Certificaciones que respaldan nuestro compromiso
+      </h2>
+
       <p>
-        Contamos con certificaciones orientadas a la calidad, gestión ambiental,
+        Documentos orientados a la calidad, gestión ambiental,
         buenas prácticas laborales y cumplimiento empresarial.
       </p>
     </div>
 
-    <div class="cert-grid">
-      <article class="cert-card" *ngFor="let certification of certifications">
-        <strong>{{ certification.name }}</strong>
-        <span>{{ certification.detail }}</span>
+    <div
+      class="cert-grid"
+      *ngIf="certifications().length > 0"
+    >
+      <article
+        class="cert-card"
+        *ngFor="let certification of certifications()"
+      >
+        <div class="cert-card-icon">
+          <span class="material-symbols-outlined">
+            {{
+              certification.tipoArchivo === 'PDF'
+                ? 'picture_as_pdf'
+                : 'image'
+            }}
+          </span>
+        </div>
+
+        <small>{{ certification.tipo }}</small>
+
+        <strong>{{ certification.nombre }}</strong>
+
+        <p>
+          {{
+            certification.descripcion ||
+            'Documento institucional disponible para visualización.'
+          }}
+        </p>
+
+        <button
+          type="button"
+          class="cert-card-link"
+          (click)="openCertification(certification)"
+        >
+          Ver certificación
+          <span class="material-symbols-outlined">
+            visibility
+          </span>
+        </button>
       </article>
     </div>
 
+    <div
+      class="landing-empty"
+      *ngIf="
+        !loadingLanding() &&
+        certifications().length === 0
+      "
+    >
+      Todavía no hay certificaciones publicadas.
+    </div>
+
     <div class="center-action">
-      <a class="btn btn-dark" routerLink="/nosotros">
-        Conócenos más
-        <span class="material-symbols-outlined">arrow_forward</span>
+      <a
+        class="btn btn-dark"
+        routerLink="/certificaciones"
+      >
+        Ver todas las certificaciones
+        <span class="material-symbols-outlined">
+          arrow_forward
+        </span>
       </a>
     </div>
   </div>
@@ -262,21 +400,63 @@
           <small class="admin-error" *ngIf="nombre.touched && nombre.errors?.['minlength']">Debe tener al menos 3 caracteres.</small>
         </label>
 
-        <label>
-          Empresa / Institución
-          <input type="text" name="empresa" [(ngModel)]="quoteForm.empresa" maxlength="150" placeholder="Ej: Constructora S.A.">
-        </label>
 
-        <label>
-          RUC
-          <input type="text" name="ruc" [(ngModel)]="quoteForm.ruc" #ruc="ngModel" pattern="[0-9]{11}" maxlength="11" inputmode="numeric" placeholder="Ej: 20601234567" (input)="onRucInput()">
-          <small class="admin-error" *ngIf="ruc.touched && ruc.errors?.['pattern']">El RUC debe tener exactamente 11 dígitos o quedar vacío.</small>
-        </label>
 
-        <label>
-          Razón social
-          <input type="text" name="razonSocial" [(ngModel)]="quoteForm.razonSocial" maxlength="180" placeholder="Razón social (opcional)">
-        </label>
+     <div class="form-field">
+  <label for="home-ruc">
+    RUC
+  </label>
+
+  <div class="ruc-control">
+    <input
+      id="home-ruc"
+      type="text"
+      name="ruc"
+      [(ngModel)]="quoteForm.ruc"
+      maxlength="11"
+      inputmode="numeric"
+      autocomplete="off"
+      placeholder="Ej: 20601234567"
+      (input)="onRucInput()"
+    >
+
+    <button
+      type="button"
+      class="btn-consultar-ruc"
+      [disabled]="
+        consultandoRuc ||
+        quoteForm.ruc.length !== 11
+      "
+      (click)="consultarRuc()"
+    >
+      <span class="material-symbols-outlined">
+        search
+      </span>
+
+      {{
+        consultandoRuc
+          ? 'Consultando...'
+          : 'Consultar'
+      }}
+    </button>
+  </div>
+</div>
+
+<div class="form-field">
+  <label for="home-razon-social">
+    Razón social
+  </label>
+
+  <input
+    id="home-razon-social"
+    type="text"
+    name="razonSocial"
+    [(ngModel)]="quoteForm.razonSocial"
+    maxlength="200"
+    readonly
+    placeholder="Se completará al consultar el RUC"
+  >
+</div>
 
         <label>
           Teléfono *

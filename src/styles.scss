@@ -19,6 +19,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* SweetAlert siempre por encima de los modales */
+.swal2-container {
+  z-index: 999999 !important;
+}
+
+.swal2-popup {
+  z-index: 1000000 !important;
+}
+
 body {
   margin: 0;
   font-family: 'Inter', Arial, sans-serif;
