@@ -81,49 +81,54 @@ export class ProductosGestion implements OnInit, OnDestroy {
     this.liberarPrevisualizaciones();
   }
 
-  cargarDatos(): void {
-    this.cargando = true;
-    this.refrescarVista();
-
-    forkJoin({
-      productos: this.productosService.getAdminProducts({
-        page: 0,
-        size: 100
-      }),
-      categorias: this.categoriasService.getAdmin('', 0, 100)
-    })
-      .pipe(
-        finalize(() => {
-          this.cargando = false;
-          this.refrescarVista();
-        })
-      )
-      .subscribe({
-        next: resultado => {
-          this.productos = [...resultado.productos.content];
-          this.categorias = [...resultado.categorias.content];
-
-          if (this.productoEditandoId) {
-            this.productoEditando = this.productos.find(
-              item => item.idProducto === this.productoEditandoId
-            );
-          }
-
-          this.refrescarVista();
-        },
-        error: error => {
-          this.productos = [];
-          this.categorias = [];
-
-          this.sweetAlert.error(
-            'No se pudo cargar el catálogo',
-            getHttpErrorMessage(error)
-          );
-
-          this.refrescarVista();
-        }
-      });
+cargarDatos(): void {
+  if (this.cargando) {
+    return;
   }
+
+  this.cargando = true;
+  this.refrescarVista();
+
+  forkJoin({
+    productos: this.productosService.getAdminProducts({
+      page: 0,
+      size: 20
+    }),
+    categorias: this.categoriasService.getAdmin('', 0, 100)
+  })
+    .pipe(
+      timeout(15000),
+      finalize(() => {
+        this.cargando = false;
+        this.refrescarVista();
+      })
+    )
+    .subscribe({
+      next: resultado => {
+        this.productos = [...resultado.productos.content];
+        this.categorias = [...resultado.categorias.content];
+
+        if (this.productoEditandoId) {
+          this.productoEditando = this.productos.find(
+            item => item.idProducto === this.productoEditandoId
+          );
+        }
+
+        this.refrescarVista();
+      },
+      error: error => {
+        this.productos = [];
+        this.categorias = [];
+
+        this.sweetAlert.error(
+          'No se pudo cargar el catálogo',
+          getHttpErrorMessage(error)
+        );
+
+        this.refrescarVista();
+      }
+    });
+}
 
   get productosFiltrados(): Producto[] {
     const termino = this.terminoBusqueda.trim().toLowerCase();
