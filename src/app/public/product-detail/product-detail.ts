@@ -1,120 +1,316 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { PRODUCTS_DATA, ProductData } from '../../shared/data/products-data';
-import { buildWhatsappUrl } from '../../shared/data/company-info';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  signal
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  ActivatedRoute,
+  RouterLink
+} from '@angular/router';
+import {
+  EMPTY,
+  catchError,
+  finalize,
+  forkJoin,
+  of,
+  switchMap,
+  tap
+} from 'rxjs';
 
-interface QuoteItem {
-  id: number;
-  code: string;
-  name: string;
-  category: string;
-  quantity: number;
-}
+import { SweetAlertService } from '../../compartido/servicios/sweet-alert.service';
+import { assetUrl } from '../../core/utils/api-url';
+import { getHttpErrorMessage } from '../../core/utils/http-error';
+import {
+  parseLines,
+  parseSpecifications
+} from '../../core/utils/text-parser';
+import { Producto } from '../../shared/models/domain.models';
+import { ContactService } from '../../shared/services/contact.service';
+import { ProductService } from '../../shared/services/product.service';
+import { QuoteService } from '../../shared/services/quote.service';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    RouterLink
+  ],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss'
 })
 export class ProductDetail implements OnInit {
-  products: ProductData[] = PRODUCTS_DATA;
-  product?: ProductData;
 
-  selectedImage = '';
-  quantity = 1;
+  private readonly destroyRef = inject(DestroyRef);
 
-  constructor(private route: ActivatedRoute) {}
+  readonly product = signal<Producto | null>(null);
+  readonly relatedProducts = signal<Producto[]>([]);
+  readonly selectedImage = signal('');
+  readonly quantity = signal(1);
+  readonly loading = signal(true);
+  readonly errorMessage = signal('');
 
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const id = Number(params.get('id'));
-      this.product = this.products.find(item => item.id === id) ?? this.products[0];
-      this.selectedImage = this.product.mainImage;
-      this.quantity = 1;
+  readonly characteristics = computed(() =>
+    parseLines(this.product()?.caracteristicas)
+  );
 
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 50);
-    });
-  }
+  readonly specifications = computed(() =>
+    parseSpecifications(
+      this.product()?.especificacionesTecnicas
+    )
+  );
 
-  get relatedProducts(): ProductData[] {
-    if (!this.product) {
+  readonly gallery = computed(() => {
+    const current = this.product();
+
+    if (!current) {
       return [];
     }
 
-    return this.products
-      .filter(item =>
-        item.category === this.product?.category &&
-        item.id !== this.product?.id &&
-        item.available
+    const additionalImages = [
+      ...(current.imagenes ?? [])
+    ]
+      .filter(image => image.activo)
+      .sort(
+        (first, second) =>
+          first.orden - second.orden
       )
-      .slice(0, 4);
+      .map(image => image.urlImagen);
+
+    const images = [
+      current.imagenPrincipalUrl,
+      ...additionalImages
+    ]
+      .filter(
+        (value): value is string =>
+          Boolean(value?.trim())
+      )
+      .map(image => this.imageUrl(image));
+
+    return [...new Set(images)];
+  });
+
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly productService: ProductService,
+    private readonly quoteService: QuoteService,
+    private readonly contactService: ContactService,
+    private readonly sweetAlert: SweetAlertService
+  ) {}
+
+  ngOnInit(): void {
+    this.route.paramMap
+      .pipe(
+        tap(() => {
+          this.loading.set(true);
+          this.errorMessage.set('');
+          this.product.set(null);
+          this.relatedProducts.set([]);
+          this.selectedImage.set('');
+          this.quantity.set(1);
+        }),
+        switchMap(params => {
+          const id = params.get('id');
+
+          if (!id) {
+            this.errorMessage.set(
+              'No se recibió el identificador del producto.'
+            );
+            this.loading.set(false);
+            return EMPTY;
+          }
+
+          return this.productService
+            .getPublicProduct(id)
+            .pipe(
+              switchMap(product =>
+                forkJoin({
+                  product: of(product),
+                  related: this.productService
+                    .getRelatedProducts(product.idProducto)
+                    .pipe(
+                      catchError(() => of([]))
+                    )
+                })
+              ),
+              tap(({ product, related }) => {
+                this.product.set(product);
+                this.relatedProducts.set([
+                  ...related
+                ]);
+                this.quantity.set(1);
+
+                const firstImage =
+                  this.buildGallery(product)[0];
+
+                this.selectedImage.set(
+                  firstImage ??
+                  this.imageUrl(
+                    product.imagenPrincipalUrl
+                  )
+                );
+              }),
+              catchError(error => {
+                this.product.set(null);
+                this.relatedProducts.set([]);
+                this.selectedImage.set('');
+
+                this.errorMessage.set(
+                  getHttpErrorMessage(
+                    error,
+                    'El producto no existe o no está publicado.'
+                  )
+                );
+
+                return EMPTY;
+              }),
+              finalize(() => {
+                this.loading.set(false);
+              })
+            );
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   selectImage(image: string): void {
-    this.selectedImage = image;
+    this.selectedImage.set(image);
   }
 
   increaseQuantity(): void {
-    this.quantity++;
+    this.quantity.update(value => value + 1);
   }
 
   decreaseQuantity(): void {
-    if (this.quantity > 1) {
-      this.quantity--;
-    }
+    this.quantity.update(value =>
+      value > 1 ? value - 1 : 1
+    );
   }
 
   addToQuote(): void {
-    if (!this.product) {
+    const current = this.product();
+
+    if (!current) {
+      void this.sweetAlert.error(
+        'Producto no disponible',
+        'No fue posible obtener la información del producto.'
+      );
       return;
     }
 
-    const storageKey = 'jm_pormar_quote';
-    const currentItems: QuoteItem[] = JSON.parse(localStorage.getItem(storageKey) || '[]');
-
-    const existingItem = currentItems.find(item => item.id === this.product?.id);
-
-    if (existingItem) {
-      existingItem.quantity += this.quantity;
-    } else {
-      currentItems.push({
-        id: this.product.id,
-        code: this.product.code,
-        name: this.product.name,
-        category: this.product.category,
-        quantity: this.quantity
-      });
+    if (
+      current.disponibilidad !== 'DISPONIBLE'
+    ) {
+      void this.sweetAlert.advertencia(
+        'Producto no disponible',
+        'Este producto no está disponible para cotización.'
+      );
+      return;
     }
 
-    localStorage.setItem(storageKey, JSON.stringify(currentItems));
-    alert('Producto agregado a la lista de cotización.');
+    this.quoteService.add(
+      current,
+      this.quantity()
+    );
+
+    void this.sweetAlert.toast(
+      this.quantity() === 1
+        ? 'Producto agregado a la cotización'
+        : `${this.quantity()} unidades agregadas a la cotización`
+    );
   }
 
   quoteByWhatsapp(): void {
-    if (!this.product) {
+    const current = this.product();
+
+    if (!current) {
+      void this.sweetAlert.error(
+        'Producto no disponible',
+        'No fue posible obtener la información del producto.'
+      );
       return;
     }
 
-    const message = `
-Hola JM Pormar, buen día.
+    const orderNumber = this.generateOrderNumber();
+    const orderDate = this.formatOrderDate(new Date());
 
-Quisiera solicitar una cotización para este producto:
+    const message =
+      `*PEDIDO N.° ${orderNumber}*\n` +
+      `*Fecha:* ${orderDate}\n\n` +
+      'Hola JM Pormar, buen día.\n\n' +
+      '*ESTOY INTERESADO EN:*\n' +
+      `1. *Producto:* ${current.nombre}\n` +
+      `   *Código:* ${current.codigoSku}\n` +
+      `   *Categoría:* ${current.categoria}\n` +
+      `   *Cantidad:* ${this.quantity()}\n` +
+      `   *Disponibilidad:* ${
+        current.disponibilidad === 'DISPONIBLE'
+          ? 'Disponible'
+          : 'No disponible'
+      }\n\n` +
+      '*SOLICITUD:*\n' +
+      'Por favor, confirmar precio, disponibilidad, ' +
+      'tiempo de atención y forma de entrega.\n\n' +
+      `*Enlace del producto:* ${window.location.href}\n\n` +
+      'Gracias.';
 
-PRODUCTO DE INTERÉS
-• Producto: ${this.product.name}
-• Código: ${this.product.code}
-• Categoría: ${this.product.category}
-• Cantidad referencial: ${this.quantity}
+    this.contactService.openWhatsapp(message);
+  }
 
-Quedo atento a su confirmación de disponibilidad, precio y tiempo de atención.
-Gracias.
-`.trim();
+  private generateOrderNumber(): string {
+    const now = new Date();
+    const pad = (value: number): string =>
+      value.toString().padStart(2, '0');
 
-    window.open(buildWhatsappUrl(message), '_blank');
+    return [
+      'JMP',
+      `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`,
+      `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`
+    ].join('-');
+  }
+
+  private formatOrderDate(date: Date): string {
+    return new Intl.DateTimeFormat('es-PE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
+  }
+
+  imageUrl(path?: string | null): string {
+    return assetUrl(path);
+  }
+
+  private buildGallery(
+    product: Producto
+  ): string[] {
+    const additionalImages = [
+      ...(product.imagenes ?? [])
+    ]
+      .filter(image => image.activo)
+      .sort(
+        (first, second) =>
+          first.orden - second.orden
+      )
+      .map(image => image.urlImagen);
+
+    const images = [
+      product.imagenPrincipalUrl,
+      ...additionalImages
+    ]
+      .filter(
+        (value): value is string =>
+          Boolean(value?.trim())
+      )
+      .map(image => this.imageUrl(image));
+
+    return [...new Set(images)];
   }
 }

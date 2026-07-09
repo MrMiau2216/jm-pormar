@@ -1020,3 +1020,768 @@
     padding: 26px;
   }
 }
+
+/* ===============================
+   HOME VISUAL - BLOQUE 2
+   =============================== */
+
+.home-section {
+  padding: 5rem 2rem;
+  background: #f5f3f0;
+}
+
+.section-heading {
+  max-width: 860px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.section-heading span {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  color: #a67c52;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: #202632;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.05;
+  font-weight: 900;
+}
+
+.section-heading p {
+  margin: 1rem auto 0;
+  max-width: 760px;
+  color: #5b616b;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.grid-sectores-home,
+.grid-servicios-home,
+.grid-lineas-home,
+.grid-certificaciones-home {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 1.4rem;
+}
+
+.grid-sectores-home {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.sector-card-home {
+  min-height: 280px;
+  border-radius: 24px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 18px 42px rgba(43, 47, 54, 0.14);
+  display: flex;
+  align-items: flex-end;
+}
+
+.sector-card-contenido {
+  padding: 1.6rem;
+  color: #ffffff;
+}
+
+.sector-card-contenido h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.sector-card-contenido p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.55;
+}
+
+.grid-servicios-home,
+.grid-lineas-home {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.servicio-card-home,
+.linea-card-home {
+  background: #ffffff;
+  border: 1px solid rgba(43, 47, 54, 0.12);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 18px 44px rgba(43, 47, 54, 0.09);
+}
+
+.servicio-imagen-home,
+.linea-imagen-home {
+  height: 190px;
+  background: #e9e4dc;
+  overflow: hidden;
+}
+
+.servicio-imagen-home img,
+.linea-imagen-home img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.servicio-contenido-home,
+.linea-contenido-home {
+  padding: 1.5rem;
+}
+
+.servicio-contenido-home span,
+.linea-contenido-home span {
+  color: #a67c52;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.servicio-contenido-home h3,
+.linea-contenido-home h3 {
+  margin: 0.55rem 0 0.8rem;
+  color: #202632;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.servicio-contenido-home p,
+.linea-contenido-home p {
+  margin: 0;
+  color: #5b616b;
+  line-height: 1.65;
+}
+
+.grid-certificaciones-home {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.certificacion-card-home {
+  min-height: 150px;
+  padding: 1.5rem;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(166, 124, 82, 0.24);
+  box-shadow: 0 16px 38px rgba(43, 47, 54, 0.08);
+}
+
+.certificacion-tipo-home {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(166, 124, 82, 0.12);
+  color: #a67c52;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.certificacion-card-home h3 {
+  margin: 0;
+  color: #202632;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+.acciones-home {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-home-principal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.95rem 1.45rem;
+  border-radius: 14px;
+  background: #2b2f36;
+  color: #ffffff;
+  font-weight: 800;
+  text-decoration: none;
+  border: 1px solid #2b2f36;
+}
+
+.btn-home-principal:hover {
+  background: #1f242b;
+}
+
+.clientes-home {
+  overflow: hidden;
+}
+
+.clientes-carousel {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.clientes-track {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+}
+
+.clientes-track.animado {
+  animation: clientes-scroll-home 28s linear infinite;
+}
+
+.cliente-card-home {
+  min-width: 190px;
+  height: 120px;
+  padding: 1rem;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid rgba(43, 47, 54, 0.12);
+  box-shadow: 0 14px 32px rgba(43, 47, 54, 0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  text-align: center;
+}
+
+.cliente-logo-home {
+  width: 70px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cliente-logo-home img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.cliente-card-home strong {
+  color: #2b2f36;
+  font-size: 0.9rem;
+}
+
+.estado-vacio-home {
+  width: min(820px, 100%);
+  margin: 0 auto;
+  padding: 1.4rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px dashed rgba(43, 47, 54, 0.18);
+  text-align: center;
+  color: #5b616b;
+}
+
+input[readonly],
+textarea[readonly] {
+  background: #f3f0eb;
+  color: #5b616b;
+  cursor: not-allowed;
+}
+
+@keyframes clientes-scroll-home {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid-sectores-home,
+  .grid-servicios-home,
+  .grid-lineas-home,
+  .grid-certificaciones-home {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .home-section {
+    padding: 4rem 1rem;
+  }
+
+  .grid-sectores-home,
+  .grid-servicios-home,
+  .grid-lineas-home,
+  .grid-certificaciones-home {
+    grid-template-columns: 1fr;
+  }
+
+  .sector-card-home {
+    min-height: 240px;
+  }
+
+  .clientes-carousel {
+    mask-image: none;
+  }
+
+  .clientes-track {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .clientes-track.animado {
+    animation: none;
+  }
+}
+
+/* ===============================
+   HOME AJUSTES FINALES - BLOQUE 8
+   =============================== */
+
+.home-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.grid-servicios-home,
+.grid-lineas-home,
+.grid-certificaciones-home,
+.grid-sectores-home {
+  align-items: stretch;
+}
+
+.servicio-card-home,
+.linea-card-home,
+.certificacion-card-home,
+.sector-card-home,
+.cliente-card-home {
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.servicio-card-home:hover,
+.linea-card-home:hover,
+.certificacion-card-home:hover,
+.cliente-card-home:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 62px rgba(43, 47, 54, 0.15);
+}
+
+.sector-card-home:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 28px 68px rgba(43, 47, 54, 0.2);
+}
+
+.servicio-imagen-home img,
+.linea-imagen-home img {
+  transition: transform 0.35s ease;
+}
+
+.servicio-card-home:hover .servicio-imagen-home img,
+.linea-card-home:hover .linea-imagen-home img {
+  transform: scale(1.06);
+}
+
+.servicio-card-home,
+.linea-card-home {
+  min-height: 100%;
+}
+
+.servicio-contenido-home,
+.linea-contenido-home {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+.servicio-contenido-home p,
+.linea-contenido-home p {
+  margin-bottom: 0;
+}
+
+.certificacion-card-home {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.certificacion-card-home h3 {
+  word-break: break-word;
+}
+
+.clientes-carousel:hover .clientes-track.animado {
+  animation-play-state: paused;
+}
+
+.cliente-logo-home img {
+  filter: grayscale(1);
+  opacity: 0.82;
+  transition:
+    filter 0.22s ease,
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.cliente-card-home:hover img {
+  filter: grayscale(0);
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+.estado-vacio-home {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(245, 243, 240, 0.9));
+}
+
+.estado-vacio-home p {
+  margin: 0;
+  font-weight: 700;
+}
+
+input[readonly] {
+  opacity: 1;
+  border-color: rgba(166, 124, 82, 0.22);
+}
+
+/* Evita que los fondos con imagen se vean planos si la imagen no carga */
+.sector-card-home {
+  background-color: #2b2f36;
+}
+
+/* Mejora de separación entre bloques grandes */
+.home-section + .home-section {
+  border-top: 1px solid rgba(43, 47, 54, 0.06);
+}
+
+/* Responsive más pulido */
+@media (max-width: 1180px) {
+  .grid-sectores-home {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-servicios-home,
+  .grid-lineas-home,
+  .grid-certificaciones-home {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .home-section {
+    padding: 3.8rem 1rem;
+  }
+
+  .section-heading {
+    margin-bottom: 2rem;
+  }
+
+  .section-heading h2 {
+    font-size: clamp(1.9rem, 9vw, 2.6rem);
+  }
+
+  .section-heading p {
+    font-size: 0.98rem;
+  }
+
+  .grid-sectores-home,
+  .grid-servicios-home,
+  .grid-lineas-home,
+  .grid-certificaciones-home {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .sector-card-home {
+    min-height: 230px;
+  }
+
+  .servicio-imagen-home,
+  .linea-imagen-home {
+    height: 180px;
+  }
+
+  .servicio-contenido-home,
+  .linea-contenido-home {
+    min-height: auto;
+    padding: 1.25rem;
+  }
+
+  .clientes-carousel {
+    overflow: visible;
+  }
+
+  .clientes-track {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    animation: none !important;
+  }
+
+  .cliente-card-home {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 460px) {
+  .clientes-track {
+    grid-template-columns: 1fr;
+  }
+
+  .cliente-card-home {
+    height: auto;
+    min-height: 105px;
+  }
+}
+
+/* ===============================
+   HOME FIX CLIENTES / CARDS
+   =============================== */
+
+.grid-certificaciones-home {
+  align-items: stretch;
+}
+
+.certificacion-card-home {
+  position: relative;
+  min-height: 180px;
+  padding: 1.6rem;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(166, 124, 82, 0.24);
+  box-shadow: 0 18px 46px rgba(43, 47, 54, 0.09);
+  overflow: hidden;
+}
+
+.certificacion-card-home::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: #a67c52;
+}
+
+.certificacion-card-home::after {
+  content: 'workspace_premium';
+  font-family: 'Material Symbols Outlined';
+  position: absolute;
+  right: 1.2rem;
+  bottom: 1rem;
+  color: rgba(166, 124, 82, 0.12);
+  font-size: 4rem;
+  line-height: 1;
+}
+
+.certificacion-tipo-home {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.42rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(166, 124, 82, 0.12);
+  color: #a67c52;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.certificacion-card-home h3 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: #202632;
+  font-size: 1.22rem;
+  line-height: 1.28;
+  font-weight: 900;
+}
+
+.clientes-carousel {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.clientes-track {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.clientes-track.animado {
+  justify-content: flex-start;
+  width: max-content;
+  animation: clientes-scroll-home 28s linear infinite;
+}
+
+.cliente-card-home {
+  flex: 0 0 220px;
+  min-width: 220px;
+  height: 128px;
+  padding: 1rem;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(43, 47, 54, 0.12);
+  box-shadow: 0 16px 38px rgba(43, 47, 54, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.cliente-logo-home {
+  width: 82px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cliente-logo-home img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.cliente-card-home strong {
+  color: #2b2f36;
+  font-size: 0.92rem;
+  line-height: 1.25;
+  font-weight: 900;
+}
+
+@keyframes clientes-scroll-home {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 900px) {
+  .clientes-track,
+  .clientes-track.animado {
+    width: 100%;
+    animation: none;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .cliente-card-home {
+    flex-basis: 200px;
+    min-width: 200px;
+  }
+}
+
+/* ===============================
+   CLIENTES HOME FIX
+   =============================== */
+
+.clientes-home {
+  overflow: visible;
+}
+
+.clientes-carousel {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  overflow: visible;
+  padding: 1rem 0 2rem;
+}
+
+.clientes-track {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  overflow: visible;
+}
+
+.clientes-track.animado {
+  justify-content: flex-start;
+  width: max-content;
+  animation: clientes-scroll-home 30s linear infinite;
+}
+
+.cliente-card-home {
+  flex: 0 0 220px;
+  min-width: 220px;
+  height: 128px;
+  padding: 1rem;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(43, 47, 54, 0.12);
+  box-shadow: 0 16px 38px rgba(43, 47, 54, 0.08);
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.cliente-card-home:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px rgba(43, 47, 54, 0.16);
+}
+
+@keyframes clientes-scroll-home {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ===============================
+   CLIENTES - CARDS MÁS GRANDES PARA LOGOS
+   =============================== */
+
+.cliente-card-home {
+  flex: 0 0 260px;
+  min-width: 260px;
+  height: 150px;
+  padding: 1.2rem;
+}
+
+.cliente-card-home img {
+  max-width: 190px;
+  max-height: 88px;
+  object-fit: contain;
+}
+
+.clientes-carousel {
+  padding-top: 1.5rem;
+  padding-bottom: 2.5rem;
+}
+
+/* ===============================
+   HOME - PÁRRAFO COMERCIAL ADICIONAL (HERO OSCURO)
+   =============================== */
+
+.home-commercial-copy {
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin: 1rem 0 0;
+}

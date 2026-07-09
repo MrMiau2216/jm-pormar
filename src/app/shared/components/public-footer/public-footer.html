@@ -1,57 +1,56 @@
-<footer class="public-footer">
+<footer class="public-footer" *ngIf="mostrarFooter">
   <div class="footer-container">
     <div class="footer-brand">
-      <h3>{{ company.shortName }}</h3>
-
-      <p>
-        Empresa peruana dedicada al abastecimiento de materiales de construcción,
-        artículos de ferretería, herramientas, equipos y servicios generales para
-        obras, empresas, instituciones y proyectos.
-      </p>
+      <h3>{{ shortName }}</h3>
+      <p>Empresa peruana dedicada al abastecimiento de materiales, ferretería, herramientas, equipos y servicios generales para obras, empresas, instituciones y proyectos.</p>
     </div>
 
     <div class="footer-section">
       <h4>Navegación</h4>
-      <a routerLink="/">Inicio</a>
-      <a routerLink="/nosotros">Nosotros</a>
-      <a routerLink="/productos">Productos</a>
-      <a routerLink="/servicios">Servicios</a>
-      <a routerLink="/contacto">Contáctanos</a>
+      <a routerLink="/">Inicio</a><a routerLink="/nosotros">Nosotros</a><a routerLink="/productos">Productos</a><a routerLink="/servicios">Servicios</a><a routerLink="/contacto">Contáctanos</a>
     </div>
 
     <div class="footer-section">
       <h4>Institucional</h4>
-      <a routerLink="/certificaciones">Certificaciones ISO</a>
-      <a routerLink="/politica-privacidad">Política de privacidad</a>
-      <a routerLink="/terminos-condiciones">Términos y condiciones</a>
-
-      <p class="footer-note">
-        La información del catálogo es referencial. La disponibilidad y condiciones
-        finales se confirman mediante cotización.
-      </p>
+      <a routerLink="/certificaciones">Certificaciones</a><a routerLink="/politica-privacidad">Política de privacidad</a><a routerLink="/terminos-condiciones">Términos y condiciones</a><a routerLink="/admin/login">Administración</a>
+      <p class="footer-note">La información del catálogo es referencial. La disponibilidad y condiciones finales se confirman mediante cotización.</p>
     </div>
 
     <div class="footer-section footer-contact">
-      <h4>Sede central</h4>
+      <h4>Datos</h4>
+      <ul class="footer-datos" *ngIf="contact as info; else noContact">
+        <li>
+          <span class="material-symbols-outlined">business</span>
+          <span>{{ info.razonSocial || companyName }}</span>
+        </li>
 
-      <div class="mini-map">
-        <div class="mini-map-grid"></div>
+        <li *ngIf="info.ruc">
+          <span class="material-symbols-outlined">badge</span>
+          <span>RUC: {{ info.ruc }}</span>
+        </li>
 
-        <div class="mini-map-pin">
+        <li>
+          <span class="material-symbols-outlined">call</span>
+          <span>{{ formatPhone(info.whatsapp) }}</span>
+        </li>
+
+        <li>
+          <span class="material-symbols-outlined">mail</span>
+          <span>{{ info.correo }}</span>
+        </li>
+
+        <li>
           <span class="material-symbols-outlined">location_on</span>
-        </div>
+          <span>{{ info.direccion }}</span>
+        </li>
 
-        <small>{{ company.location }}</small>
-      </div>
-
-      <p><strong>Razón social:</strong> {{ company.name }}</p>
-      <p><strong>RUC:</strong> {{ company.ruc }}</p>
-      <p><strong>Correo:</strong> {{ company.email }}</p>
-      <p><strong>Teléfono:</strong> {{ company.phoneDisplay }}</p>
+        <li>
+          <span class="material-symbols-outlined">schedule</span>
+          <span>{{ info.horarioAtencion }}</span>
+        </li>
+      </ul>
+      <ng-template #noContact><p>Configuración de contacto no disponible.</p></ng-template>
     </div>
   </div>
-
-  <div class="footer-bottom">
-    <p>© 2024 {{ company.shortName }}. Todos los derechos reservados.</p>
-  </div>
+  <div class="footer-bottom"><p>© {{ currentYear }} {{ shortName }}. Todos los derechos reservados.</p></div>
 </footer>

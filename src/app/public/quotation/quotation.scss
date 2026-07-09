@@ -385,3 +385,104 @@
     padding: 24px;
   }
 }
+
+/* ===============================
+   COTIZACIÓN - BLOQUE 3
+   =============================== */
+
+.quote-contact-card {
+  width: min(380px, 100%);
+  margin: auto;
+  padding: 2.5rem 2.2rem;
+  border-radius: 28px;
+  background: #ffffff;
+  border: 1px solid rgba(166, 124, 82, 0.28);
+  box-shadow: 0 24px 60px rgba(43, 47, 54, 0.18);
+  text-align: center;
+}
+
+.quote-contact-icon {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 1.2rem;
+  border-radius: 999px;
+  background: rgba(166, 124, 82, 0.12);
+  color: #a67c52;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quote-contact-icon .material-symbols-outlined {
+  font-size: 2rem;
+}
+
+.quote-contact-label {
+  display: block;
+  margin-bottom: 0.7rem;
+  color: #5b616b;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quote-contact-card strong {
+  display: block;
+  color: #202632;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.quote-contact-card p {
+  margin: 1rem 0 1.4rem;
+  color: #5b616b;
+  font-size: 1rem;
+}
+
+.quote-contact-button {
+  display: inline-flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 0.95rem 1.2rem;
+  border-radius: 14px;
+  background: #2b2f36;
+  color: #ffffff;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.quote-contact-button:hover {
+  background: #1f242b;
+}
+
+.quote-contact-location {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(43, 47, 54, 0.12);
+  color: #5b616b;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+input[readonly],
+textarea[readonly] {
+  background: #f3f0eb;
+  color: #5b616b;
+  cursor: not-allowed;
+}
+
+/* ===============================
+   COTIZACIÓN - QUITAR CARD CONTACTO
+   =============================== */
+
+.quote-contact-card,
+.cotizacion-contacto-card,
+.atencion-inmediata-card {
+  display: none !important;
+}

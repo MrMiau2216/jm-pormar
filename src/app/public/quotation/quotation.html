@@ -55,7 +55,7 @@
             <button type="button" (click)="increaseQuantity(item)">+</button>
           </div>
 
-          <button type="button" class="remove-button" (click)="removeItem(item.id)">
+          <button type="button" class="remove-button" (click)="removeItem(item)">
             <span class="material-symbols-outlined">delete</span>
           </button>
         </article>
@@ -85,77 +85,40 @@
         <strong>{{ totalUnits }}</strong>
       </div>
 
-      <form class="quote-form">
+      <form #quotationForm="ngForm" class="quote-form" (ngSubmit)="sendByWhatsapp(quotationForm)" novalidate>
         <label>
           Nombre completo *
-          <input
-            type="text"
-            name="nombre"
-            [(ngModel)]="quoteForm.nombre"
-            placeholder="Ej: Juan Pérez"
-          >
+          <input type="text" name="nombre" [(ngModel)]="quoteForm.nombre" #nombre="ngModel" required minlength="3" maxlength="150" placeholder="Ej: Juan Pérez">
+          <small class="admin-error" *ngIf="nombre.touched && nombre.errors?.['required']">El nombre es obligatorio.</small>
+          <small class="admin-error" *ngIf="nombre.touched && nombre.errors?.['minlength']">Debe tener al menos 3 caracteres.</small>
         </label>
 
         <label>
-          Empresa / Institución
-          <input
-            type="text"
-            name="empresa"
-            [(ngModel)]="quoteForm.empresa"
-            placeholder="Ej: Constructora S.A."
-          >
+          <span>RUC</span>
+          <input type="text" name="ruc" [(ngModel)]="quoteForm.ruc" #ruc="ngModel" (input)="onlyDigits('ruc')" pattern="[0-9]{11}" maxlength="11" inputmode="numeric" placeholder="Ej: 20601234567" (keydown.enter)="$event.preventDefault()">
+          <small class="admin-error" *ngIf="ruc.touched && ruc.errors?.['pattern']">El RUC debe tener exactamente 11 dígitos o quedar vacío.</small>
         </label>
 
         <label>
-          RUC
-          <input
-            type="text"
-            name="ruc"
-            [(ngModel)]="quoteForm.ruc"
-            (input)="onRucInput()"
-            (blur)="searchRuc()"
-            maxlength="11"
-            inputmode="numeric"
-            placeholder="Ej: 20601234567"
-          >
-
-          <small class="ruc-message" *ngIf="rucMessage">
-            {{ rucMessage }}
-          </small>
-        </label>
-
-        <label>
-          Razón social
-          <input
-            type="text"
-            name="razonSocial"
-            [(ngModel)]="quoteForm.razonSocial"
-            placeholder="Se completará automáticamente con el RUC"
-            readonly
-          >
+          <span>Razón social</span>
+          <input type="text" name="razonSocial" [(ngModel)]="quoteForm.razonSocial" placeholder="Se completará automáticamente con el RUC" readonly>
         </label>
 
         <label>
           Teléfono *
-          <input
-            type="text"
-            name="telefono"
-            [(ngModel)]="quoteForm.telefono"
-            placeholder="Ej: 987654321"
-          >
+          <input type="text" name="telefono" [(ngModel)]="quoteForm.telefono" #telefono="ngModel" required pattern="[0-9+() -]{7,20}" maxlength="20" placeholder="Ej: 987654321">
+          <small class="admin-error" *ngIf="telefono.touched && telefono.errors?.['required']">El teléfono es obligatorio.</small>
+          <small class="admin-error" *ngIf="telefono.touched && telefono.errors?.['pattern']">Ingresa un teléfono válido de 7 a 20 caracteres.</small>
         </label>
 
         <label>
           Detalle del requerimiento
-          <textarea
-            name="detalle"
-            rows="4"
-            [(ngModel)]="quoteForm.detalle"
-            placeholder="Agrega detalles de tu requerimiento, tiempos de entrega, cantidades adicionales, obra o destino..."
-          ></textarea>
+          <textarea name="detalle" rows="4" [(ngModel)]="quoteForm.detalle" maxlength="2000" placeholder="Agrega detalles de tu requerimiento, tiempos de entrega, cantidades adicionales, obra o destino..."></textarea>
+          <small>{{ quoteForm.detalle.length }}/2000</small>
         </label>
 
-        <button type="button" class="send-button" (click)="sendByWhatsapp()">
+        <p class="admin-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        <button type="submit" class="send-button">
           <span class="material-symbols-outlined">send</span>
           Enviar cotización por WhatsApp
         </button>

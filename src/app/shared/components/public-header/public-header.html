@@ -1,19 +1,57 @@
 <header class="public-header">
   <div class="header-container">
-    <button type="button" class="brand" (click)="goTo('/')">
+    <button
+      type="button"
+      class="brand"
+      (click)="goTo('/')"
+    >
       JM Pormar
     </button>
 
     <nav class="nav" [class.open]="isMenuOpen">
-      <button type="button" (click)="goTo('/')">Inicio</button>
-      <button type="button" (click)="goTo('/nosotros')">Nosotros</button>
-      <button type="button" (click)="goTo('/productos')">Productos</button>
-      <button type="button" (click)="goTo('/servicios')">Servicios</button>
-      <button type="button" (click)="goTo('/contacto')">Contáctanos</button>
+      <button
+        type="button"
+        (click)="goTo('/')"
+      >
+        Inicio
+      </button>
+
+      <button
+        type="button"
+        (click)="goTo('/nosotros', 'nosotros-principal')"
+      >
+        Nosotros
+      </button>
+
+      <button
+        type="button"
+        (click)="goTo('/productos', 'catalogo')"
+      >
+        Productos
+      </button>
+
+      <button
+        type="button"
+        (click)="goTo('/servicios', 'servicios-principales')"
+      >
+        Servicios
+      </button>
+
+      <button
+        type="button"
+        (click)="goTo('/contacto', 'contacto-principal')"
+      >
+        Contáctanos
+      </button>
     </nav>
 
     <div class="header-actions">
-      <button type="button" class="menu-button" (click)="toggleMenu()">
+      <button
+        type="button"
+        class="menu-button"
+        aria-label="Abrir o cerrar menú"
+        (click)="toggleMenu()"
+      >
         <span class="material-symbols-outlined">
           {{ isMenuOpen ? 'close' : 'menu' }}
         </span>

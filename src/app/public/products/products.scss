@@ -342,11 +342,6 @@ select {
   margin-bottom: 18px;
 }
 
-.product-actions {
-  display: grid;
-  gap: 10px;
-}
-
 .outline-button,
 .add-button {
   min-height: 42px;
@@ -523,4 +518,119 @@ select {
   .pagination {
     flex-wrap: wrap;
   }
+}
+
+/* ===============================
+   PRODUCTOS - BLOQUE 6
+   =============================== */
+
+#explorar-catalogo {
+  scroll-margin-top: 90px;
+}
+
+.filtros-catalogo {
+  width: min(1180px, 100%);
+  margin: 0 auto 2rem;
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) 260px auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.campo-busqueda {
+  position: relative;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(43, 47, 54, 0.14);
+  box-shadow: 0 12px 30px rgba(43, 47, 54, 0.06);
+}
+
+.campo-busqueda .material-symbols-outlined {
+  color: #a67c52;
+  font-size: 1.25rem;
+}
+
+.campo-busqueda input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #2b2f36;
+  font: inherit;
+}
+
+.selector-categoria {
+  min-height: 54px;
+  width: 100%;
+  padding: 0 1rem;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(43, 47, 54, 0.14);
+  color: #2b2f36;
+  font: inherit;
+  outline: none;
+  box-shadow: 0 12px 30px rgba(43, 47, 54, 0.06);
+}
+
+.btn-limpiar-filtros {
+  min-height: 54px;
+  padding: 0 1.1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(166, 124, 82, 0.42);
+  background: #ffffff;
+  color: #a67c52;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px rgba(43, 47, 54, 0.06);
+}
+
+.btn-limpiar-filtros:hover {
+  background: rgba(166, 124, 82, 0.08);
+}
+
+@media (max-width: 900px) {
+  .filtros-catalogo {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-limpiar-filtros {
+    width: 100%;
+  }
+}
+
+/* ===============================
+   PRODUCTOS - ALINEAR BOTONES DE CARDS
+   =============================== */
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.product-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.product-body p {
+  min-height: 66px;
+}
+
+.product-actions {
+  margin-top: auto;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.product-actions a,
+.product-actions button {
+  min-height: 44px;
 }

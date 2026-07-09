@@ -1,14 +1,9 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface Certification {
-  name: string;
-  type: string;
-  description: string;
-  fileUrl: string;
-  fileType: 'PDF' | 'IMAGE';
-  icon: string;
-}
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { finalize } from 'rxjs';
+import { getHttpErrorMessage } from '../../core/utils/http-error';
+import { Certificacion } from '../../shared/models/domain.models';
+import { CertificationService } from '../../shared/services/certification.service';
 
 @Component({
   selector: 'app-certifications',
@@ -16,53 +11,79 @@ interface Certification {
   templateUrl: './certifications.html',
   styleUrl: './certifications.scss'
 })
-export class Certifications {
-  selectedCertification?: Certification;
+export class Certifications implements OnInit {
+  certifications: Certificacion[] = [];
+  loading = true;
+  errorMessage = '';
 
-  certifications: Certification[] = [
-    {
-      name: 'ISO 9001',
-      type: 'Calidad',
-      description:
-        'Certificación orientada al sistema de gestión de la calidad y mejora continua de procesos.',
-      fileUrl: '/certificates/iso-9001.pdf',
-      fileType: 'PDF',
-      icon: 'verified'
-    },
-    {
-      name: 'ISO 14001',
-      type: 'Ambiental',
-      description:
-        'Certificación relacionada con la gestión ambiental y el compromiso con prácticas responsables.',
-      fileUrl: '/certificates/iso-14001.pdf',
-      fileType: 'PDF',
-      icon: 'eco'
-    },
-    {
-      name: 'ISO 37001',
-      type: 'Antisoborno',
-      description:
-        'Certificación enfocada en la prevención de soborno y fortalecimiento de buenas prácticas empresariales.',
-      fileUrl: '/certificates/iso-37001.pdf',
-      fileType: 'PDF',
-      icon: 'gpp_good'
-    },
-    {
-      name: 'BPL',
-      type: 'Buenas prácticas',
-      description:
-        'Reconocimiento relacionado con buenas prácticas logísticas, laborales u operativas.',
-      fileUrl: '/certificates/bpl.pdf',
-      fileType: 'PDF',
-      icon: 'description'
-    }
-  ];
+  constructor(
+    private readonly certificationService: CertificationService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
-  openPreview(certification: Certification): void {
-    this.selectedCertification = certification;
+  ngOnInit(): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.cdr.detectChanges();
+
+    this.certificationService.getPublic()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: certifications => {
+          this.certifications = [...certifications].sort((a, b) => a.orden - b.orden);
+          this.cdr.detectChanges();
+        },
+        error: error => {
+          this.certifications = [];
+          this.errorMessage = getHttpErrorMessage(error, 'No se pudieron cargar las certificaciones.');
+          this.cdr.detectChanges();
+        }
+      });
   }
 
-  closePreview(): void {
-    this.selectedCertification = undefined;
+  get certificacionesPublicas(): Certificacion[] {
+    return this.certifications.filter(certificacion => certificacion?.activo !== false);
+  }
+
+  obtenerNombreCertificacion(certificacion: any): string {
+    return certificacion?.nombre || certificacion?.titulo || 'Certificación registrada';
+  }
+
+  obtenerDescripcionCertificacion(certificacion: any): string {
+    return certificacion?.descripcion || 'Documento de respaldo empresarial registrado por JM Pormar.';
+  }
+
+  obtenerTipoCertificacion(certificacion: any): string {
+    return certificacion?.tipo || certificacion?.tipoArchivo || 'Certificación';
+  }
+
+  obtenerUrlCertificado(certificacion: any): string {
+    const url =
+      certificacion?.archivoUrl ||
+      certificacion?.urlArchivo ||
+      certificacion?.documentoUrl ||
+      certificacion?.pdfUrl ||
+      '';
+
+    if (url.startsWith('http') || url.startsWith('/')) {
+      return url;
+    }
+
+    const id =
+      certificacion?.idCertificacion ||
+      certificacion?.id ||
+      certificacion?.uuid ||
+      '';
+
+    return id ? `/api/public/certificaciones/${id}/ver` : '#';
+  }
+
+  certificadoTieneVista(certificacion: any): boolean {
+    return this.obtenerUrlCertificado(certificacion) !== '#';
   }
 }

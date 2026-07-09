@@ -1,176 +1,104 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { COMPANY_INFO, buildWhatsappUrl } from '../../shared/data/company-info';
-import { RucLookupService } from '../../shared/services/ruc-lookup.service';
-
-interface ContactMethod {
-  icon: string;
-  title: string;
-  value: string;
-  detail: string;
-}
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { Contacto } from '../../shared/models/domain.models';
+import { ContactService } from '../../shared/services/contact.service';
+import { logError } from '../../shared/utils/app-logger.util';
+import { abrirWhatsappDirecto, armarMensajeWhatsapp } from '../../shared/utils/whatsapp.util';
 
 @Component({
   selector: 'app-contact',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './contact.html',
   styleUrl: './contact.scss'
 })
-export class Contact {
-  company = COMPANY_INFO;
+export class Contact implements OnInit {
+  readonly companyName = 'INVERSIONES JM PORMAR BIENES Y SERVICIOS E.I.R.L.';
+  readonly shortName = 'JM Pormar';
+  contact?: Contacto;
+  loading = true;
+  errorMessage = '';
+  formErrorMessage = '';
 
-  constructor(private rucLookupService: RucLookupService) {}
+  contactForm = { nombre: '', empresa: '', razonSocial: '', ruc: '', telefono: '', correo: '', asunto: '', mensaje: '' };
+  private ultimoRucConsultado = '';
 
-  contactForm = {
-    nombre: '',
-    empresa: '',
-    razonSocial: '',
-    ruc: '',
-    telefono: '',
-    correo: '',
-    asunto: '',
-    mensaje: ''
-  };
+  constructor(private readonly contactService: ContactService) {}
 
-  rucMessage = '';
-  rucSearching = false;
-
-  onRucInput(): void {
-    this.contactForm.ruc = this.contactForm.ruc.replace(/\D/g, '');
-
-    if (this.contactForm.ruc.length < 11) {
-      this.contactForm.razonSocial = '';
-      this.rucMessage = '';
-    }
-
-    if (this.contactForm.ruc.length === 11) {
-      this.searchRuc();
-    }
-  }
-
-  searchRuc(): void {
-    const ruc = this.contactForm.ruc.trim();
-
-    if (!ruc) {
-      this.contactForm.razonSocial = '';
-      this.rucMessage = '';
-      return;
-    }
-
-    if (ruc.length !== 11) {
-      this.contactForm.razonSocial = '';
-      this.rucMessage = 'El RUC debe tener 11 dígitos.';
-      return;
-    }
-
-    this.rucSearching = true;
-    this.rucMessage = 'Buscando razón social...';
-
-    this.rucLookupService.searchByRuc(ruc).subscribe(result => {
-      this.rucSearching = false;
-
-      if (!result) {
-        this.contactForm.razonSocial = '';
-        this.rucMessage = 'No se encontró razón social para este RUC.';
-        return;
+  ngOnInit(): void {
+    this.contactService.getPublic().subscribe({
+      next: contact => {
+        this.contact = contact;
+        this.loading = false;
+      },
+      error: () => {
+        this.errorMessage = 'No se pudo cargar la configuración de contacto.';
+        this.loading = false;
       }
-
-      this.contactForm.razonSocial = result.razonSocial;
-      this.rucMessage = 'Razón social encontrada.';
     });
   }
 
-  private validateContactForm(): boolean {
-    if (!this.contactForm.nombre.trim()) {
-      alert('Ingresa tu nombre completo.');
-      return false;
-    }
+  onlyDigits(): void {
+    this.contactForm.ruc = this.contactForm.ruc.replace(/\D/g, '');
 
-    if (!this.contactForm.telefono.trim()) {
-      alert('Ingresa tu número de teléfono.');
-      return false;
-    }
-
-    if (!this.contactForm.asunto.trim() && !this.contactForm.mensaje.trim()) {
-      alert('Ingresa un asunto o mensaje.');
-      return false;
-    }
-
-    if (this.contactForm.ruc && this.contactForm.ruc.length !== 11) {
-      alert('El RUC debe tener 11 dígitos.');
-      return false;
-    }
-
-    if (this.contactForm.ruc && !this.contactForm.razonSocial) {
-      alert('Valida el RUC para obtener la razón social.');
-      return false;
-    }
-
-    return true;
-  }
-
-  contactMethods: ContactMethod[] = [
-    {
-      icon: 'call',
-      title: 'Teléfono',
-      value: COMPANY_INFO.phoneDisplay,
-      detail: 'Atención comercial directa'
-    },
-    {
-      icon: 'mail',
-      title: 'Correo electrónico',
-      value: COMPANY_INFO.email,
-      detail: 'Recepción de consultas empresariales'
-    },
-    {
-      icon: 'location_on',
-      title: 'Ubicación',
-      value: COMPANY_INFO.location,
-      detail: 'Atención a empresas, obras e instituciones'
-    },
-    {
-      icon: 'schedule',
-      title: 'Horario de atención',
-      value: 'Lunes a sábado',
-      detail: 'Atención previa coordinación'
-    }
-  ];
-
-  sendContact(): void {
-    if (!this.validateContactForm()) {
+    if (this.contactForm.ruc.length !== 11) {
+      this.contactForm.razonSocial = '';
+      this.ultimoRucConsultado = '';
       return;
     }
 
-    const message = `
-Hola JM Pormar, buen día.
+    if (this.ultimoRucConsultado === this.contactForm.ruc) {
+      return;
+    }
 
-Quisiera realizar una consulta desde su página web.
+    this.ultimoRucConsultado = this.contactForm.ruc;
 
-DATOS DE CONTACTO
-• Nombre: ${this.contactForm.nombre}
-• Empresa / Institución: ${this.contactForm.empresa || 'No indicado'}
-• RUC: ${this.contactForm.ruc || 'No indicado'}
-• Razón social: ${this.contactForm.razonSocial || 'No indicada'}
-• Teléfono: ${this.contactForm.telefono}
-• Correo: ${this.contactForm.correo || 'No indicado'}
+    this.contactService.consultarRuc(this.contactForm.ruc).subscribe(result => {
+      this.contactForm.razonSocial = result?.razonSocial || '';
+    });
+  }
 
-ASUNTO
-${this.contactForm.asunto || 'No indicado'}
+  sendContact(formDirective: NgForm): void {
+    this.formErrorMessage = '';
+    this.onlyDigits();
+    if (formDirective.invalid) {
+      formDirective.control.markAllAsTouched();
+      this.formErrorMessage = 'Corrige los campos marcados antes de enviar la consulta.';
+      return;
+    }
+    if (!this.contactForm.asunto.trim() && !this.contactForm.mensaje.trim()) {
+      this.formErrorMessage = 'Ingresa un asunto o un mensaje.';
+      return;
+    }
 
-MENSAJE
-${this.contactForm.mensaje || 'No indicado'}
+    const f = this.contactForm;
 
-Quedo atento a su respuesta.
-Gracias.
-`.trim();
+    try {
+      const mensaje = armarMensajeWhatsapp([
+        'Hola, buen día.',
+        '',
+        `Mi nombre es ${f.nombre.trim() || 'cliente interesado'}.`,
+        f.razonSocial ? `Represento a: ${f.razonSocial.trim()}` : null,
+        f.ruc ? `RUC: ${f.ruc}` : null,
+        f.telefono ? `Teléfono de contacto: ${f.telefono.trim()}` : null,
+        f.correo ? `Correo: ${f.correo.trim()}` : null,
+        '',
+        'MOTIVO DE CONSULTA',
+        f.asunto ? f.asunto.trim() : 'Deseo realizar una consulta.',
+        '',
+        f.mensaje ? `DETALLE\n${f.mensaje.trim()}` : null,
+        '',
+        'Quedo atento(a) a su respuesta.',
+        'Muchas gracias.'
+      ]);
 
-    window.open(buildWhatsappUrl(message), '_blank');
+      abrirWhatsappDirecto(this.contact?.whatsapp, mensaje);
+    } catch (error) {
+      logError('CONTACTO', 'ENVIAR_WHATSAPP', error, f);
+    }
   }
 
   openWhatsapp(): void {
-    const message = 'Hola, deseo comunicarme con JM Pormar.';
-    window.open(buildWhatsappUrl(message), '_blank');
+    abrirWhatsappDirecto(this.contact?.whatsapp, 'Hola, deseo comunicarme con JM Pormar.');
   }
 }

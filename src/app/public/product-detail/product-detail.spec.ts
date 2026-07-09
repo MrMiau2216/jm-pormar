@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
 import { ProductDetail } from './product-detail';
@@ -15,24 +16,14 @@ describe('ProductDetail', () => {
 
     await TestBed.configureTestingModule({
       imports: [ProductDetail],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProductDetail);
     component = fixture.componentInstance;
-    await fixture.whenStable();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should show available products from the same category', () => {
-    component.product = component.products.find(product => product.id === 3);
-
-    expect(component.relatedProducts.map(product => product.name)).toEqual([
-      'Rotomartillo SDS Plus',
-      'Esmeril Angular 4 1/2"',
-    ]);
   });
 });

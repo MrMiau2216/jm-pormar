@@ -1,0 +1,341 @@
+/* ===============================
+   CONTACTO ADMIN - VISTA FINAL
+   =============================== */
+
+.contacto-admin-page {
+  padding: 2rem;
+  background: #f5f3f0;
+  min-height: 100%;
+}
+
+.contacto-admin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.contacto-admin-header span {
+  color: #a67c52;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contacto-admin-header h1 {
+  margin: 0.35rem 0 0.3rem;
+  color: #202632;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1;
+  font-weight: 900;
+}
+
+.contacto-admin-header p {
+  margin: 0;
+  color: #5b616b;
+  font-size: 1.02rem;
+}
+
+.btn-recargar-contacto {
+  min-height: 48px;
+  padding: 0 1.2rem;
+  border-radius: 14px;
+  border: 1px solid rgba(43, 47, 54, 0.14);
+  background: #ffffff;
+  color: #2b2f36;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+}
+
+.btn-recargar-contacto:hover {
+  border-color: rgba(166, 124, 82, 0.45);
+  color: #a67c52;
+}
+
+.contacto-admin-alerta {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.2rem;
+  border-radius: 18px;
+  background: rgba(166, 124, 82, 0.08);
+  border: 1px solid rgba(166, 124, 82, 0.22);
+  color: #5b616b;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.contacto-admin-alerta .material-symbols-outlined {
+  color: #a67c52;
+}
+
+.contacto-admin-alerta p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.contacto-admin-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.contacto-admin-form,
+.contacto-admin-preview {
+  background: #ffffff;
+  border: 1px solid rgba(43, 47, 54, 0.12);
+  border-radius: 26px;
+  box-shadow: 0 18px 44px rgba(43, 47, 54, 0.08);
+}
+
+.contacto-admin-form {
+  padding: 1.8rem;
+}
+
+.form-header {
+  margin-bottom: 1.6rem;
+}
+
+.form-header h2 {
+  margin: 0 0 0.35rem;
+  color: #202632;
+  font-size: 1.55rem;
+  font-weight: 900;
+}
+
+.form-header p {
+  margin: 0;
+  color: #5b616b;
+}
+
+.contacto-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.contacto-admin-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  color: #202632;
+  font-weight: 900;
+}
+
+.contacto-admin-grid label span {
+  font-size: 0.88rem;
+}
+
+.campo-completo {
+  grid-column: 1 / -1;
+}
+
+.contacto-admin-grid input {
+  width: 100%;
+  height: 52px;
+  border-radius: 14px;
+  border: 1px solid rgba(43, 47, 54, 0.16);
+  background: #ffffff;
+  color: #202632;
+  padding: 0 0.95rem;
+  font: inherit;
+}
+
+.contacto-admin-grid input:focus {
+  outline: none;
+  border-color: rgba(166, 124, 82, 0.7);
+  box-shadow: 0 0 0 4px rgba(166, 124, 82, 0.1);
+}
+
+.contacto-admin-limitaciones {
+  margin-top: 1.5rem;
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  background: #f5f3f0;
+  border: 1px dashed rgba(43, 47, 54, 0.18);
+  color: #5b616b;
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+}
+
+.contacto-admin-limitaciones .material-symbols-outlined {
+  color: #a67c52;
+}
+
+.contacto-admin-limitaciones strong {
+  display: block;
+  color: #202632;
+  margin-bottom: 0.25rem;
+}
+
+.contacto-admin-limitaciones p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.contacto-admin-actions {
+  margin-top: 1.6rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.btn-secundario-contacto,
+.btn-guardar-contacto {
+  min-height: 48px;
+  padding: 0 1.2rem;
+  border-radius: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.btn-secundario-contacto {
+  background: #ffffff;
+  color: #2b2f36;
+  border: 1px solid rgba(43, 47, 54, 0.18);
+}
+
+.btn-guardar-contacto {
+  background: #a67c52;
+  color: #ffffff;
+  border: 1px solid #a67c52;
+}
+
+.btn-guardar-contacto:hover {
+  background: #90683f;
+}
+
+.contacto-admin-preview {
+  padding: 1.5rem;
+  position: sticky;
+  top: 5.5rem;
+}
+
+.preview-header {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.preview-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(166, 124, 82, 0.1);
+  color: #a67c52;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-header h2 {
+  margin: 0;
+  color: #202632;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.preview-header p {
+  margin: 0.25rem 0 0;
+  color: #5b616b;
+  font-size: 0.92rem;
+}
+
+.preview-item {
+  padding: 1rem;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(43, 47, 54, 0.12);
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.preview-item + .preview-item {
+  margin-top: 0.8rem;
+}
+
+.preview-item .material-symbols-outlined {
+  color: #a67c52;
+}
+
+.preview-item small {
+  display: block;
+  color: #5b616b;
+  font-weight: 900;
+  margin-bottom: 0.2rem;
+}
+
+.preview-item strong {
+  display: block;
+  color: #202632;
+  font-weight: 900;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.preview-whatsapp {
+  margin-top: 1rem;
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 14px;
+  background: #25d366;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-whatsapp:hover {
+  background: #1ebe5d;
+}
+
+@media (max-width: 1100px) {
+  .contacto-admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .contacto-admin-preview {
+    position: static;
+  }
+}
+
+@media (max-width: 720px) {
+  .contacto-admin-page {
+    padding: 1rem;
+  }
+
+  .contacto-admin-header {
+    flex-direction: column;
+  }
+
+  .contacto-admin-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contacto-admin-actions {
+    flex-direction: column;
+  }
+
+  .btn-secundario-contacto,
+  .btn-guardar-contacto,
+  .btn-recargar-contacto {
+    width: 100%;
+    justify-content: center;
+  }
+}

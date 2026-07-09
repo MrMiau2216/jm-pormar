@@ -1,0 +1,181 @@
+<section class="pagina-servicios">
+  <div class="encabezado-pagina">
+    <div>
+      <small>Gestión de servicios</small>
+      <h1>Servicios</h1>
+      <p>Administra los servicios registrados según la estructura de la tabla servicio.</p>
+    </div>
+
+    <button type="button" class="boton-principal" (click)="abrirNuevoServicio()">
+      <span class="material-symbols-outlined">add</span>
+      Nuevo servicio
+    </button>
+  </div>
+
+  <div class="tarjeta-informativa">
+    <span class="material-symbols-outlined">info</span>
+    <p>
+      Este módulo respeta los campos definidos en la tabla servicio. Cada servicio
+      cuenta con una sola imagen principal.
+    </p>
+  </div>
+
+  <div class="tarjeta-filtros">
+    <label class="buscador">
+      <span class="material-symbols-outlined">search</span>
+      <input
+        type="text"
+        [(ngModel)]="terminoBusqueda"
+        placeholder="Buscar por nombre, proyecto o descripción..."
+      >
+    </label>
+
+    <select [(ngModel)]="filtroEstado" aria-label="Filtrar por estado">
+      <option value="TODOS">Todos</option>
+      <option value="ACTIVOS">Activos</option>
+      <option value="INACTIVOS">Inactivos</option>
+    </select>
+
+    <button type="button" class="boton-limpiar" (click)="limpiarFiltros()">Limpiar</button>
+  </div>
+
+  <div class="tarjeta-tabla">
+    <div class="resumen-tabla">
+      <strong>{{ serviciosFiltrados.length }}</strong>
+      <span>servicios encontrados</span>
+    </div>
+
+    <div class="tabla-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Imagen</th>
+            <th>Servicio</th>
+            <th>Proyecto relacionado</th>
+            <th>Estado web</th>
+            <th>Última actualización</th>
+            <th class="columna-acciones">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let servicio of serviciosFiltrados">
+            <td data-label="Imagen" class="celda-imagen">
+              <div class="miniatura">
+                <img
+                  *ngIf="servicio.imagenPrincipalUrl; else sinImagen"
+                  [src]="resolverUrl(servicio.imagenPrincipalUrl)"
+                  [alt]="servicio.nombre"
+                >
+                <ng-template #sinImagen>
+                  <span class="material-symbols-outlined">image</span>
+                </ng-template>
+              </div>
+            </td>
+            <td data-label="Servicio">
+              <div class="servicio-info">
+                <strong>{{ servicio.nombre }}</strong>
+                <span>{{ servicio.descripcionBreve }}</span>
+              </div>
+            </td>
+            <td data-label="Proyecto relacionado"><span class="texto-muted">{{ servicio.proyectoRelacionado }}</span></td>
+            <td data-label="Estado web">
+              <span class="estado" [class.inactivo]="!servicio.activo">
+                {{ servicio.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td data-label="Última actualización">
+              <span class="texto-muted">
+                {{ servicio.fechaActualizacion | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+            </td>
+            <td class="acciones" data-label="Acciones">
+              <div class="acciones-contenedor">
+              <button
+                type="button"
+                class="boton-icono editar"
+                title="Editar"
+                aria-label="Editar servicio"
+                (click)="abrirEditarServicio(servicio)"
+              >
+                <span class="material-symbols-outlined">edit</span>
+              </button>
+
+              <button
+                type="button"
+                class="boton-icono cambiar-estado"
+                title="Activar o desactivar"
+                aria-label="Activar o desactivar servicio"
+                (click)="cambiarEstado(servicio)"
+              >
+                <span class="material-symbols-outlined">
+                  {{ servicio.activo ? 'visibility_off' : 'visibility' }}
+                </span>
+              </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="serviciosFiltrados.length === 0">
+            <td colspan="6" class="sin-resultados">
+              No se encontraron servicios con los filtros seleccionados.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="fondo-modal" *ngIf="modalAbierto">
+  <div class="modal-servicio" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-servicio">
+    <div class="modal-encabezado">
+      <div>
+        <small>{{ modoEdicion ? 'Editar servicio' : 'Nuevo servicio' }}</small>
+        <h2 id="titulo-modal-servicio">{{ modoEdicion ? 'Modificar información' : 'Registrar servicio' }}</h2>
+      </div>
+      <button type="button" class="boton-cerrar" aria-label="Cerrar" (click)="cerrarModal()"><span class="material-symbols-outlined">close</span></button>
+    </div>
+
+    <form class="formulario-servicio" #formServicio="ngForm" (ngSubmit)="guardarServicio(formServicio)" novalidate>
+      <div class="grid-formulario">
+        <label>
+          Nombre del servicio *
+          <input type="text" name="nombre" [(ngModel)]="formulario.nombre" required minlength="3" maxlength="150" placeholder="Ej: Abastecimiento de materiales">
+        </label>
+        <label>
+          Proyecto relacionado
+          <input type="text" name="proyectoRelacionado" [(ngModel)]="formulario.proyectoRelacionado" maxlength="180" placeholder="Ej: Obras civiles, empresas e instituciones">
+        </label>
+      </div>
+
+      <div class="bloque-archivo">
+        <label>
+          Imagen principal
+          <input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" (change)="seleccionarImagenPrincipal($event)" [disabled]="subiendoArchivo">
+        </label>
+        <div class="vista-imagen" *ngIf="formulario.imagenPrincipalUrl">
+          <img [src]="resolverUrl(formulario.imagenPrincipalUrl)" alt="Vista previa del servicio">
+          <span>{{ formulario.imagenPrincipalUrl }}</span>
+        </div>
+        <small>JPG, PNG o WEBP. Máximo 5 MB. {{ subiendoArchivo ? 'Cargando archivo...' : '' }}</small>
+      </div>
+
+      <label>
+        Descripción breve *
+        <textarea name="descripcionBreve" rows="3" [(ngModel)]="formulario.descripcionBreve" required maxlength="250" placeholder="Texto corto que se verá en la tarjeta del servicio..."></textarea>
+      </label>
+      <label>
+        Descripción completa *
+        <textarea name="descripcionCompleta" rows="5" [(ngModel)]="formulario.descripcionCompleta" required maxlength="5000" placeholder="Detalle completo del servicio..."></textarea>
+      </label>
+
+      <div class="checks-formulario"><label><input type="checkbox" name="activo" [(ngModel)]="formulario.activo"> Servicio activo en la web</label></div>
+      <div class="nota-formulario"><span class="material-symbols-outlined">info</span><p>Los cambios se guardan en PostgreSQL y las imágenes en el volumen persistente del backend.</p></div>
+      <div class="acciones-modal">
+        <button type="button" class="boton-secundario" (click)="cerrarModal()">Cancelar</button>
+        <button type="submit" class="boton-principal" [disabled]="guardando || subiendoArchivo">{{ guardando ? 'Guardando...' : (modoEdicion ? 'Guardar cambios' : 'Registrar servicio') }}</button>
+      </div>
+    </form>
+  </div>
+</div>

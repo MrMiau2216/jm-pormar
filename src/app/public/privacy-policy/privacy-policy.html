@@ -32,10 +32,10 @@
 
       <ul>
         <li><strong>Razón social:</strong> INVERSIONES JM PORMAR BIENES Y SERVICIOS E.I.R.L.</li>
-        <li><strong>RUC:</strong> 20601234567</li>
-        <li><strong>Ubicación:</strong> Lima, Perú</li>
-        <li><strong>Correo de contacto:</strong> contacto&#64;jmpormar.com</li>
-        <li><strong>Teléfono:</strong> +51 949 180 383</li>
+        <li><strong>RUC:</strong> {{ contact?.ruc || 'No disponible' }}</li>
+        <li><strong>Ubicación:</strong> {{ contact?.direccion || 'Lima, Perú' }}</li>
+        <li><strong>Correo de contacto:</strong> {{ contact?.correo || 'No disponible' }}</li>
+        <li><strong>Teléfono:</strong> {{ formatPhone(contact?.whatsapp) }}</li>
       </ul>
     </article>
 

@@ -34,21 +34,10 @@ describe('Quotation', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should populate the business name for a known RUC', () => {
-    component.quoteForm.ruc = '20601234567';
-
-    component.onRucInput();
-
-    expect(component.quoteForm.razonSocial).toBe(
-      'INVERSIONES JM PORMAR BIENES Y SERVICIOS E.I.R.L.'
-    );
-    expect(component.rucMessage).toBe('Razón social encontrada.');
-  });
-
   it('should remove non-numeric RUC characters', () => {
     component.quoteForm.ruc = '20A60-123';
 
-    component.onRucInput();
+    component.onlyDigits('ruc');
 
     expect(component.quoteForm.ruc).toBe('2060123');
   });

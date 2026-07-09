@@ -1,0 +1,34 @@
+<div class="fondo-dialogo" *ngIf="dialogo$ | async as dialogo">
+  <div
+    class="tarjeta-dialogo"
+    [class.error]="dialogo.tipo === 'error'"
+    [class.exito]="dialogo.tipo === 'exito'"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titulo-dialogo-sistema"
+  >
+    <div class="icono-dialogo">
+      <span class="material-symbols-outlined">{{ dialogo.icono }}</span>
+    </div>
+
+    <div class="contenido-dialogo">
+      <h2 id="titulo-dialogo-sistema">{{ dialogo.titulo }}</h2>
+      <p>{{ dialogo.mensaje }}</p>
+    </div>
+
+    <div class="acciones-dialogo">
+      <button
+        type="button"
+        class="boton-cancelar"
+        *ngIf="dialogo.tipo === 'confirmacion'"
+        (click)="cancelar()"
+      >
+        {{ dialogo.textoCancelar }}
+      </button>
+
+      <button type="button" class="boton-aceptar" (click)="aceptar()">
+        {{ dialogo.textoAceptar }}
+      </button>
+    </div>
+  </div>
+</div>

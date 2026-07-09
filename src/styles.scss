@@ -17,14 +17,21 @@
 
 html {
   scroll-behavior: smooth;
+  min-height: 100%;
 }
 
 body {
   margin: 0;
+  min-height: 100%;
   font-family: 'Inter', Arial, sans-serif;
   background: var(--color-background);
   color: var(--color-text);
   overflow-x: hidden;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
 }
 
 a {
@@ -60,5 +67,341 @@ main {
 @media (max-width: 480px) {
   .section-container {
     width: min(100% - 22px, 1180px);
+  }
+}
+
+/* ===============================
+   FIX GLOBAL LAYOUT / FOOTER
+   =============================== */
+
+body {
+  width: 100%;
+  background: #2b2f36;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+}
+
+router-outlet {
+  display: none;
+}
+
+main,
+.main-content,
+.contenido-publico,
+.public-layout,
+.layout-publico {
+  flex: 1 0 auto;
+  background: #f5f3f0;
+}
+
+app-public-footer {
+  flex-shrink: 0;
+  display: block;
+  background: #2b2f36;
+}
+
+/* Evita bloque blanco debajo del footer al alejar zoom */
+.footer-publico,
+.public-footer,
+footer {
+  margin-bottom: 0;
+}
+
+/* ===============================
+   ADMIN VISUAL GLOBAL - BLOQUE 9
+   =============================== */
+
+:root {
+  --admin-primary: #2b2f36;
+  --admin-secondary: #5b616b;
+  --admin-accent: #a67c52;
+  --admin-neutral: #f5f3f0;
+  --admin-white: #ffffff;
+  --admin-border: rgba(43, 47, 54, 0.12);
+  --admin-shadow: 0 18px 44px rgba(43, 47, 54, 0.09);
+  --admin-radius: 22px;
+}
+
+[class*='gestion'],
+[class*='admin'] {
+  box-sizing: border-box;
+}
+
+.pagina-gestion,
+.contenedor-gestion,
+.admin-page,
+.panel-admin,
+.gestion-page {
+  background: var(--admin-neutral);
+  min-height: 100%;
+}
+
+.encabezado-gestion,
+.admin-header,
+.cabecera-gestion,
+.header-admin {
+  margin-bottom: 1.8rem;
+}
+
+.encabezado-gestion span,
+.admin-header span,
+.cabecera-gestion span,
+.header-admin span {
+  color: var(--admin-accent);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.encabezado-gestion h1,
+.admin-header h1,
+.cabecera-gestion h1,
+.header-admin h1 {
+  color: #202632;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.encabezado-gestion p,
+.admin-header p,
+.cabecera-gestion p,
+.header-admin p {
+  color: var(--admin-secondary);
+}
+
+.tarjeta-gestion,
+.card-gestion,
+.admin-card,
+.tarjeta-admin,
+.bloque-gestion,
+.panel-card {
+  background: var(--admin-white);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius);
+  box-shadow: var(--admin-shadow);
+}
+
+.tarjeta-informativa,
+.alerta-informativa,
+.info-admin {
+  background: rgba(166, 124, 82, 0.08);
+  border: 1px solid rgba(166, 124, 82, 0.22);
+  color: var(--admin-secondary);
+  border-radius: 18px;
+}
+
+.tarjeta-informativa .material-symbols-outlined,
+.alerta-informativa .material-symbols-outlined,
+.info-admin .material-symbols-outlined {
+  color: var(--admin-accent);
+}
+
+button,
+.btn,
+.boton,
+.btn-admin,
+.boton-admin {
+  font-weight: 800;
+}
+
+.btn-primario,
+.boton-primario,
+.btn-admin-primario,
+button[type='submit'] {
+  background: var(--admin-primary);
+  color: #ffffff;
+  border-color: var(--admin-primary);
+}
+
+.btn-primario:hover,
+.boton-primario:hover,
+.btn-admin-primario:hover,
+button[type='submit']:hover {
+  background: #1f242b;
+}
+
+.btn-secundario,
+.boton-secundario,
+.btn-admin-secundario {
+  background: #ffffff;
+  color: var(--admin-primary);
+  border: 1px solid var(--admin-border);
+}
+
+.btn-secundario:hover,
+.boton-secundario:hover,
+.btn-admin-secundario:hover {
+  border-color: rgba(166, 124, 82, 0.45);
+  color: var(--admin-accent);
+}
+
+input,
+select,
+textarea {
+  border-color: rgba(43, 47, 54, 0.16);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: rgba(166, 124, 82, 0.65);
+  box-shadow: 0 0 0 4px rgba(166, 124, 82, 0.1);
+}
+
+input[readonly],
+textarea[readonly] {
+  background: #f3f0eb;
+  color: var(--admin-secondary);
+  cursor: not-allowed;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+thead {
+  background: rgba(43, 47, 54, 0.04);
+}
+
+th {
+  color: var(--admin-primary);
+  font-weight: 900;
+}
+
+td {
+  color: var(--admin-secondary);
+}
+
+.badge,
+.estado,
+.etiqueta,
+.pill {
+  border-radius: 999px;
+  font-weight: 900;
+}
+
+.modal,
+.modal-admin,
+.modal-gestion,
+.dialogo-admin {
+  backdrop-filter: blur(6px);
+}
+
+.modal-contenido,
+.modal-content,
+.dialogo-contenido,
+.formulario-modal {
+  border-radius: 26px;
+  border: 1px solid var(--admin-border);
+  box-shadow: 0 30px 90px rgba(43, 47, 54, 0.24);
+}
+
+/* ===============================
+   HEADER PUBLICO STICKY
+   =============================== */
+
+app-public-header,
+app-header-public,
+app-navbar-public,
+.public-header,
+.header-publico,
+.navbar-publico,
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  background: #ffffff;
+  box-shadow: 0 1px 0 rgba(43, 47, 54, 0.08);
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* ===============================
+   ADMIN: OCULTAR MENSAJES INFORMATIVOS
+   =============================== */
+
+.tarjeta-informativa,
+.alerta-informativa,
+.info-admin,
+.admin-info,
+.mensaje-informativo,
+.bloque-informativo {
+  display: none !important;
+}
+
+/* ===============================
+   TOASTS VISIBLES BAJO HEADER
+   =============================== */
+
+.swal2-container.swal2-top-end,
+.swal2-container.swal2-top-right,
+.swal2-container.swal2-top {
+  top: 86px !important;
+  z-index: 3000 !important;
+}
+
+.swal2-popup.swal2-toast {
+  border-radius: 16px !important;
+  padding: 0.85rem 1rem !important;
+  box-shadow: 0 18px 45px rgba(43, 47, 54, 0.18) !important;
+  border: 1px solid rgba(43, 47, 54, 0.12) !important;
+}
+
+.swal2-popup.swal2-toast .swal2-title {
+  color: #202632 !important;
+  font-size: 0.92rem !important;
+  font-weight: 900 !important;
+  line-height: 1.35 !important;
+}
+
+.swal2-popup.swal2-toast .swal2-timer-progress-bar {
+  background: #a67c52 !important;
+}
+
+/* ===============================
+   JM PORMAR - TOASTS VISIBLES
+   =============================== */
+
+.swal2-container.swal2-top-end,
+.swal2-container.swal2-top-right,
+.swal2-container.swal2-top {
+  top: 92px !important;
+  z-index: 4000 !important;
+  padding-right: 1.2rem !important;
+}
+
+.swal2-popup.swal2-toast.jm-toast-popup,
+.swal2-popup.swal2-toast {
+  border-radius: 16px !important;
+  padding: 0.85rem 1rem !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(43, 47, 54, 0.12) !important;
+  box-shadow: 0 18px 45px rgba(43, 47, 54, 0.18) !important;
+}
+
+.swal2-popup.swal2-toast .swal2-title {
+  color: #202632 !important;
+  font-size: 0.92rem !important;
+  font-weight: 900 !important;
+  line-height: 1.35 !important;
+}
+
+.swal2-popup.swal2-toast .swal2-timer-progress-bar {
+  background: #a67c52 !important;
+}
+
+@media (max-width: 768px) {
+  .swal2-container.swal2-top-end,
+  .swal2-container.swal2-top-right,
+  .swal2-container.swal2-top {
+    top: 78px !important;
+    padding: 0 0.75rem !important;
   }
 }

@@ -1,0 +1,307 @@
+<section class="pagina-productos">
+  <div class="encabezado-pagina">
+    <div>
+      <small>Gestión de catálogo</small>
+      <h1>Productos</h1>
+      <p>Administra los productos registrados según la estructura de la tabla producto.</p>
+    </div>
+
+    <button type="button" class="boton-principal" (click)="abrirNuevoProducto()">
+      <span class="material-symbols-outlined">add</span>
+      Nuevo producto
+    </button>
+  </div>
+
+  <div class="tarjeta-filtros">
+    <label class="buscador">
+      <span class="material-symbols-outlined">search</span>
+      <input
+        type="text"
+        [(ngModel)]="terminoBusqueda"
+        placeholder="Buscar por nombre, código o categoría..."
+      >
+    </label>
+
+    <select [(ngModel)]="filtroCategoria" aria-label="Filtrar por categoría">
+      <option value="TODAS">Todas las categorías</option>
+      <option *ngFor="let categoria of categorias" [value]="categoria.idCategoria">
+        {{ categoria.nombre }}
+      </option>
+    </select>
+
+    <select [(ngModel)]="filtroDisponibilidad" aria-label="Filtrar por disponibilidad">
+      <option value="TODAS">Toda disponibilidad</option>
+      <option value="DISPONIBLE">Disponible</option>
+      <option value="NO_DISPONIBLE">No disponible</option>
+    </select>
+
+    <select [(ngModel)]="filtroEstado" aria-label="Filtrar por estado">
+      <option value="TODOS">Todos</option>
+      <option value="ACTIVOS">Activos</option>
+      <option value="INACTIVOS">Inactivos</option>
+    </select>
+
+    <button type="button" class="boton-limpiar" (click)="limpiarFiltros()">Limpiar</button>
+  </div>
+
+  <div class="tarjeta-tabla">
+    <div class="resumen-tabla">
+      <strong>{{ productosFiltrados.length }}</strong>
+      <span>productos encontrados</span>
+    </div>
+
+    <div class="tabla-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Imagen</th>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Disponibilidad</th>
+            <th>Estado web</th>
+            <th class="columna-acciones">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let producto of productosFiltrados">
+            <td class="celda-imagen" data-label="Imagen">
+              <div class="miniatura">
+                <img
+                  *ngIf="producto.imagenPrincipalUrl; else sinImagen"
+                  [src]="resolverUrl(producto.imagenPrincipalUrl)"
+                  [alt]="producto.nombre"
+                >
+                <ng-template #sinImagen>
+                  <span class="material-symbols-outlined">image</span>
+                </ng-template>
+              </div>
+            </td>
+            <td data-label="Código"><strong>{{ producto.codigoSku }}</strong></td>
+            <td class="celda-producto" data-label="Producto">
+              <div class="producto-info">
+                <strong>{{ producto.nombre }}</strong>
+                <span>{{ producto.descripcionBreve }}</span>
+              </div>
+            </td>
+            <td data-label="Categoría">{{ obtenerNombreCategoria(producto.idCategoria) }}</td>
+            <td data-label="Disponibilidad">
+              <span
+                class="etiqueta"
+                [class.disponible]="producto.disponibilidad === 'DISPONIBLE'"
+                [class.no-disponible]="producto.disponibilidad === 'NO_DISPONIBLE'"
+              >
+                {{ formatearDisponibilidad(producto.disponibilidad) }}
+              </span>
+            </td>
+            <td data-label="Estado web">
+              <span class="estado" [class.inactivo]="!producto.activo">
+                {{ producto.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="acciones" data-label="Acciones">
+              <div class="acciones-contenedor">
+                <button
+                  type="button"
+                  class="boton-icono editar"
+                  title="Editar"
+                  aria-label="Editar producto"
+                  (click)="abrirEditarProducto(producto)"
+                >
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="boton-icono cambiar-estado"
+                  title="Activar o desactivar"
+                  aria-label="Activar o desactivar producto"
+                  (click)="cambiarEstado(producto)"
+                >
+                  <span class="material-symbols-outlined">
+                    {{ producto.activo ? 'visibility_off' : 'visibility' }}
+                  </span>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="productosFiltrados.length === 0">
+            <td colspan="7" class="sin-resultados">
+              No se encontraron productos con los filtros seleccionados.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="fondo-modal" *ngIf="modalAbierto">
+  <div class="modal-producto" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-producto">
+    <div class="modal-encabezado">
+      <div>
+        <small>{{ modoEdicion ? 'Editar producto' : 'Nuevo producto' }}</small>
+        <h2 id="titulo-modal-producto">{{ modoEdicion ? 'Modificar información' : 'Registrar producto' }}</h2>
+      </div>
+      <button type="button" class="boton-cerrar" aria-label="Cerrar" (click)="cerrarModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form class="formulario-producto" #formProducto="ngForm" (ngSubmit)="guardarProducto(formProducto)" novalidate>
+      <div class="grid-formulario">
+        <label>
+          Código SKU *
+          <input type="text" name="codigoSku" [(ngModel)]="formulario.codigoSku" required minlength="2" maxlength="50" pattern="^[A-Za-z0-9._/-]+$" placeholder="Ej: MAT-001">
+        </label>
+        <label>
+          Nombre del producto *
+          <input type="text" name="nombre" [(ngModel)]="formulario.nombre" required minlength="3" maxlength="150" placeholder="Ej: Cemento Portland Tipo I">
+        </label>
+        <label>
+          Categoría *
+          <select name="idCategoria" [(ngModel)]="formulario.idCategoria" required>
+            <option value="" disabled>Selecciona una categoría</option>
+            <option *ngFor="let categoria of categorias" [value]="categoria.idCategoria">{{ categoria.nombre }}{{ categoria.activo ? '' : ' (inactiva)' }}</option>
+          </select>
+        </label>
+        <label>
+          Disponibilidad *
+          <select name="disponibilidad" [(ngModel)]="formulario.disponibilidad" required>
+            <option value="DISPONIBLE">Disponible</option>
+            <option value="NO_DISPONIBLE">No disponible</option>
+          </select>
+        </label>
+      </div>
+
+      <section class="bloque-imagenes-producto">
+        <div class="imagen-principal-admin">
+          <div class="titulo-bloque-imagenes">
+            <div>
+              <strong>Imagen principal {{ formulario.activo ? '*' : '' }}</strong>
+              <small>Se muestra en el catálogo y como primera imagen del detalle.</small>
+            </div>
+            <label class="boton-secundario archivo-boton" [class.deshabilitado]="guardando">
+              {{ imagenPrincipalVista ? 'Cambiar imagen' : 'Seleccionar imagen' }}
+              <input
+                type="file"
+                hidden
+                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                (change)="seleccionarImagenPrincipal($event)"
+                [disabled]="guardando"
+              >
+            </label>
+          </div>
+
+          <div class="vista-imagen-principal" *ngIf="imagenPrincipalVista; else sinImagenPrincipal">
+            <img [src]="imagenPrincipalVista" alt="Vista previa de imagen principal">
+            <div>
+              <strong>{{ archivoPrincipalPendiente?.name || 'Imagen principal registrada' }}</strong>
+              <small>JPG, PNG o WEBP. Máximo 5 MB.</small>
+            </div>
+            <button
+              *ngIf="archivoPrincipalPendiente"
+              type="button"
+              class="boton-retirar-imagen"
+              (click)="quitarImagenPrincipalPendiente()"
+              [disabled]="guardando"
+            >
+              Quitar selección
+            </button>
+          </div>
+          <ng-template #sinImagenPrincipal>
+            <div class="imagen-vacia">
+              <span class="material-symbols-outlined">image</span>
+              <span>No se ha seleccionado una imagen principal.</span>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="galeria-admin">
+          <div class="galeria-encabezado">
+            <div>
+              <strong>Imágenes para el detalle</strong>
+              <small>
+                Hasta 3 imágenes adicionales. Total permitido: 4 imágenes por producto
+                (1 principal + 3 de detalle). {{ totalImagenesDetalle }}/{{ maxImagenesDetalle }} usadas.
+              </small>
+            </div>
+            <label
+              class="boton-secundario archivo-boton"
+              [class.deshabilitado]="!puedeAgregarImagenDetalle"
+            >
+              Agregar imágenes
+              <input
+                type="file"
+                hidden
+                multiple
+                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                (change)="seleccionarImagenesDetalle($event)"
+                [disabled]="!puedeAgregarImagenDetalle"
+              >
+            </label>
+          </div>
+
+          <div class="galeria-lista" *ngIf="totalImagenesDetalle > 0; else galeriaVacia">
+            <article *ngFor="let imagen of productoEditando?.imagenes || []">
+              <img [src]="resolverUrl(imagen.urlImagen)" alt="Imagen de detalle registrada">
+              <span>Detalle {{ imagen.orden }}</span>
+              <button
+                type="button"
+                (click)="eliminarImagenAdicional(imagen.idImagen)"
+                [disabled]="guardando"
+              >
+                Retirar
+              </button>
+            </article>
+
+            <article class="imagen-pendiente" *ngFor="let vista of vistasDetallePendientes; let indice = index">
+              <img [src]="vista" [alt]="'Nueva imagen de detalle ' + (indice + 1)">
+              <span>{{ archivosDetallePendientes[indice].name }}</span>
+              <button
+                type="button"
+                (click)="quitarImagenDetallePendiente(indice)"
+                [disabled]="guardando"
+              >
+                Quitar
+              </button>
+            </article>
+          </div>
+
+          <ng-template #galeriaVacia>
+            <p class="texto-muted">Todavía no hay imágenes de detalle seleccionadas.</p>
+          </ng-template>
+        </div>
+      </section>
+
+      <label>
+        Descripción breve *
+        <textarea name="descripcionBreve" rows="3" [(ngModel)]="formulario.descripcionBreve" required maxlength="250" placeholder="Texto corto que se verá en la tarjeta del producto..."></textarea>
+      </label>
+      <label>
+        Descripción completa *
+        <textarea name="descripcionCompleta" rows="4" [(ngModel)]="formulario.descripcionCompleta" required maxlength="5000" placeholder="Detalle completo del producto..."></textarea>
+      </label>
+      <div class="grid-formulario">
+        <label>
+          Características
+          <textarea name="caracteristicas" rows="5" [(ngModel)]="formulario.caracteristicas" maxlength="4000" placeholder="Una característica por línea..."></textarea>
+        </label>
+        <label>
+          Especificaciones técnicas
+          <textarea name="especificacionesTecnicas" rows="5" [(ngModel)]="formulario.especificacionesTecnicas" maxlength="4000" placeholder="Ej: Unidad: Bolsa&#10;Uso: Construcción"></textarea>
+        </label>
+      </div>
+
+      <div class="checks-formulario">
+        <label><input type="checkbox" name="activo" [(ngModel)]="formulario.activo"> Producto activo en la web</label>
+      </div>
+      <div class="acciones-modal">
+        <button type="button" class="boton-secundario" (click)="cerrarModal()" [disabled]="guardando">Cancelar</button>
+        <button type="submit" class="boton-principal" [disabled]="guardando">{{ guardando ? 'Guardando...' : (modoEdicion ? 'Guardar cambios' : 'Registrar producto') }}</button>
+      </div>
+    </form>
+  </div>
+</div>

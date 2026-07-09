@@ -1,0 +1,116 @@
+.fondo-dialogo {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.tarjeta-dialogo {
+  width: min(440px, 100%);
+  background: white;
+  border-radius: 22px;
+  padding: 30px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.28);
+  animation: aparecerDialogo 0.18s ease;
+  text-align: center;
+}
+
+.icono-dialogo {
+  width: 68px;
+  height: 68px;
+  border-radius: 22px;
+  background: #f2e9df;
+  color: var(--color-accent-dark);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+
+  .material-symbols-outlined {
+    font-size: 36px;
+  }
+}
+
+.tarjeta-dialogo.error .icono-dialogo {
+  background: #fff1f1;
+  color: #b42318;
+}
+
+.tarjeta-dialogo.exito .icono-dialogo {
+  background: #e9f8ef;
+  color: #147d3f;
+}
+
+.contenido-dialogo {
+  h2 {
+    margin: 0 0 10px;
+    color: var(--color-primary);
+    font-size: 24px;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+}
+
+.acciones-dialogo {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.boton-cancelar,
+.boton-aceptar {
+  border: 0;
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-weight: 900;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.boton-cancelar {
+  background: var(--color-background);
+  color: var(--color-primary);
+}
+
+.boton-aceptar {
+  background: var(--color-accent);
+  color: white;
+
+  &:hover {
+    background: var(--color-accent-dark);
+  }
+}
+
+@keyframes aparecerDialogo {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 520px) {
+  .tarjeta-dialogo {
+    padding: 24px;
+  }
+
+  .acciones-dialogo {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}

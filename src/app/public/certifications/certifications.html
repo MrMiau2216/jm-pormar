@@ -1,94 +1,69 @@
-<section class="cert-hero">
-  <div class="section-container">
-    <span>Respaldo empresarial</span>
+<section class="cert-hero"><div class="section-container"><span>Respaldo empresarial</span><h1>Certificaciones</h1><p>Conoce las certificaciones y documentos que respaldan nuestros procesos, compromiso empresarial y buenas prácticas.</p></div></section>
 
+<section class="cert-page" *ngIf="loading || errorMessage">
+  <div class="section-container">
+    <div class="cert-card" *ngIf="loading"><h3>Cargando certificaciones...</h3></div>
+    <div class="cert-card" *ngIf="!loading && errorMessage"><h3>No se pudieron cargar</h3><p>{{ errorMessage }}</p></div>
+  </div>
+</section>
+
+<section class="certificaciones-page-section" *ngIf="!loading && !errorMessage">
+  <div class="section-heading">
+    <span>Documentos publicados</span>
     <h1>Certificaciones</h1>
+    <p>
+      Consulta los certificados y documentos de respaldo publicados por JM Pormar.
+    </p>
+  </div>
+
+  <div
+    class="grid-certificaciones-page"
+    *ngIf="certificacionesPublicas.length > 0"
+  >
+    <article
+      class="certificacion-page-card"
+      *ngFor="let certificacion of certificacionesPublicas"
+    >
+      <div class="certificacion-page-icono">
+        <span class="material-symbols-outlined">description</span>
+      </div>
+
+      <span class="certificacion-page-tipo">
+        {{ obtenerTipoCertificacion(certificacion) }}
+      </span>
+
+      <h2>{{ obtenerNombreCertificacion(certificacion) }}</h2>
+
+      <p>
+        {{ obtenerDescripcionCertificacion(certificacion) }}
+      </p>
+
+      <a
+        *ngIf="certificadoTieneVista(certificacion)"
+        class="btn-ver-certificado"
+        [href]="obtenerUrlCertificado(certificacion)"
+        target="_blank"
+        rel="noopener"
+      >
+        Ver certificado
+        <span class="material-symbols-outlined">open_in_new</span>
+      </a>
+    </article>
+  </div>
+
+  <div
+    class="estado-vacio-certificaciones"
+    *ngIf="certificacionesPublicas.length === 0"
+  >
+    <span class="material-symbols-outlined">description</span>
+
+    <h2>No hay certificaciones publicadas</h2>
 
     <p>
-      Conoce las certificaciones y documentos que respaldan nuestros procesos,
-      compromiso empresarial y buenas prácticas.
+      Los certificados activos se mostrarán aquí cuando sean registrados desde
+      el panel administrador.
     </p>
   </div>
 </section>
 
-<section class="cert-page">
-  <div class="section-container">
-    <div class="section-title centered">
-      <small>Excelencia certificada</small>
-      <h2>Certificaciones empresariales</h2>
-      <p>
-        Documentación institucional que fortalece la confianza en nuestros servicios y atención.
-      </p>
-    </div>
-
-    <div class="cert-grid">
-      <article class="cert-card" *ngFor="let certification of certifications">
-        <div class="cert-icon">
-          <span class="material-symbols-outlined">{{ certification.icon }}</span>
-        </div>
-
-        <small>{{ certification.type }}</small>
-
-        <h3>{{ certification.name }}</h3>
-
-        <p>{{ certification.description }}</p>
-
-        <button type="button" (click)="openPreview(certification)">
-          <span class="material-symbols-outlined">visibility</span>
-          Ver certificado
-        </button>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section class="cert-info">
-  <div class="section-container info-card">
-    <div>
-      <small>Importante</small>
-      <h2>Visualización de certificados</h2>
-      <p>
-        Los certificados se muestran como vista previa dentro de la web.
-        La disponibilidad final del archivo dependerá de la configuración realizada
-        desde el panel administrador.
-      </p>
-    </div>
-
-    <span class="material-symbols-outlined">verified_user</span>
-  </div>
-</section>
-
-<div class="preview-backdrop" *ngIf="selectedCertification">
-  <div class="preview-modal">
-    <div class="preview-header">
-      <div>
-        <small>Vista previa del certificado</small>
-        <h2>{{ selectedCertification.name }}</h2>
-      </div>
-
-      <button type="button" class="close-button" (click)="closePreview()">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-    </div>
-
-    <div class="preview-body">
-      <ng-container *ngIf="selectedCertification.fileType === 'PDF'; else imagePreview">
-        <iframe [src]="selectedCertification.fileUrl"></iframe>
-      </ng-container>
-
-      <ng-template #imagePreview>
-        <img [src]="selectedCertification.fileUrl" [alt]="selectedCertification.name">
-      </ng-template>
-    </div>
-
-    <div class="preview-footer">
-      <p>
-        El certificado se muestra solo como vista previa.
-      </p>
-
-      <button type="button" (click)="closePreview()">
-        Cerrar
-      </button>
-    </div>
-  </div>
-</div>
+<section class="cert-info"><div class="section-container info-card"><div><small>Importante</small><h2>Visualización de certificados</h2><p>Los documentos se sirven desde endpoints controlados por el backend y se muestran dentro de la web.</p></div><span class="material-symbols-outlined">verified_user</span></div></section>

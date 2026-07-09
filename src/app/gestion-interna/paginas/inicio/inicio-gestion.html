@@ -1,0 +1,56 @@
+<section class="pagina-inicio">
+  <div class="encabezado-pagina">
+    <div>
+      <small>Panel de control</small>
+      <h1>Dashboard</h1>
+      <p>Resumen general del contenido administrable de la web.</p>
+    </div>
+  </div>
+
+  <div class="grid-resumen">
+    <a
+      class="tarjeta-resumen"
+      *ngFor="let tarjeta of tarjetas"
+      [routerLink]="tarjeta.ruta"
+    >
+      <div>
+        <small>{{ tarjeta.titulo }}</small>
+        <h2>{{ tarjeta.cantidad }}</h2>
+        <p>{{ tarjeta.descripcion }}</p>
+      </div>
+
+      <span class="material-symbols-outlined">{{ tarjeta.icono }}</span>
+    </a>
+
+    <a class="tarjeta-contacto" routerLink="/portal-jmp/contacto">
+      <span class="material-symbols-outlined">contact_phone</span>
+      <h3>Contacto</h3>
+      <p>{{ contactoConfigurado ? 'Datos configurados' : 'Configuración pendiente' }}</p>
+      <strong>Editar datos</strong>
+    </a>
+  </div>
+
+  <section class="tarjeta-accesos tarjeta-accesos-completa">
+    <div class="titulo-tarjeta">
+      <span class="material-symbols-outlined">bolt</span>
+      <h2>Accesos rápidos</h2>
+    </div>
+
+    <div class="acciones-rapidas">
+      <a routerLink="/portal-jmp/productos" class="accion-principal">
+        <span class="material-symbols-outlined">add</span>
+        Agregar producto
+      </a>
+
+      <a routerLink="/portal-jmp/servicios" class="accion-secundaria">
+        <span class="material-symbols-outlined">add</span>
+        Agregar servicio
+      </a>
+
+      <a routerLink="/portal-jmp/certificaciones" class="accion-borde">
+        <span class="material-symbols-outlined">add</span>
+        Agregar certificación
+      </a>
+    </div>
+  </section>
+</section>

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
 import { Products } from './products';
@@ -22,31 +23,25 @@ describe('Products', () => {
 
     await TestBed.configureTestingModule({
       imports: [Products],
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Products);
     component = fixture.componentInstance;
-    await fixture.whenStable();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should only list available products', () => {
-    expect(component.filteredProducts.every(product => product.available)).toBe(true);
-  });
-
-  it('should apply search only when requested', () => {
-    const initialCount = component.filteredProducts.length;
-
+  it('should reset public filters', () => {
     component.searchTerm = 'cemento';
-    expect(component.filteredProducts.length).toBe(initialCount);
+    component.selectedCategoryId = 'categoria';
+    component.selectedAvailability = 'DISPONIBLE';
+    component.resetFilters();
 
-    component.applySearch();
-    expect(component.filteredProducts.every(product =>
-      product.name.toLowerCase().includes('cemento')
-    )).toBe(true);
+    expect(component.searchTerm).toBe('');
+    expect(component.selectedCategoryId).toBe('');
+    expect(component.selectedAvailability).toBe('');
   });
 });

@@ -1,21 +1,14 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { buildWhatsappUrl } from '../../shared/data/company-info';
-
-interface ServiceItem {
-  title: string;
-  subtitle: string;
-  description: string;
-  image: string;
-  icon: string;
-}
-
-interface ProcessStep {
-  number: string;
-  title: string;
-  description: string;
-}
+import { finalize } from 'rxjs';
+import { assetUrl } from '../../core/utils/api-url';
+import { getHttpErrorMessage } from '../../core/utils/http-error';
+import { Contacto, Servicio } from '../../shared/models/domain.models';
+import { ContactService } from '../../shared/services/contact.service';
+import { ServiceService } from '../../shared/services/service.service';
+import { logError } from '../../shared/utils/app-logger.util';
+import { abrirWhatsappDirecto, armarMensajeWhatsapp } from '../../shared/utils/whatsapp.util';
 
 @Component({
   selector: 'app-services',
@@ -23,84 +16,167 @@ interface ProcessStep {
   templateUrl: './services.html',
   styleUrl: './services.scss'
 })
-export class Services {
-  services: ServiceItem[] = [
+export class Services implements OnInit {
+  services: Servicio[] = [];
+  loading = true;
+  errorMessage = '';
+  contact?: Contacto;
+
+  readonly areasApoyo = [
+    { icono: 'engineering', titulo: 'Obras civiles' },
+    { icono: 'business', titulo: 'Empresas privadas' },
+    { icono: 'account_balance', titulo: 'Instituciones' },
+    { icono: 'build', titulo: 'Mantenimiento' },
+    { icono: 'inventory_2', titulo: 'Abastecimiento' },
+    { icono: 'handyman', titulo: 'Servicios generales' }
+  ];
+
+  readonly procesoAtencion = [
     {
-      title: 'Abastecimiento para obras',
-      subtitle: 'Materiales, ferretería y equipos',
-      description:
-        'Atención de requerimientos de materiales, herramientas, artículos de ferretería, equipos e insumos para empresas, obras y proyectos.',
-      image: '/images/servicio-abastecimiento.jpg',
-      icon: 'inventory_2'
+      numero: '1',
+      titulo: 'Recibimos tu consulta',
+      descripcion: 'Recepción del requerimiento técnico o comercial.'
     },
     {
-      title: 'Transporte y apoyo logístico',
-      subtitle: 'Coordinación y traslado',
-      description:
-        'Apoyo en el traslado, distribución y coordinación de materiales según los requerimientos operativos del cliente.',
-      image: '/images/servicio-transporte.jpg',
-      icon: 'local_shipping'
+      numero: '2',
+      titulo: 'Revisamos el alcance',
+      descripcion: 'Análisis de necesidades, materiales y tiempos.'
     },
     {
-      title: 'Mantenimiento y acondicionamiento',
-      subtitle: 'Conservación y mejora de espacios',
-      description:
-        'Servicios orientados a la conservación, mejora, reparación y acondicionamiento de ambientes, instalaciones o espacios de trabajo.',
-      image: '/images/servicio-mantenimiento.jpg',
-      icon: 'construction'
+      numero: '3',
+      titulo: 'Coordinamos la propuesta',
+      descripcion: 'Definición de soluciones técnicas y operativas.'
     },
     {
-      title: 'Consultoría técnica',
-      subtitle: 'Asesoría para requerimientos',
-      description:
-        'Orientación técnica para selección de materiales, metrados, presupuestos, fichas técnicas y planificación de soluciones para proyectos.',
-      image: '/images/servicio-consultoria.jpg',
-      icon: 'engineering'
+      numero: '4',
+      titulo: 'Enviamos la cotización',
+      descripcion: 'Emisión de la propuesta formal para evaluación.'
+    },
+    {
+      numero: '5',
+      titulo: 'Damos seguimiento',
+      descripcion: 'Acompañamiento hasta la atención del servicio.'
     }
   ];
 
-  processSteps: ProcessStep[] = [
-    {
-      number: '01',
-      title: 'Recepción del requerimiento',
-      description:
-        'El cliente comunica su necesidad de productos, servicios, materiales o apoyo para obra.'
-    },
-    {
-      number: '02',
-      title: 'Evaluación y coordinación',
-      description:
-        'Se revisa el requerimiento, cantidades, destino, condiciones y prioridad de atención.'
-    },
-    {
-      number: '03',
-      title: 'Cotización y propuesta',
-      description:
-        'Se prepara una propuesta de atención acorde al requerimiento solicitado.'
-    },
-    {
-      number: '04',
-      title: 'Atención y seguimiento',
-      description:
-        'Se coordina la entrega, servicio o atención final, manteniendo comunicación directa.'
-    }
+  readonly respaldoServicios = [
+    { icono: 'support_agent', titulo: 'Atención directa' },
+    { icono: 'schedule', titulo: 'Coordinación rápida' },
+    { icono: 'verified', titulo: 'Soluciones integrales' }
   ];
 
-  quoteService(serviceName: string): void {
-    const message = `
-Hola, deseo solicitar información sobre el siguiente servicio:
+  constructor(
+    private readonly serviceService: ServiceService,
+    private readonly contactService: ContactService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
-Servicio: ${serviceName}
+  ngOnInit(): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.cdr.detectChanges();
 
-Por favor, quisiera recibir orientación o una cotización.
-Gracias.
-    `.trim();
+    this.serviceService.getPublic()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: services => {
+          this.services = [...services];
+          this.cdr.detectChanges();
+        },
+        error: error => {
+          this.services = [];
+          this.errorMessage = getHttpErrorMessage(error, 'No se pudieron cargar los servicios.');
+          this.cdr.detectChanges();
+        }
+      });
 
-    window.open(buildWhatsappUrl(message), '_blank');
+    this.contactService.getPublic().subscribe({
+      next: contact => { this.contact = contact; this.cdr.detectChanges(); },
+      error: () => { this.contact = undefined; this.cdr.detectChanges(); }
+    });
   }
 
-  generalQuote(): void {
-    const message = 'Hola, deseo solicitar información sobre los servicios de JM Pormar.';
-    window.open(buildWhatsappUrl(message), '_blank');
+  solicitarInformacionGeneral(): void {
+    try {
+      const mensaje = armarMensajeWhatsapp([
+        'Hola, buen día.',
+        '',
+        'Estoy interesado(a) en los servicios de JM Pormar.',
+        'Me gustaría recibir más información sobre sus soluciones para empresas, obras y proyectos.',
+        '',
+        'Quedo atento(a) a su respuesta.',
+        'Muchas gracias.'
+      ]);
+
+      abrirWhatsappDirecto(this.contact?.whatsapp, mensaje);
+    } catch (error) {
+      logError('SERVICIOS', 'WHATSAPP_GENERAL', error);
+    }
+  }
+
+  solicitarServicioWhatsapp(servicio: any): void {
+    try {
+      const nombreServicio = this.obtenerTituloServicio(servicio);
+
+      const mensaje = armarMensajeWhatsapp([
+        'Hola, buen día.',
+        '',
+        `Estoy interesado(a) en solicitar más información sobre el servicio: ${nombreServicio}.`,
+        '',
+        'Me gustaría conocer disponibilidad, alcance del servicio y forma de atención.',
+        '',
+        'Quedo atento(a) a su respuesta.',
+        'Muchas gracias.'
+      ]);
+
+      abrirWhatsappDirecto(this.contact?.whatsapp, mensaje);
+    } catch (error) {
+      logError('SERVICIOS', 'WHATSAPP_SERVICIO', error, servicio);
+    }
+  }
+
+  get serviciosPublicos(): any[] {
+    const source = (this as any).services ?? (this as any).servicios ?? [];
+    return source.filter((servicio: any) => servicio?.activo !== false);
+  }
+
+  obtenerTituloServicio(servicio: any): string {
+    return servicio?.titulo || servicio?.nombre || 'Servicio especializado';
+  }
+
+  obtenerDescripcionServicio(servicio: any): string {
+    return (
+      servicio?.descripcion ||
+      servicio?.descripcionCorta ||
+      servicio?.descripcionBreve ||
+      'Atención especializada para empresas, obras, instituciones y proyectos.'
+    );
+  }
+
+  obtenerImagenServicio(servicio: any, index: number): string {
+    const imagen =
+      servicio?.imagenPrincipalUrl ||
+      servicio?.imagenUrl ||
+      servicio?.urlImagen ||
+      servicio?.imagen ||
+      '';
+
+    if (imagen) {
+      return assetUrl(imagen);
+    }
+
+    const imagenes = [
+      '/images/services/servicio-obras.jpg',
+      '/images/services/servicio-mantenimiento.jpg',
+      '/images/services/servicio-abastecimiento.jpg',
+      '/images/services/servicio-instituciones.jpg'
+    ];
+
+    return imagenes[index % imagenes.length];
   }
 }

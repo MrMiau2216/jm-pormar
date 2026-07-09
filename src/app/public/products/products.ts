@@ -1,16 +1,15 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { PRODUCTS_DATA, ProductData } from '../../shared/data/products-data';
-
-interface QuoteItem {
-  id: number;
-  code: string;
-  name: string;
-  category: string;
-  quantity: number;
-}
+import { finalize } from 'rxjs';
+import { SweetAlertService } from '../../compartido/servicios/sweet-alert.service';
+import { assetUrl } from '../../core/utils/api-url';
+import { getHttpErrorMessage } from '../../core/utils/http-error';
+import { Categoria, Producto } from '../../shared/models/domain.models';
+import { CategoryService } from '../../shared/services/category.service';
+import { ProductService } from '../../shared/services/product.service';
+import { QuoteService } from '../../shared/services/quote.service';
 
 @Component({
   selector: 'app-products',
@@ -18,152 +17,157 @@ interface QuoteItem {
   templateUrl: './products.html',
   styleUrl: './products.scss'
 })
-export class Products {
+export class Products implements OnInit, AfterViewInit {
   searchTerm = '';
-  appliedSearchTerm = '';
-  selectedCategory = 'TODAS';
+  selectedCategoryId = '';
   showSuggestions = false;
 
-  currentPage = 1;
+  currentPage = 0;
   pageSize = 8;
-
+  totalPages = 0;
+  totalElements = 0;
+  products: Producto[] = [];
+  categories: Categoria[] = [];
+  loading = false;
+  errorMessage = '';
   quoteCount = 0;
 
-  categories = [
-    'TODAS',
-    'Materiales',
-    'Ferretería',
-    'Tuberías',
-    'Electricidad',
-    'Herramientas',
-    'EPPS'
-  ];
+  constructor(
+    private readonly productService: ProductService,
+    private readonly categoryService: CategoryService,
+    private readonly quoteService: QuoteService,
+    private readonly sweetAlert: SweetAlertService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
-  products: ProductData[] = PRODUCTS_DATA;
+  ngOnInit(): void {
+    this.categoryService.getPublic().subscribe({
+      next: categories => {
+        this.categories = [...categories];
+        this.cdr.detectChanges();
+      },
+      error: error => {
+        this.categories = [];
+        this.errorMessage = getHttpErrorMessage(error, 'No se pudieron cargar las categorías.');
+        this.cdr.detectChanges();
+      }
+    });
 
-  constructor() {
-    this.updateQuoteCount();
+    this.quoteService.items$.subscribe(() => {
+      this.quoteCount = this.quoteService.count;
+      this.cdr.detectChanges();
+    });
+    this.loadProducts();
   }
 
-  get searchSuggestions(): ProductData[] {
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      const catalogo = document.getElementById('explorar-catalogo');
+      catalogo?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 250);
+  }
+
+  get searchSuggestions(): Producto[] {
     const term = this.searchTerm.trim().toLowerCase();
-
-    if (term.length < 2) {
-      return [];
-    }
-
+    if (term.length < 2) return [];
     return this.products
-      .filter(product => {
-        const matches =
-          product.name.toLowerCase().includes(term) ||
-          product.code.toLowerCase().includes(term) ||
-          product.category.toLowerCase().includes(term);
-
-        return product.available && matches;
-      })
+      .filter(product => product.nombre.toLowerCase().includes(term) || product.codigoSku.toLowerCase().includes(term))
       .slice(0, 6);
   }
 
-  applySearch(): void {
-    this.appliedSearchTerm = this.searchTerm.trim();
-    this.showSuggestions = false;
-    this.currentPage = 1;
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, index) => index);
   }
 
-  selectSuggestion(product: ProductData): void {
-    this.searchTerm = product.name;
-    this.appliedSearchTerm = product.name;
+  loadProducts(): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.cdr.detectChanges();
+
+    this.productService.getPublicProducts({
+      buscar: this.searchTerm.trim() || undefined,
+      categoriaId: this.selectedCategoryId || undefined,
+      page: this.currentPage,
+      size: this.pageSize
+    })
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: page => {
+          this.products = [...page.content];
+          this.currentPage = page.page;
+          this.totalPages = page.totalPages;
+          this.totalElements = page.totalElements;
+          this.cdr.detectChanges();
+        },
+        error: error => {
+          this.products = [];
+          this.errorMessage = getHttpErrorMessage(error, 'No se pudo cargar el catálogo.');
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+  applySearch(): void {
     this.showSuggestions = false;
-    this.currentPage = 1;
+    this.currentPage = 0;
+    this.loadProducts();
+  }
+
+  selectSuggestion(product: Producto): void {
+    this.searchTerm = product.nombre;
+    this.applySearch();
   }
 
   onSearchTyping(): void {
     this.showSuggestions = this.searchTerm.trim().length >= 2;
-
-    if (this.searchTerm.trim() === '') {
-      this.appliedSearchTerm = '';
-      this.currentPage = 1;
-    }
-  }
-
-  get filteredProducts(): ProductData[] {
-    const term = this.appliedSearchTerm.trim().toLowerCase();
-
-    return this.products.filter(product => {
-      const isAvailable = product.available;
-
-      const matchesSearch =
-        !term ||
-        product.name.toLowerCase().includes(term) ||
-        product.code.toLowerCase().includes(term) ||
-        product.category.toLowerCase().includes(term);
-
-      const matchesCategory =
-        this.selectedCategory === 'TODAS' ||
-        product.category === this.selectedCategory;
-
-      return isAvailable && matchesSearch && matchesCategory;
-    });
-  }
-
-  get pagedProducts(): ProductData[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.filteredProducts.slice(start, start + this.pageSize);
-  }
-
-  get totalPages(): number {
-    return Math.max(1, Math.ceil(this.filteredProducts.length / this.pageSize));
-  }
-
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, index) => index + 1);
+    if (!this.searchTerm.trim()) this.applySearch();
   }
 
   changePage(page: number): void {
-    if (page < 1 || page > this.totalPages) {
-      return;
-    }
-
+    if (page < 0 || page >= this.totalPages || page === this.currentPage) return;
     this.currentPage = page;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.loadProducts();
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  }
+
+  onFilterChange(): void {
+    this.currentPage = 0;
+    this.loadProducts();
   }
 
   resetFilters(): void {
     this.searchTerm = '';
-    this.appliedSearchTerm = '';
-    this.selectedCategory = 'TODAS';
+    this.selectedCategoryId = '';
     this.showSuggestions = false;
-    this.currentPage = 1;
+    this.currentPage = 0;
+    this.loadProducts();
   }
 
-  onFilterChange(): void {
-    this.currentPage = 1;
-  }
-
-  addToQuote(product: ProductData): void {
-    const storageKey = 'jm_pormar_quote';
-    const currentItems: QuoteItem[] = JSON.parse(localStorage.getItem(storageKey) || '[]');
-
-    const existingItem = currentItems.find(item => item.id === product.id);
-
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      currentItems.push({
-        id: product.id,
-        code: product.code,
-        name: product.name,
-        category: product.category,
-        quantity: 1
-      });
+  addToQuote(product: Producto): void {
+    if (product.disponibilidad !== 'DISPONIBLE') {
+      void this.sweetAlert.advertencia(
+        'Producto no disponible',
+        'Este producto no se encuentra disponible para cotización.'
+      );
+      return;
     }
 
-    localStorage.setItem(storageKey, JSON.stringify(currentItems));
-    this.updateQuoteCount();
+    this.quoteService.add(product, 1);
+    this.quoteCount = this.quoteService.count;
+
+    void this.sweetAlert.toast(
+      `"${product.nombre}" agregado a la cotización`
+    );
+
+    this.cdr.detectChanges();
   }
 
-  private updateQuoteCount(): void {
-    const items: QuoteItem[] = JSON.parse(localStorage.getItem('jm_pormar_quote') || '[]');
-    this.quoteCount = items.reduce((total, item) => total + item.quantity, 0);
+  imageUrl(product: Producto): string {
+    return assetUrl(product.imagenPrincipalUrl);
   }
 }
