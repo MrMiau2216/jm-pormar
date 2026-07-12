@@ -1,120 +1,222 @@
-<section class="pagina-contacto">
-  <div class="encabezado-pagina">
+<section class="contacto-admin-page">
+  <div class="contacto-admin-header">
     <div>
-      <small>Configuración general</small>
+      <span>Configuración general</span>
       <h1>Contacto</h1>
-      <p>Administra los datos que utiliza el footer, la página de contacto y los botones de WhatsApp.</p>
+      <p>
+        Administra los datos que utiliza el footer, la página de contacto y los botones de WhatsApp.
+      </p>
     </div>
 
-    <button type="button" class="boton-secundario" (click)="recargarDesdeBase()" [disabled]="cargando">
+    <button
+      type="button"
+      class="btn-recargar-contacto"
+      (click)="recargarDesdeBase()"
+      [disabled]="cargando"
+    >
       <span class="material-symbols-outlined">refresh</span>
       Recargar desde la base
     </button>
   </div>
 
-  <div class="tarjeta-informativa">
+  <div class="contacto-admin-alerta">
     <span class="material-symbols-outlined">info</span>
-    <p>Esta vista corresponde exactamente a la tabla <strong>configuracion_contacto</strong>: WhatsApp, correo, dirección, horario de atención y RUC.</p>
+    <p>
+      Esta vista corresponde al modelo actual de contacto: WhatsApp, correo,
+      dirección, horario de atención, RUC y razón social.
+    </p>
   </div>
 
-  <div class="grid-contacto">
-    <form class="tarjeta-formulario" #formContacto="ngForm" (ngSubmit)="guardarConfiguracion(formContacto)" novalidate>
-      <div class="subtitulo-formulario">
+  <div class="contacto-admin-layout">
+    <form class="contacto-admin-form" #formContacto="ngForm" (ngSubmit)="guardarConfiguracion(formContacto)" novalidate>
+      <div class="form-header">
         <h2>Datos de contacto</h2>
-        <p>Los cambios se guardan en PostgreSQL y se reflejan automáticamente en la web pública.</p>
+        <p>
+          Los cambios se guardan en PostgreSQL y se reflejan en la web pública.
+        </p>
       </div>
 
-      <div class="grid-formulario">
+      <div class="contacto-admin-grid">
         <label>
-          WhatsApp *
-          <input type="text" name="whatsapp" inputmode="numeric" [(ngModel)]="formulario.whatsapp" (input)="limpiarSoloNumeros('whatsapp')" required minlength="9" maxlength="15" pattern="^[0-9]{9,15}$" placeholder="51949180383">
+          <span>WhatsApp *</span>
+          <input
+            type="text"
+            name="whatsapp"
+            inputmode="numeric"
+            [(ngModel)]="formulario.whatsapp"
+            (input)="limpiarSoloNumeros('whatsapp')"
+            required
+            minlength="9"
+            maxlength="15"
+            pattern="^[0-9]{9,15}$"
+            placeholder="51949180383"
+          />
         </label>
+
         <label>
-          Correo *
-          <input type="email" name="correo" [(ngModel)]="formulario.correo" required maxlength="150" placeholder="contacto@jmpormar.com">
+          <span>Correo *</span>
+          <input
+            type="email"
+            name="correo"
+            [(ngModel)]="formulario.correo"
+            required
+            maxlength="150"
+            placeholder="contacto@jmpormar.com"
+          />
         </label>
-       <label>
-  RUC
-  <div class="campo-ruc">
-    <input
-      type="text"
-      name="ruc"
-      [(ngModel)]="formulario.ruc"
-      maxlength="11"
-      inputmode="numeric"
-      placeholder="Ej: 20601234567"
-      (input)="onRucInput()"
-    >
 
-    <button
-      type="button"
-      class="boton-consultar-ruc"
-      [disabled]="
-        consultandoRuc ||
-        formulario.ruc.length !== 11
-      "
-      (click)="consultarRuc()"
-    >
-      <span class="material-symbols-outlined">
-        search
-      </span>
-
-      {{
-        consultandoRuc
-          ? 'Consultando...'
-          : 'Consultar'
-      }}
-    </button>
-  </div>
-</label>
-
-<label>
-  Razón social
-  <input
-    type="text"
-    name="razonSocial"
-    [(ngModel)]="formulario.razonSocial"
-    maxlength="200"
-    readonly
-    placeholder="Se completará al consultar el RUC"
-  >
-</label>
         <label>
-          Horario de atención *
-          <input type="text" name="horarioAtencion" [(ngModel)]="formulario.horarioAtencion" required minlength="5" maxlength="180" placeholder="Lunes a sábado, previa coordinación">
+          <span>RUC</span>
+          <input
+            type="text"
+            name="ruc"
+            maxlength="11"
+            inputmode="numeric"
+            [(ngModel)]="formulario.ruc"
+            (input)="limpiarSoloNumeros('ruc')"
+            pattern="^$|^[0-9]{11}$"
+            placeholder="20601234567"
+          />
+        </label>
+
+        <label>
+          <span>Razón social</span>
+          <input
+            type="text"
+            name="razonSocial"
+            [(ngModel)]="formulario.razonSocial"
+            maxlength="200"
+            placeholder="Razón social de la empresa"
+          />
+        </label>
+
+        <label class="campo-completo">
+          <span>Horario de atención *</span>
+          <input
+            type="text"
+            name="horarioAtencion"
+            [(ngModel)]="formulario.horarioAtencion"
+            required
+            minlength="5"
+            maxlength="180"
+            placeholder="Lunes a sábado de 8:00 a.m. a 6:00 p.m."
+          />
+        </label>
+
+        <label class="campo-completo">
+          <span>Dirección *</span>
+          <input
+            type="text"
+            name="direccion"
+            [(ngModel)]="formulario.direccion"
+            required
+            minlength="5"
+            maxlength="250"
+            placeholder="Dirección de la empresa"
+          />
         </label>
       </div>
 
-      <label>
-        Dirección *
-        <input type="text" name="direccion" [(ngModel)]="formulario.direccion" required minlength="5" maxlength="250" placeholder="Dirección de la empresa">
-      </label>
+      <div class="contacto-admin-limitaciones">
+        <span class="material-symbols-outlined">database</span>
+        <div>
+          <strong>Campos disponibles actualmente</strong>
+          <p>
+            Google Maps, mensajes base y visibilidad por campo no forman parte del modelo backend actual.
+            Se pueden agregar después con migración y endpoints nuevos.
+          </p>
+        </div>
+      </div>
 
-      <div class="acciones-formulario">
-        <button type="button" class="boton-secundario" (click)="abrirWhatsapp()">
-          <span class="material-symbols-outlined">chat</span>
-          Probar WhatsApp
+      <div class="contacto-admin-actions">
+        <button
+          type="button"
+          class="btn-secundario-contacto"
+          (click)="cargarConfiguracion()"
+          [disabled]="cargando || guardando"
+        >
+          Cancelar
         </button>
-        <button type="submit" class="boton-principal" [disabled]="guardando || cargando">
+
+        <button
+          type="submit"
+          class="btn-guardar-contacto"
+          [disabled]="guardando"
+        >
           <span class="material-symbols-outlined">save</span>
           {{ guardando ? 'Guardando...' : 'Guardar cambios' }}
         </button>
       </div>
     </form>
 
-    <aside class="tarjeta-vista-previa">
-      <div class="vista-header">
-        <span class="material-symbols-outlined">visibility</span>
-        <div><h2>Vista previa</h2><p>Información obtenida de la base de datos.</p></div>
+    <aside class="contacto-admin-preview">
+      <div class="preview-header">
+        <div class="preview-icon">
+          <span class="material-symbols-outlined">visibility</span>
+        </div>
+
+        <div>
+          <h2>Vista previa</h2>
+          <p>Información obtenida de la base de datos.</p>
+        </div>
       </div>
-      <div class="preview-lista">
-        <div><span class="material-symbols-outlined">badge</span><div><small>RUC</small><strong>{{ formulario.ruc || 'No indicado' }}</strong></div></div>
-        <div><span class="material-symbols-outlined">chat</span><div><small>WhatsApp</small><strong>{{ formulario.whatsapp || 'No indicado' }}</strong></div></div>
-        <div><span class="material-symbols-outlined">mail</span><div><small>Correo</small><strong>{{ formulario.correo || 'No indicado' }}</strong></div></div>
-        <div><span class="material-symbols-outlined">location_on</span><div><small>Dirección</small><strong>{{ formulario.direccion || 'No indicado' }}</strong></div></div>
-        <div><span class="material-symbols-outlined">schedule</span><div><small>Horario</small><strong>{{ formulario.horarioAtencion || 'No indicado' }}</strong></div></div>
+
+      <div class="preview-item">
+        <span class="material-symbols-outlined">badge</span>
+        <div>
+          <small>RUC</small>
+          <strong>{{ formulario.ruc || 'No indicado' }}</strong>
+        </div>
       </div>
-      <div class="nota-contacto"><span class="material-symbols-outlined">database</span><p>Google Maps no forma parte del modelo de datos actual.</p></div>
+
+      <div class="preview-item">
+        <span class="material-symbols-outlined">business</span>
+        <div>
+          <small>Razón social</small>
+          <strong>{{ formulario.razonSocial || 'No indicado' }}</strong>
+        </div>
+      </div>
+
+      <div class="preview-item">
+        <span class="material-symbols-outlined">forum</span>
+        <div>
+          <small>WhatsApp</small>
+          <strong>{{ formulario.whatsapp || 'No indicado' }}</strong>
+        </div>
+      </div>
+
+      <div class="preview-item">
+        <span class="material-symbols-outlined">mail</span>
+        <div>
+          <small>Correo</small>
+          <strong>{{ formulario.correo || 'No indicado' }}</strong>
+        </div>
+      </div>
+
+      <div class="preview-item">
+        <span class="material-symbols-outlined">location_on</span>
+        <div>
+          <small>Dirección</small>
+          <strong>{{ formulario.direccion || 'No indicado' }}</strong>
+        </div>
+      </div>
+
+      <div class="preview-item">
+        <span class="material-symbols-outlined">schedule</span>
+        <div>
+          <small>Horario</small>
+          <strong>{{ formulario.horarioAtencion || 'No indicado' }}</strong>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="preview-whatsapp"
+        *ngIf="formulario.whatsapp"
+        (click)="abrirWhatsapp()"
+      >
+        Probar WhatsApp
+      </button>
     </aside>
   </div>
 </section>
