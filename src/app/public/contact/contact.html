@@ -4,9 +4,6 @@
 
 <section class="contact-page" id="contacto-principal">
   <div class="section-container">
-    <div class="contact-methods" *ngIf="contactMethods.length > 0">
-      <article class="method-card" *ngFor="let method of contactMethods"><div class="method-icon"><span class="material-symbols-outlined">{{ method.icon }}</span></div><div><small>{{ method.title }}</small><h3>{{ method.value }}</h3><p>{{ method.detail }}</p></div></article>
-    </div>
     <p *ngIf="loading">Cargando datos de contacto...</p>
     <p *ngIf="errorMessage">{{ errorMessage }}</p>
 
@@ -21,59 +18,13 @@
               <small class="admin-error" *ngIf="nombre.touched && nombre.errors?.['required']">El nombre es obligatorio.</small>
               <small class="admin-error" *ngIf="nombre.touched && nombre.errors?.['minlength']">Debe tener al menos 3 caracteres.</small>
             </label>
-      
+            <label>
+              <span>RUC</span>
+              <input type="text" name="ruc" [(ngModel)]="contactForm.ruc" #ruc="ngModel" pattern="[0-9]{11}" maxlength="11" inputmode="numeric" placeholder="Ej: 20601234567" (input)="onlyDigits()" (keydown.enter)="$event.preventDefault()">
+              <small class="admin-error" *ngIf="ruc.touched && ruc.errors?.['pattern']">El RUC debe tener exactamente 11 dígitos o quedar vacío.</small>
+            </label>
+            <label><span>Razón social</span><input type="text" name="razonSocial" [(ngModel)]="contactForm.razonSocial" placeholder="Se completará automáticamente con el RUC" readonly></label>
           </div>
-<div class="form-field">
-  <label for="ruc">RUC</label>
-
-  <div class="ruc-control">
-    <input
-      id="ruc"
-      type="text"
-      name="ruc"
-      [(ngModel)]="contactForm.ruc"
-      maxlength="11"
-      inputmode="numeric"
-      placeholder="Ej: 20601234567"
-      (input)="onRucInput()"
-    >
-
-    <button
-      type="button"
-      class="btn-consultar-ruc"
-      [disabled]="
-        consultandoRuc ||
-        contactForm.ruc.length !== 11
-      "
-      (click)="consultarRuc()"
-    >
-      <span class="material-symbols-outlined">
-        search
-      </span>
-
-      {{
-        consultandoRuc
-          ? 'Consultando...'
-          : 'Consultar'
-      }}
-    </button>
-  </div>
-</div>
-
-<div class="form-field">
-  <label for="razonSocial">
-    Razón social
-  </label>
-
-  <input
-    id="razonSocial"
-    type="text"
-    name="razonSocial"
-    [(ngModel)]="contactForm.razonSocial"
-    readonly
-    placeholder="Se completará al consultar el RUC"
-  >
-</div>
           <div class="form-row">
             <label>
               Teléfono *
@@ -95,28 +46,54 @@
       </div>
 
       <aside class="contact-info-card">
-        <div class="info-image"><img src="/images/contacto-almacen.jpg" alt="Contacto JM Pormar"></div>
-        <div class="info-content"><small>Sede central</small><h2>{{ companyName }}</h2><p>Empresa orientada a la atención de requerimientos empresariales, abastecimiento y servicios.</p>
-          <div class="company-data" *ngIf="contact as info">
-            <span *ngIf="info.ruc"><strong>RUC:</strong> {{ info.ruc }}</span>
-            <span><strong>Dirección:</strong> {{ info.direccion }}</span>
-            <span><strong>Correo:</strong> {{ info.correo }}</span>
-            <span><strong>Horario:</strong> {{ info.horarioAtencion }}</span>
-          </div>
+        <div class="contact-company-card">
+          <span class="section-eyebrow contact-card-label">Nuestros datos</span>
+
+          <h2>
+            INVERSIONES JM PORMAR<br />
+            BIENES Y SERVICIOS E.I.R.L.
+          </h2>
+
+          <p>
+            Somos una empresa orientada a la atención de requerimientos empresariales,
+            abastecimiento de materiales, soluciones para obras, mantenimiento y
+            servicios complementarios.
+          </p>
+
+          <p>
+            Brindamos atención directa, coordinación rápida y acompañamiento comercial
+            para empresas, instituciones y proyectos que necesitan una respuesta clara,
+            ordenada y confiable.
+          </p>
+
+          <p>
+            Nuestro objetivo es facilitar la gestión de compras, consultas técnicas y
+            solicitudes de cotización mediante una comunicación ágil y personalizada.
+          </p>
+
+          <ul class="contact-company-list">
+            <li>
+              <strong>RUC:</strong>
+              <span>{{ contact?.ruc || 'No disponible' }}</span>
+            </li>
+
+            <li>
+              <strong>Dirección:</strong>
+              <span>{{ contact?.direccion || 'Lima, Perú' }}</span>
+            </li>
+
+            <li>
+              <strong>Correo:</strong>
+              <span>{{ contact?.correo || 'No disponible' }}</span>
+            </li>
+
+            <li>
+              <strong>Horario:</strong>
+              <span>{{ contact?.horarioAtencion || 'No disponible' }}</span>
+            </li>
+          </ul>
         </div>
       </aside>
-    </div>
-  </div>
-</section>
-
-<section class="map-section" *ngIf="contact as info">
-  <div class="section-container">
-    <div class="map-card">
-      <div class="map-content">
-        <small>Información de atención</small><h2>{{ shortName }}</h2>
-        <p>Los datos de esta sección se administran desde la configuración de contacto del backend.</p>
-        <div class="map-data"><span><strong>Razón social:</strong> {{ companyName }}</span><span *ngIf="info.ruc"><strong>RUC:</strong> {{ info.ruc }}</span><span><strong>Correo:</strong> {{ info.correo }}</span><span><strong>Dirección:</strong> {{ info.direccion }}</span><span><strong>Horario:</strong> {{ info.horarioAtencion }}</span></div>
-      </div>
     </div>
   </div>
 </section>

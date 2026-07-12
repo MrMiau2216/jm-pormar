@@ -97,64 +97,83 @@
   </div>
 </section>
 
-<section class="experience">
-  <div class="section-container">
-    <div class="experience-header">
-      <small>Nuestra experiencia</small>
+<section class="about-section atencion-obras-section">
+  <div class="section-heading">
+    <span>Experiencia operativa</span>
+    <h2>Atención para obras, empresas e instituciones</h2>
+    <p>
+      Acompañamos requerimientos de abastecimiento, mantenimiento y soporte
+      operativo para distintos sectores de atención.
+    </p>
+  </div>
 
-      <h2>Atención para obras, empresas e instituciones</h2>
-
-      <p>
-        Atendemos requerimientos relacionados con abastecimiento, materiales,
-        herramientas, servicios generales y soluciones para obras y proyectos.
-      </p>
-    </div>
-
-    <div class="experience-grid">
-      <article class="experience-card" *ngFor="let item of experience">
-        <span class="material-symbols-outlined">{{ item.icon }}</span>
-
-        <h3>{{ item.title }}</h3>
-
-        <p>{{ item.description }}</p>
-      </article>
-    </div>
+  <div class="grid-atencion-experiencia">
+    <article
+      class="atencion-card"
+      *ngFor="let item of atencionExperiencia"
+      [style.backgroundImage]="'linear-gradient(180deg, rgba(43,47,54,.12), rgba(43,47,54,.82)), url(' + item.imagen + ')'"
+    >
+      <div class="atencion-card-contenido">
+        <h3>{{ item.titulo }}</h3>
+        <p>{{ item.descripcion }}</p>
+      </div>
+    </article>
   </div>
 </section>
 
-<section class="about-certifications">
-  <div class="section-container">
-    <div class="section-title centered">
-      <small>Respaldo empresarial</small>
-      <h2>Certificaciones que respaldan nuestro compromiso</h2>
+<section class="about-section certificaciones-nosotros-section">
+  <div class="section-heading">
+    <span>Respaldo documentario</span>
+    <h2>Certificaciones y documentos de respaldo</h2>
+    <p>
+      Estos documentos respaldan nuestro compromiso con la calidad, el cumplimiento
+      y la atención responsable a empresas, obras e instituciones.
+    </p>
+  </div>
+
+  <div
+    class="grid-certificaciones-nosotros"
+    *ngIf="certificacionesNosotros.length > 0"
+  >
+    <article
+      class="certificacion-nosotros-card"
+      *ngFor="let certificacion of certificacionesNosotros"
+    >
+      <div class="certificacion-nosotros-icono">
+        <span class="material-symbols-outlined">workspace_premium</span>
+      </div>
+
+      <span class="certificacion-nosotros-tipo">
+        {{ obtenerTipoCertificacion(certificacion) }}
+      </span>
+
+      <h3>{{ obtenerNombreCertificacion(certificacion) }}</h3>
+
       <p>
-        Contamos con certificaciones orientadas a la calidad, gestión ambiental,
-        buenas prácticas laborales y cumplimiento empresarial.
+        {{ obtenerDescripcionCertificacion(certificacion) }}
       </p>
-    </div>
 
-    <div class="cert-grid">
-      <article class="cert-card" *ngFor="let certification of certifications">
-        <div class="cert-icon">
-          <span class="material-symbols-outlined">{{ certification.icon }}</span>
-        </div>
+      <button
+        type="button"
+        class="btn-ver-certificado"
+        *ngIf="certificadoTieneVista(certificacion)"
+        (click)="abrirCertificado(certificacion)"
+      >
+        Ver certificado
+      </button>
+    </article>
+  </div>
 
-        <h3>{{ certification.name }}</h3>
-
-        <p>{{ certification.detail }}</p>
-
-        <button type="button" (click)="openCertificate(certification)">
-          Ver certificado
-        </button>
-      </article>
-    </div>
-
-    <div class="center-action">
-      <a class="btn-more" routerLink="/certificaciones">
-        Ver más certificados
-        <span class="material-symbols-outlined">arrow_forward</span>
-      </a>
-    </div>
+  <div
+    class="estado-vacio-certificaciones"
+    *ngIf="certificacionesNosotros.length === 0"
+  >
+    <span class="material-symbols-outlined">description</span>
+    <h3>No hay certificaciones publicadas</h3>
+    <p>
+      Los certificados activos se mostrarán en esta sección cuando sean
+      registrados desde el panel administrador.
+    </p>
   </div>
 </section>
 
@@ -197,51 +216,58 @@
   </div>
 </section>
 
-<section class="about-cta">
-  <div class="section-container cta-card">
-    <h2>
-      Comunícate con nosotros y solicita información según los requerimientos
-      de tu empresa, obra o proyecto.
-    </h2>
+<section class="about-cta-final">
+  <div class="about-cta-contenido">
+    <span>Atención personalizada</span>
 
-    <a routerLink="/contacto">
-      Deseo contactarlos
-      <span class="material-symbols-outlined">arrow_forward</span>
-    </a>
+    <h2>Comunícate con nosotros</h2>
+
+    <p>
+      Solicita información según los requerimientos de tu obra, empresa,
+      institución o proyecto.
+    </p>
+
+    <div class="about-cta-acciones">
+      <a routerLink="/contacto" class="btn-about-cta">
+        Contáctanos
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+
+      <a routerLink="/cotizacion" class="btn-about-cta-secundario">
+        Solicitar cotización
+      </a>
+    </div>
   </div>
 </section>
 
-<div class="certificate-backdrop" *ngIf="selectedCertification">
-  <div class="certificate-modal">
-    <div class="certificate-header">
+<div
+  class="modal-certificado-backdrop"
+  *ngIf="certificadoSeleccionado"
+  (click)="cerrarCertificado()"
+>
+  <div class="modal-certificado" (click)="$event.stopPropagation()">
+    <div class="modal-certificado-header">
       <div>
-        <small>Vista previa del certificado</small>
-        <h2>{{ selectedCertification.name }}</h2>
+        <span>Certificado</span>
+        <h3>{{ obtenerNombreCertificacion(certificadoSeleccionado) }}</h3>
       </div>
 
-      <button type="button" class="close-button" (click)="closeCertificate()">
+      <button
+        type="button"
+        class="btn-cerrar-certificado"
+        (click)="cerrarCertificado()"
+        aria-label="Cerrar certificado"
+      >
         <span class="material-symbols-outlined">close</span>
       </button>
     </div>
 
-    <div class="certificate-body">
-      <ng-container *ngIf="selectedCertification.fileType === 'PDF'; else imageCertificate">
-        <iframe [src]="safeCertificateUrl"></iframe>
-      </ng-container>
-
-      <ng-template #imageCertificate>
-        <img [src]="selectedCertification.fileUrl" [alt]="selectedCertification.name">
-      </ng-template>
-    </div>
-
-    <div class="certificate-footer">
-      <p>
-        Este certificado se muestra como vista previa.
-      </p>
-
-      <button type="button" (click)="closeCertificate()">
-        Cerrar
-      </button>
+    <div class="modal-certificado-body">
+      <iframe
+        *ngIf="certificadoVistaUrl"
+        [src]="certificadoVistaUrl"
+        title="Vista de certificado"
+      ></iframe>
     </div>
   </div>
 </div>

@@ -10,8 +10,14 @@
         requerimientos empresariales y operativos.
       </p>
 
+      <p class="home-commercial-copy">
+        En JM Pormar atendemos requerimientos de empresas, obras e instituciones
+        que necesitan materiales, productos de ferretería, abastecimiento y servicios
+        complementarios con una atención directa, ordenada y confiable.
+      </p>
+
       <div class="hero-actions">
-        <button type="button" class="btn btn-primary" (click)="openGeneralWhatsapp()">
+        <button type="button" class="btn btn-primary" (click)="cotizarGeneralWhatsapp()">
           <span class="material-symbols-outlined">chat</span>
           Cotizar por WhatsApp
         </button>
@@ -24,162 +30,106 @@
   </div>
 </section>
 
-<section class="sectors">
-  <div class="section-container">
-    <div class="section-title centered">
-      <h2>Sectores que atendemos</h2>
-      <span></span>
-    </div>
-
-    
-
-    <div class="sector-grid">
-      <article class="sector-card" *ngFor="let sector of sectors">
-        <div class="icon-circle">
-          <span class="material-symbols-outlined">{{ sector.icon }}</span>
-        </div>
-        <h3>{{ sector.title }}</h3>
-      </article>
-    </div>
+<section class="home-section sectores-home">
+  <div class="section-heading">
+    <span>Alcance operativo</span>
+    <h2>Sectores que atendemos</h2>
+    <p>
+      Acompañamos requerimientos de empresas, obras, instituciones y proyectos
+      con atención responsable y suministros confiables.
+    </p>
   </div>
-  
-</section>
 
-<section class="services" id="servicios">
-  <div class="section-container">
-    <div class="section-title centered">
-      <small>Nuestras capacidades</small>
-      <h2>Servicios principales</h2>
-      <p>Servicios orientados a empresas, obras, instituciones y proyectos.</p>
-    </div>
-
-    <div class="service-grid">
-      <article class="service-card" *ngFor="let service of services()">
-        <div class="service-image">
-          <img [src]="service.image" [alt]="service.title">
-        </div>
-
-        <div class="service-body">
-          <h3>{{ service.title }}</h3>
-          <p>{{ service.description }}</p>
-
-          <a href="#contacto">
-            Solicitar cotización
-            <span class="material-symbols-outlined">arrow_forward</span>
-          </a>
-        </div>
-      </article>
-    </div>
+  <div class="grid-sectores-home">
+    <article
+      class="sector-card-home"
+      *ngFor="let sector of sectoresAtencion"
+      [style.backgroundImage]="'linear-gradient(180deg, rgba(43,47,54,.18), rgba(43,47,54,.82)), url(' + sector.imagen + ')'"
+    >
+      <div class="sector-card-contenido">
+        <h3>{{ sector.titulo }}</h3>
+        <p>{{ sector.descripcion }}</p>
+      </div>
+    </article>
   </div>
 </section>
 
-<section class="products" id="productos">
-  <div class="section-container">
-    <div class="section-title centered">
-      <small>Nuestras líneas</small>
-      <h2>Productos destacados</h2>
-      <p>
-        Una selección de productos disponibles para obras,
-        empresas e instituciones.
-      </p>
-    </div>
+<section class="home-section servicios-home" id="servicios">
+  <div class="section-heading">
+    <span>Nuestras capacidades</span>
+    <h2>Servicios principales</h2>
+    <p>
+      Servicios orientados a empresas, obras, instituciones y proyectos.
+    </p>
+  </div>
 
-    <div
-      class="featured-product-grid"
-      *ngIf="featuredProducts().length > 0"
+  <div class="grid-servicios-home" *ngIf="obtenerServiciosInicio().length > 0">
+    <article
+      class="servicio-card-home"
+      *ngFor="let servicio of obtenerServiciosInicio(); let i = index"
     >
-      <article
-        class="featured-product-card"
-        *ngFor="let product of featuredProducts()"
-      >
-        <div class="featured-product-image">
-          <img
-            [src]="productImage(product.imagenPrincipalUrl)"
-            [alt]="product.nombre"
-          >
+      <div class="servicio-imagen-home">
+        <img
+          [src]="obtenerImagenServicio(servicio, i)"
+          [alt]="obtenerTituloServicio(servicio)"
+          loading="lazy"
+          (error)="usarImagenFallback($event)"
+        />
+      </div>
 
-          <span
-            class="availability-badge"
-            [class.not-available]="
-              product.disponibilidad === 'NO_DISPONIBLE'
-            "
-          >
-            {{
-              product.disponibilidad === 'DISPONIBLE'
-                ? 'Disponible'
-                : 'No disponible'
-            }}
-          </span>
-        </div>
+      <div class="servicio-contenido-home">
+        <span>Servicio</span>
+        <h3>{{ obtenerTituloServicio(servicio) }}</h3>
+        <p>{{ obtenerDescripcionServicio(servicio) }}</p>
+      </div>
+    </article>
+  </div>
 
-        <div class="featured-product-body">
-          <small>{{ product.categoria }}</small>
+  <div class="estado-vacio-home" *ngIf="obtenerServiciosInicio().length === 0">
+    <p>Los servicios publicados se mostrarán aquí cuando estén activos.</p>
+  </div>
+</section>
 
-          <h3>{{ product.nombre }}</h3>
+<section class="home-section lineas-home" id="productos">
+  <div class="section-heading">
+    <span>Nuestras líneas</span>
+    <h2>Nuestras líneas de productos</h2>
+    <p>
+      Suministros certificados de alta rotación para obras, empresas e instituciones.
+    </p>
+  </div>
 
-          <p>{{ product.descripcionBreve }}</p>
-
-          <div class="featured-product-meta">
-            Código: {{ product.codigoSku }}
-          </div>
-
-          <a
-            class="featured-product-link"
-            [routerLink]="[
-              '/productos',
-              product.idProducto
-            ]"
-          >
-            Ver detalle
-            <span class="material-symbols-outlined">
-              arrow_forward
-            </span>
-          </a>
-        </div>
-      </article>
-    </div>
-
-    <div
-      class="landing-empty"
-      *ngIf="
-        !loadingLanding() &&
-        featuredProducts().length === 0
-      "
+  <div class="grid-lineas-home" *ngIf="obtenerCategoriasInicio().length > 0">
+    <article
+      class="linea-card-home"
+      *ngFor="let categoria of obtenerCategoriasInicio(); let i = index"
     >
-      Todavía no hay productos publicados.
-    </div>
+      <div class="linea-imagen-home">
+        <img
+          [src]="obtenerImagenCategoria(categoria, i)"
+          [alt]="obtenerTituloCategoria(categoria)"
+          loading="lazy"
+          (error)="usarImagenFallback($event)"
+        />
+      </div>
 
-    <div class="section-title centered lines-title">
-      <small>Categorías</small>
-      <h2>Nuestras líneas de productos</h2>
-    </div>
+      <div class="linea-contenido-home">
+        <span>Línea de productos</span>
+        <h3>{{ obtenerTituloCategoria(categoria) }}</h3>
+        <p>{{ obtenerDescripcionCategoria(categoria) }}</p>
+      </div>
+    </article>
+  </div>
 
-    <div class="category-grid">
-      <article
-        class="category-card"
-        *ngFor="let category of categories()"
-      >
-        <div class="category-icon">
-          <span class="material-symbols-outlined">
-            {{ category.icon }}
-          </span>
-        </div>
+  <div class="estado-vacio-home" *ngIf="obtenerCategoriasInicio().length === 0">
+    <p>Las líneas de productos se mostrarán aquí cuando existan categorías activas.</p>
+  </div>
 
-        <strong>{{ category.name }}</strong>
-      </article>
-    </div>
-
-    <div class="center-action">
-      <a
-        class="btn btn-dark"
-        routerLink="/productos"
-      >
-        Ver catálogo completo
-        <span class="material-symbols-outlined">
-          arrow_forward
-        </span>
-      </a>
-    </div>
+  <div class="acciones-home">
+    <a routerLink="/productos" class="btn-home-principal">
+      Ver catálogo completo
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
   </div>
 </section>
 
@@ -253,7 +203,7 @@
     </div>
 
     <div class="stat-item">
-      <strong>4</strong>
+      <strong>{{ certificationsTotal }}</strong>
       <span>Certificaciones</span>
     </div>
 
@@ -263,119 +213,74 @@
     </div>
 
     <div class="stat-item">
-      <strong>24/7</strong>
-      <span>Atención directa</span>
+      <strong>Lun-Sáb</strong>
+      <span>Atención comercial</span>
     </div>
   </div>
 </section>
 
 
-<section
-  class="certifications"
-  id="certificaciones"
->
-  <div class="section-container">
-    <div class="section-title centered">
-      <small>Excelencia certificada</small>
+<section class="home-section certificaciones-home">
+  <div class="section-heading">
+    <span>Respaldo empresarial</span>
+    <h2>Certificaciones que respaldan nuestro compromiso</h2>
+    <p>
+      Contamos con certificaciones orientadas a la calidad, gestión ambiental,
+      buenas prácticas laborales y cumplimiento empresarial.
+    </p>
+  </div>
 
-      <h2>
-        Certificaciones que respaldan nuestro compromiso
-      </h2>
-
-      <p>
-        Documentos orientados a la calidad, gestión ambiental,
-        buenas prácticas laborales y cumplimiento empresarial.
-      </p>
-    </div>
-
-    <div
-      class="cert-grid"
-      *ngIf="certifications().length > 0"
+  <div class="grid-certificaciones-home" *ngIf="obtenerCertificacionesInicio().length > 0">
+    <article
+      class="certificacion-card-home"
+      *ngFor="let certificacion of obtenerCertificacionesInicio()"
     >
+      <span class="certificacion-tipo-home">
+        {{ obtenerTipoCertificacion(certificacion) }}
+      </span>
+
+      <h3>{{ obtenerNombreCertificacion(certificacion) }}</h3>
+    </article>
+  </div>
+
+  <div class="estado-vacio-home" *ngIf="obtenerCertificacionesInicio().length === 0">
+    <p>Las certificaciones activas se mostrarán aquí.</p>
+  </div>
+
+  <div class="acciones-home">
+    <a routerLink="/nosotros" class="btn-home-principal">
+      Conócenos más
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+</section>
+
+<section class="home-section clientes-home" *ngIf="clients.length > 0">
+  <div class="section-heading">
+    <span>Confianza empresarial</span>
+    <h2>Clientes que confiaron en nosotros</h2>
+    <p>
+      Empresas e instituciones que forman parte de nuestra experiencia de atención.
+    </p>
+  </div>
+
+  <div class="clientes-carousel">
+    <div class="clientes-track" [class.animado]="clientesAnimados">
       <article
-        class="cert-card"
-        *ngFor="let certification of certifications()"
+        class="cliente-card-home"
+        *ngFor="let client of clientesCarrusel"
       >
-        <div class="cert-card-icon">
-          <span class="material-symbols-outlined">
-            {{
-              certification.tipoArchivo === 'PDF'
-                ? 'picture_as_pdf'
-                : 'image'
-            }}
-          </span>
+        <div class="cliente-logo-home" *ngIf="obtenerLogoCliente(client)">
+          <img
+            [src]="obtenerLogoCliente(client)"
+            [alt]="obtenerNombreCliente(client)"
+            loading="lazy"
+            (error)="usarLogoFallback($event)"
+          />
         </div>
 
-        <small>{{ certification.tipo }}</small>
-
-        <strong>{{ certification.nombre }}</strong>
-
-        <p>
-          {{
-            certification.descripcion ||
-            'Documento institucional disponible para visualización.'
-          }}
-        </p>
-
-        <button
-          type="button"
-          class="cert-card-link"
-          (click)="openCertification(certification)"
-        >
-          Ver certificación
-          <span class="material-symbols-outlined">
-            visibility
-          </span>
-        </button>
+        <strong>{{ obtenerNombreCliente(client) }}</strong>
       </article>
-    </div>
-
-    <div
-      class="landing-empty"
-      *ngIf="
-        !loadingLanding() &&
-        certifications().length === 0
-      "
-    >
-      Todavía no hay certificaciones publicadas.
-    </div>
-
-    <div class="center-action">
-      <a
-        class="btn btn-dark"
-        routerLink="/certificaciones"
-      >
-        Ver todas las certificaciones
-        <span class="material-symbols-outlined">
-          arrow_forward
-        </span>
-      </a>
-    </div>
-  </div>
-</section>
-
-<section class="clients">
-  <div class="section-container">
-    <div class="section-title centered">
-      <small>Confianza empresarial</small>
-      <h2>Clientes que confiaron en nosotros</h2>
-      <p>
-        Empresas e instituciones que han confiado en nuestras soluciones.
-      </p>
-    </div>
-
-    <div class="client-carousel" [class.is-carousel]="shouldCarousel">
-      <div class="client-track">
-        <article class="client-card" *ngFor="let client of visibleClients">
-          <ng-container *ngIf="client.logo; else clientName">
-            <img [src]="client.logo" [alt]="client.name">
-          </ng-container>
-
-          <ng-template #clientName>
-            <span>{{ client.name }}</span>
-          </ng-template>
-        </article>
-      </div>
     </div>
   </div>
 </section>
@@ -400,63 +305,16 @@
           <small class="admin-error" *ngIf="nombre.touched && nombre.errors?.['minlength']">Debe tener al menos 3 caracteres.</small>
         </label>
 
+        <label>
+          RUC
+          <input type="text" name="ruc" [(ngModel)]="quoteForm.ruc" #ruc="ngModel" pattern="[0-9]{11}" maxlength="11" inputmode="numeric" placeholder="Ej: 20601234567" (input)="onRucInput()" (keydown.enter)="$event.preventDefault()">
+          <small class="admin-error" *ngIf="ruc.touched && ruc.errors?.['pattern']">El RUC debe tener exactamente 11 dígitos o quedar vacío.</small>
+        </label>
 
-
-     <div class="form-field">
-  <label for="home-ruc">
-    RUC
-  </label>
-
-  <div class="ruc-control">
-    <input
-      id="home-ruc"
-      type="text"
-      name="ruc"
-      [(ngModel)]="quoteForm.ruc"
-      maxlength="11"
-      inputmode="numeric"
-      autocomplete="off"
-      placeholder="Ej: 20601234567"
-      (input)="onRucInput()"
-    >
-
-    <button
-      type="button"
-      class="btn-consultar-ruc"
-      [disabled]="
-        consultandoRuc ||
-        quoteForm.ruc.length !== 11
-      "
-      (click)="consultarRuc()"
-    >
-      <span class="material-symbols-outlined">
-        search
-      </span>
-
-      {{
-        consultandoRuc
-          ? 'Consultando...'
-          : 'Consultar'
-      }}
-    </button>
-  </div>
-</div>
-
-<div class="form-field">
-  <label for="home-razon-social">
-    Razón social
-  </label>
-
-  <input
-    id="home-razon-social"
-    type="text"
-    name="razonSocial"
-    [(ngModel)]="quoteForm.razonSocial"
-    maxlength="200"
-    readonly
-    placeholder="Se completará al consultar el RUC"
-  >
-</div>
+        <label>
+          <span>Razón social</span>
+          <input type="text" name="razonSocial" [(ngModel)]="quoteForm.razonSocial" placeholder="Se completará automáticamente con el RUC" readonly>
+        </label>
 
         <label>
           Teléfono *
@@ -486,9 +344,9 @@
 
         <small>Atención inmediata</small>
 
-        <strong>+51 949 180 383</strong>
+        <strong>{{ contact?.whatsapp ? formatPhone(contact.whatsapp) : 'No disponible' }}</strong>
 
-        <p>contacto&#64;jmpormar.com</p>
+        <p>{{ contact?.correo || 'No disponible' }}</p>
 
         <a class="btn btn-dark full" routerLink="/contacto">
           Ver datos de contacto

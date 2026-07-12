@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -6,26 +6,12 @@ import { ClientService } from '../../shared/services/client.service';
 import { ClientItem } from '../../shared/data/clients-data';
 import { ContactService } from '../../shared/services/contact.service';
 import { CertificationService } from '../../shared/services/certification.service';
+import { Certificacion } from '../../shared/models/domain.models';
 
 interface ValueItem {
   icon: string;
   title: string;
   description: string;
-}
-
-interface ExperienceItem {
-  icon: string;
-  title: string;
-  description: string;
-}
-
-interface CertificationItem {
-  id: string;
-  icon: string;
-  name: string;
-  detail: string;
-  fileUrl: string;
-  fileType: 'PDF' | 'IMAGEN';
 }
 
 interface TrustItem {
@@ -41,35 +27,112 @@ interface TrustItem {
   styleUrl: './about.scss'
 })
 export class About implements OnInit {
-  selectedCertification?: CertificationItem;
-  safeCertificateUrl?: SafeResourceUrl;
   clients: ClientItem[] = [];
 
+  readonly atencionExperiencia = [
+    {
+      titulo: 'Obras y proyectos',
+      descripcion: 'Atención para obras civiles, mantenimiento, ampliaciones y requerimientos por etapas.',
+      imagen: '/images/about/atencion-obras.jpg'
+    },
+    {
+      titulo: 'Empresas',
+      descripcion: 'Suministro recurrente para operaciones, almacenes, mantenimiento y compras internas.',
+      imagen: '/images/about/atencion-empresas.jpg'
+    },
+    {
+      titulo: 'Instituciones',
+      descripcion: 'Apoyo a instituciones públicas y privadas con requerimientos formales y documentación.',
+      imagen: '/images/about/atencion-instituciones.jpg'
+    },
+    {
+      titulo: 'Servicios generales',
+      descripcion: 'Soluciones para instalaciones, mantenimiento preventivo y atención operativa.',
+      imagen: '/images/about/atencion-servicios.jpg'
+    }
+  ];
+
+  certificadoSeleccionado: any | null = null;
+  certificadoVistaUrl: SafeResourceUrl | null = null;
+
   constructor(
-    private sanitizer: DomSanitizer,
     private clientService: ClientService,
     private contactService: ContactService,
-    private certificationService: CertificationService
+    private certificationService: CertificationService,
+    private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
     this.clientService.getClients().subscribe(clients => {
       this.clients = clients;
+      this.cdr.detectChanges();
     });
 
     this.certificationService.getPublic().subscribe({
-      next: certifications => {
-        this.certifications = certifications.map(item => ({
-          id: item.idCertificacion,
-          icon: item.tipoArchivo === 'PDF' ? 'picture_as_pdf' : 'workspace_premium',
-          name: item.nombre,
-          detail: item.tipo,
-          fileUrl: this.certificationService.viewUrl(item.idCertificacion),
-          fileType: item.tipoArchivo
-        }));
-      },
-      error: () => this.certifications = []
+      next: certifications => { this.certifications = certifications ?? []; this.cdr.detectChanges(); },
+      error: () => { this.certifications = []; this.cdr.detectChanges(); }
     });
+  }
+
+  get certificacionesNosotros(): any[] {
+    const source = (this as any).certifications ?? (this as any).certificaciones ?? [];
+    return Array.isArray(source)
+      ? source.filter((certificacion: any) => certificacion?.activo !== false)
+      : [];
+  }
+
+  obtenerNombreCertificacion(certificacion: any): string {
+    return certificacion?.nombre || certificacion?.titulo || 'Certificación registrada';
+  }
+
+  obtenerDescripcionCertificacion(certificacion: any): string {
+    return certificacion?.descripcion || 'Documento de respaldo empresarial registrado por JM Pormar.';
+  }
+
+  obtenerTipoCertificacion(certificacion: any): string {
+    return certificacion?.tipo || certificacion?.tipoArchivo || 'Certificación';
+  }
+
+  obtenerUrlCertificado(certificacion: any): string {
+    const url =
+      certificacion?.archivoUrl ||
+      certificacion?.urlArchivo ||
+      certificacion?.documentoUrl ||
+      certificacion?.pdfUrl ||
+      '';
+
+    if (url.startsWith('http') || url.startsWith('/')) {
+      return url;
+    }
+
+    const id =
+      certificacion?.idCertificacion ||
+      certificacion?.id ||
+      certificacion?.uuid ||
+      '';
+
+    return id ? `/api/public/certificaciones/${id}/ver` : '#';
+  }
+
+  certificadoTieneVista(certificacion: any): boolean {
+    return this.obtenerUrlCertificado(certificacion) !== '#';
+  }
+
+  abrirCertificado(certificacion: any): void {
+    const url = this.obtenerUrlCertificado(certificacion);
+
+    if (!url || url === '#') {
+      return;
+    }
+
+    this.certificadoSeleccionado = certificacion;
+    this.certificadoVistaUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  cerrarCertificado(): void {
+    this.certificadoSeleccionado = null;
+    this.certificadoVistaUrl = null;
   }
 
   values: ValueItem[] = [
@@ -105,30 +168,7 @@ export class About implements OnInit {
     }
   ];
 
-  experience: ExperienceItem[] = [
-    {
-      icon: 'construction',
-      title: 'Abastecimiento para obras',
-      description: 'Atención de materiales, herramientas, equipos e insumos para proyectos.'
-    },
-    {
-      icon: 'engineering',
-      title: 'Servicios generales',
-      description: 'Apoyo en mantenimiento, acondicionamiento y soluciones operativas.'
-    },
-    {
-      icon: 'domain',
-      title: 'Atención a empresas',
-      description: 'Soporte para áreas de compras, logística y requerimientos corporativos.'
-    },
-    {
-      icon: 'account_balance',
-      title: 'Instituciones',
-      description: 'Atención de requerimientos para entidades y proyectos especiales.'
-    }
-  ];
-
-  certifications: CertificationItem[] = [];
+  certifications: Certificacion[] = [];
 
   trustItems: TrustItem[] = [
     {
@@ -161,17 +201,5 @@ export class About implements OnInit {
   openWhatsapp(): void {
     const message = 'Hola, deseo solicitar información sobre JM Pormar y sus servicios.';
     this.contactService.openWhatsapp(message);
-  }
-
-  openCertificate(certification: CertificationItem): void {
-    this.selectedCertification = certification;
-    this.safeCertificateUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-      this.certificationService.viewUrl(certification.id)
-    );
-  }
-
-  closeCertificate(): void {
-    this.selectedCertification = undefined;
-    this.safeCertificateUrl = undefined;
   }
 }
