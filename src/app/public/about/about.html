@@ -14,7 +14,7 @@
 <section class="who-we-are" id="nosotros-principal">
   <div class="section-container about-grid">
     <div class="about-image">
-      <img src="/images/about-equipo.jpg" alt="Equipo JM Pormar">
+      <img src="/images/about/about-equipo-jm-pormar.png" alt="Equipo JM Pormar">
     </div>
 
     <div class="about-content">
@@ -203,13 +203,11 @@
     <div class="client-carousel" [class.is-carousel]="shouldCarousel">
       <div class="client-track">
         <article class="client-card" *ngFor="let client of visibleClients">
-          <ng-container *ngIf="client.logo; else clientName">
-            <img [src]="client.logo" [alt]="client.name">
-          </ng-container>
+          <div class="client-logo-box" *ngIf="client.logo">
+            <img [src]="client.logo" [alt]="client.name" loading="lazy">
+          </div>
 
-          <ng-template #clientName>
-            <span>{{ client.name }}</span>
-          </ng-template>
+          <strong>{{ client.name }}</strong>
         </article>
       </div>
     </div>

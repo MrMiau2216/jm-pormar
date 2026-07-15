@@ -87,6 +87,14 @@
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.04);
 }
 
+.quotation-visual {
+  background:
+    linear-gradient(rgba(43, 47, 54, 0.72), rgba(43, 47, 54, 0.72)),
+    url('/images/quotation/quotation-support.png') center/cover no-repeat;
+  border-radius: 26px;
+  padding: 18px;
+}
+
 .quote-items {
   display: grid;
   gap: 16px;

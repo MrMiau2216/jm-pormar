@@ -5,7 +5,7 @@
   align-items: center;
   background:
     linear-gradient(90deg, rgba(43, 47, 54, 0.96), rgba(43, 47, 54, 0.72)),
-    url('/images/hero-almacen.jpg') center/cover no-repeat;
+    url('/images/home/home-hero.png') center/cover no-repeat;
   color: white;
 }
 
@@ -815,7 +815,7 @@
 .quote-info {
   background:
     linear-gradient(rgba(43, 47, 54, 0.72), rgba(43, 47, 54, 0.72)),
-    url('/images/contacto-almacen.jpg') center/cover no-repeat;
+    url('/images/quotation/quotation-support.png') center/cover no-repeat;
   display: grid;
   place-items: center;
   padding: 44px;
@@ -1028,6 +1028,24 @@
 .home-section {
   padding: 5rem 2rem;
   background: #f5f3f0;
+}
+
+.servicios-home {
+  background:
+    linear-gradient(rgba(245, 243, 240, 0.94), rgba(245, 243, 240, 0.94)),
+    url('/images/home/home-servicios-principales.png') center/cover no-repeat;
+}
+
+.lineas-home {
+  background:
+    linear-gradient(rgba(245, 243, 240, 0.94), rgba(245, 243, 240, 0.94)),
+    url('/images/home/home-lineas-productos.png') center/cover no-repeat;
+}
+
+.certificaciones-home {
+  background:
+    linear-gradient(rgba(245, 243, 240, 0.94), rgba(245, 243, 240, 0.94)),
+    url('/images/home/home-certificaciones-apoyo.png') center/cover no-repeat;
 }
 
 .section-heading {
